@@ -1715,6 +1715,11 @@
         display: none !important;
       }
 
+      body.print-internal-copy #quoteModal,
+      body:not(.print-customer-copy):not(.print-internal-copy) #quoteModal {
+        display: none !important;
+      }
+
       /* Internal Copy mode: print regular calculator with internal breakdown */
       body.print-internal-copy .calculator-layout {
         display: block !important;
@@ -1907,9 +1912,9 @@
           </div>
 
           <div class="target-slider-row">
-            <input type="range" id="pricingTargetSlider" class="range-slider" min="0" max="90" value="40" oninput="syncPricingTarget(this.value)" />
+            <input type="range" id="pricingTargetSlider" class="range-slider" min="0" max="95" value="40" oninput="syncPricingTarget(this.value)" />
             <div class="input-wrapper target-val-input">
-              <input type="number" id="pricingTargetVal" value="40" min="0" max="99" oninput="syncPricingTarget(this.value)" />
+              <input type="number" id="pricingTargetVal" value="40" min="0" max="95" oninput="syncPricingTarget(this.value)" />
               <span class="input-suffix">%</span>
             </div>
           </div>
@@ -1919,11 +1924,11 @@
             <span class="rounding-label">🏷️ Price Rounding (Client Sell Unit):</span>
             <select id="priceRounding" class="rounding-select" onchange="calculate()">
               <option value="none">Exact (No Rounding)</option>
-              <option value="round_05">Round up to .x5 or .x0 (Nearest /bin/sh.05)</option>
-              <option value="round_50">Round up to $.50 (e.g. .50)</option>
-              <option value="round_100">Round up to .00 (e.g. .00)</option>
-              <option value="round_95">Round up to $.95 (e.g. .95)</option>
-              <option value="round_99">Round up to $.99 (e.g. .99)</option>
+              <option value="5cents">Round up to nearest $0.05 (e.g. $7.67 → $7.70)</option>
+              <option value="50cents">Round up to nearest $0.50 (e.g. $7.67 → $8.00)</option>
+              <option value="dollar">Round up to whole dollar (e.g. $7.17 → $8.00)</option>
+              <option value="95cents">Round up to $.95 (e.g. $7.67 → $7.95)</option>
+              <option value="99cents">Round up to $.99 (e.g. $7.67 → $7.99)</option>
             </select>
           </div>
         </div>
@@ -2157,15 +2162,15 @@
         </div>
         <div class="h-stat">
           <span class="h-stat-label">Total Revenue</span>
-          <span class="h-stat-val" id="statTotalRevenue">/bin/sh.00</span>
+          <span class="h-stat-val" id="statTotalRevenue">$0.00</span>
         </div>
         <div class="h-stat">
           <span class="h-stat-label">Total Cost</span>
-          <span class="h-stat-val" id="statTotalCost">/bin/sh.00</span>
+          <span class="h-stat-val" id="statTotalCost">$0.00</span>
         </div>
         <div class="h-stat">
           <span class="h-stat-label">Gross Profit</span>
-          <span class="h-stat-val" style="color:var(--amber-dark)" id="statGrossProfit">/bin/sh.00</span>
+          <span class="h-stat-val" style="color:var(--amber-dark)" id="statGrossProfit">$0.00</span>
         </div>
         <div class="h-stat">
           <span class="h-stat-label">Avg Margin %</span>
@@ -2452,7 +2457,7 @@
       themeKey: 'amber',
       primaryColor: '#f59e0b',
       darkColor: '#d97706',
-      accentColor: '#fbbf24'
+      accentColor: '#fef3c7'
     };
     let brandingSettings = Object.assign({}, DEFAULT_BRANDING);
 
@@ -2656,20 +2661,21 @@
       }
       delete orderItems[index].customUnitSell;
       delete orderItems[index].customTotalSell;
+      delete orderItems[index].customAllInUnit;
       syncMarginFromCustomSell();
       calculate();
     }
 
     function onItemUnitSellDirect(index, value) {
       const val = parseFloat(value);
+      // Unit Sell is the all-in price per unit (setup and shipping spread in), same as displayed
       if (!isNaN(val) && val >= 0) {
-        orderItems[index].customUnitSell = val;
-        delete orderItems[index].customSellProd;
-        delete orderItems[index].customSellDec;
-        delete orderItems[index].customTotalSell;
+        orderItems[index].customAllInUnit = val;
       } else {
-        delete orderItems[index].customUnitSell;
+        delete orderItems[index].customAllInUnit;
       }
+      delete orderItems[index].customUnitSell;
+      delete orderItems[index].customTotalSell;
       syncMarginFromCustomSell();
       calculate();
     }
@@ -2678,46 +2684,67 @@
       const val = parseFloat(value);
       if (!isNaN(val) && val >= 0) {
         orderItems[index].customTotalSell = val;
-        const qty = parseFloat(orderItems[index].quantity) || 0;
-        if (qty > 0) {
-          orderItems[index].customUnitSell = val / qty;
-        }
       } else {
         delete orderItems[index].customTotalSell;
-        delete orderItems[index].customUnitSell;
       }
+      delete orderItems[index].customUnitSell;
+      delete orderItems[index].customAllInUnit;
       syncMarginFromCustomSell();
       calculate();
     }
 
+    // When every priced line is typed in by hand, move the target slider to the
+    // margin (or markup) those prices actually produce. If some lines are still
+    // auto-priced from the target, leave it alone: moving it would re-price them.
     function syncMarginFromCustomSell() {
+      const isSet = v => v !== undefined && v !== '' && !isNaN(parseFloat(v));
       let totCost = 0;
       let totSell = 0;
+      let allManual = true;
+
       orderItems.forEach(item => {
         const qty = parseFloat(item.quantity) || 0;
         const prodCost = parseFloat(item.productCostUnit) || 0;
         const decCost = parseFloat(item.decorationCostUnit) || 0;
         const setupCost = parseFloat(item.setupCharge) || 0;
         const shipCost = parseFloat(item.shippingCost) || 0;
-        totCost += (prodCost + decCost) * qty + setupCost + shipCost;
+        const itemCost = (prodCost + decCost) * qty + setupCost + shipCost;
+        totCost += itemCost;
+        if (itemCost <= 0) return;
 
-        let pSell = item.customSellProd !== undefined ? parseFloat(item.customSellProd) : prodCost;
-        let dSell = item.customSellDec !== undefined ? parseFloat(item.customSellDec) : decCost;
-        let sSell = item.customSellSetup !== undefined ? parseFloat(item.customSellSetup) : setupCost;
-        let shSell = item.customSellShip !== undefined ? parseFloat(item.customSellShip) : shipCost;
-        let uSell = item.customUnitSell !== undefined ? parseFloat(item.customUnitSell) : (pSell + dSell);
-        let tSell = item.customTotalSell !== undefined ? parseFloat(item.customTotalSell) : ((uSell * qty) + sSell + shSell);
-        totSell += tSell;
+        if (isSet(item.customTotalSell)) {
+          totSell += parseFloat(item.customTotalSell);
+          return;
+        }
+        if (isSet(item.customAllInUnit)) {
+          totSell += parseFloat(item.customAllInUnit) * qty;
+          return;
+        }
+        const unitManual = isSet(item.customUnitSell) ||
+          ((prodCost <= 0 || isSet(item.customSellProd)) && (decCost <= 0 || isSet(item.customSellDec)));
+        const setupManual = setupCost <= 0 || isSet(item.customSellSetup);
+        const shipManual = shipCost <= 0 || isSet(item.customSellShip);
+        if (!(unitManual && setupManual && shipManual)) {
+          allManual = false;
+          return;
+        }
+        const unitSell = isSet(item.customUnitSell) ? parseFloat(item.customUnitSell)
+          : (isSet(item.customSellProd) ? parseFloat(item.customSellProd) : 0) + (isSet(item.customSellDec) ? parseFloat(item.customSellDec) : 0);
+        totSell += unitSell * qty
+          + (isSet(item.customSellSetup) ? parseFloat(item.customSellSetup) : 0)
+          + (isSet(item.customSellShip) ? parseFloat(item.customSellShip) : 0);
       });
 
-      if (totSell > totCost && totSell > 0) {
-        const computedMargin = ((totSell - totCost) / totSell) * 100;
-        const targetInput = document.getElementById('pricingTargetVal');
-        const targetSlider = document.getElementById('pricingTargetSlider');
-        const bounded = Math.min(Math.max(Math.round(computedMargin), 0), 95);
-        if (targetInput && document.activeElement !== targetInput) targetInput.value = bounded;
-        if (targetSlider) targetSlider.value = bounded;
-      }
+      if (!allManual || totSell <= totCost || totCost <= 0) return;
+
+      const pct = currentPricingType === 'margin'
+        ? ((totSell - totCost) / totSell) * 100
+        : ((totSell - totCost) / totCost) * 100;
+      const bounded = Math.min(Math.max(Math.round(pct * 10) / 10, 0), getMaxTargetPct());
+      const targetInput = document.getElementById('pricingTargetVal');
+      const targetSlider = document.getElementById('pricingTargetSlider');
+      if (targetInput && document.activeElement !== targetInput) targetInput.value = bounded;
+      if (targetSlider) targetSlider.value = bounded;
     }
 
     function addNewProductItem() {
@@ -2750,7 +2777,40 @@
       }
     }
 
+    const ROUNDING_ALIASES = { round_05: '5cents', round_50: '50cents', round_100: 'dollar', round_95: '95cents', round_99: '99cents' };
+
+    // One place that prices a line item; used by the screen, the quote and saving
+    function computeItemSell(item, multiplier, roundingRule) {
+      const has = v => v !== undefined && v !== '' && v !== null && !isNaN(parseFloat(v));
+      const qty = parseFloat(item.quantity) || 0;
+      const prodCost = parseFloat(item.productCostUnit) || 0;
+      const decCost = parseFloat(item.decorationCostUnit) || 0;
+      const setupCost = parseFloat(item.setupCharge) || 0;
+      const shipCost = parseFloat(item.shippingCost) || 0;
+      const auto = c => (c > 0 ? c * multiplier : 0);
+
+      const r = {
+        qty,
+        cost: (prodCost + decCost) * qty + setupCost + shipCost,
+        autoProd: auto(prodCost),
+        autoDec: auto(decCost),
+        autoSetup: auto(setupCost),
+        autoShip: auto(shipCost)
+      };
+      r.prodSell = has(item.customSellProd) ? parseFloat(item.customSellProd) : r.autoProd;
+      r.decSell = has(item.customSellDec) ? parseFloat(item.customSellDec) : r.autoDec;
+      r.setupSell = has(item.customSellSetup) ? parseFloat(item.customSellSetup) : r.autoSetup;
+      r.shipSell = has(item.customSellShip) ? parseFloat(item.customSellShip) : r.autoShip;
+      r.unitSell = has(item.customUnitSell) ? parseFloat(item.customUnitSell) : applyPriceRounding(r.prodSell + r.decSell, roundingRule);
+      r.total = r.unitSell * qty + r.setupSell + r.shipSell;
+      if (has(item.customAllInUnit)) r.total = parseFloat(item.customAllInUnit) * qty;
+      if (has(item.customTotalSell)) r.total = parseFloat(item.customTotalSell);
+      r.allInUnit = qty > 0 ? r.total / qty : r.unitSell;
+      return r;
+    }
+
     function applyPriceRounding(price, rule) {
+      rule = ROUNDING_ALIASES[rule] || rule;
       if (!rule || rule === 'none' || price <= 0) return price;
       if (rule === '5cents') {
         return Math.ceil(price * 20) / 20;
@@ -2758,10 +2818,12 @@
         return Math.ceil(price * 2) / 2;
       } else if (rule === 'dollar') {
         return Math.ceil(price);
-      } else if (rule === '95cents') {
-        return Math.floor(price) + 0.95;
-      } else if (rule === '99cents') {
-        return Math.floor(price) + 0.99;
+      } else if (rule === '95cents' || rule === '99cents') {
+        // Round UP to the next .95 / .99 so rounding never cuts into margin
+        const ending = rule === '95cents' ? 0.95 : 0.99;
+        let p = Math.floor(price) + ending;
+        if (p + 1e-9 < price) p += 1;
+        return Math.round(p * 100) / 100;
       }
       return price;
     }
@@ -2805,32 +2867,38 @@
 
     function openManageRepsModal() {
       renderRepList();
-      const modal = document.getElementById('manageRepsModal');
+      const modal = document.getElementById('repsModal');
       if (modal) modal.classList.add('open');
+      const input = document.getElementById('newRepNameInput');
+      if (input) setTimeout(() => input.focus(), 50);
     }
 
     function closeManageRepsModal() {
-      const modal = document.getElementById('manageRepsModal');
+      const modal = document.getElementById('repsModal');
       if (modal) modal.classList.remove('open');
     }
 
     function renderRepList() {
-      const list = document.getElementById('repList');
+      const list = document.getElementById('repListContainer');
       if (!list) return;
       list.innerHTML = savedReps.map((r, i) => `
         <div style="display:flex; justify-content:space-between; align-items:center; padding:8px; border-bottom:1px solid #f1f5f9;">
           <span>${escapeHtml(r)}</span>
-          ${savedReps.length > 1 ? `<button type="button" class="btn btn-secondary btn-sm" onclick="deleteRep(${i})" style="color:#ef4444;">✕</button>` : ''}
+          ${savedReps.length > 1 ? `<button type="button" class="btn btn-secondary btn-sm" onclick="deleteRep(${i})" style="color:#ef4444;" title="Remove rep">✕</button>` : ''}
         </div>
       `).join('');
     }
 
     function addCustomRep() {
-      const input = document.getElementById('newRepName');
+      const input = document.getElementById('newRepNameInput');
       if (!input) return;
       const name = input.value.trim();
       if (!name) return;
-      if (!savedReps.includes(name)) {
+      if (savedReps.includes(name)) {
+        alert(`${name} is already in your list.`);
+        return;
+      }
+      {
         savedReps.push(name);
         storeUserData('reps', savedReps);
         renderRepList();
@@ -2852,24 +2920,30 @@
 
     function setPricingTargetType(type) {
       currentPricingType = type;
-      const btnMargin = document.getElementById('tabMargin');
-      const btnMarkup = document.getElementById('tabMarkup');
-      const label = document.getElementById('targetPercentLabel');
+      const btnMargin = document.getElementById('btnTargetMargin');
+      const btnMarkup = document.getElementById('btnTargetMarkup');
+      const slider = document.getElementById('pricingTargetSlider');
+      const input = document.getElementById('pricingTargetVal');
+      const maxVal = getMaxTargetPct();
 
-      if (type === 'margin') {
-        if (btnMargin) btnMargin.classList.add('active');
-        if (btnMarkup) btnMarkup.classList.remove('active');
-        if (label) label.innerText = 'Target margin %';
-      } else {
-        if (btnMarkup) btnMarkup.classList.add('active');
-        if (btnMargin) btnMargin.classList.remove('active');
-        if (label) label.innerText = 'Target markup %';
+      if (btnMargin) btnMargin.classList.toggle('active', type === 'margin');
+      if (btnMarkup) btnMarkup.classList.toggle('active', type !== 'margin');
+      if (slider) slider.max = maxVal;
+      if (input) {
+        input.max = maxVal;
+        if ((parseFloat(input.value) || 0) > maxVal) input.value = maxVal;
+        if (slider) slider.value = input.value;
       }
       calculate();
     }
 
+    // Margin can never reach 100%; markup commonly goes well past 100%
+    function getMaxTargetPct() {
+      return currentPricingType === 'margin' ? 95 : 500;
+    }
+
     function syncPricingTarget(val) {
-      const v = Math.min(Math.max(parseFloat(val) || 0, 0), 95);
+      const v = Math.min(Math.max(parseFloat(val) || 0, 0), getMaxTargetPct());
       const input = document.getElementById('pricingTargetVal');
       const slider = document.getElementById('pricingTargetSlider');
       if (input && document.activeElement !== input) input.value = v;
@@ -2879,8 +2953,8 @@
 
     function setPrintCopy(type) {
       currentPrintCopy = type;
-      const btnCust = document.getElementById('copyCustomer');
-      const btnInt = document.getElementById('copyInternal');
+      const btnCust = document.getElementById('pillCustomer');
+      const btnInt = document.getElementById('pillInternal');
       if (type === 'Customer') {
         if (btnCust) btnCust.classList.add('active');
         if (btnInt) btnInt.classList.remove('active');
@@ -2903,6 +2977,8 @@
       }
     }
 
+    let lastCalcTotals = { totalCost: 0, totalSell: 0 };
+
     function calculate() {
       const targetPct = (parseFloat(document.getElementById('pricingTargetVal').value) || 0) / 100;
       const commissionPct = (parseFloat(document.getElementById('commissionPercent').value) || 0) / 100;
@@ -2919,38 +2995,21 @@
         const itemQty = parseFloat(item.quantity) || 0;
         totalOrderQty += itemQty;
 
-        const prodCost = parseFloat(item.productCostUnit) || 0;
-        const decCost = parseFloat(item.decorationCostUnit) || 0;
-        const setupCost = parseFloat(item.setupCharge) || 0;
-        const shipCost = parseFloat(item.shippingCost) || 0;
-
-        const itemTotalCost = (prodCost + decCost) * itemQty + setupCost + shipCost;
+        const priced = computeItemSell(item, multiplier, roundingRule);
+        const itemTotalCost = priced.cost;
         calculatedTotalCost += itemTotalCost;
 
-        // Auto sell calculations based on multiplier
-        let autoProdSellUnit = prodCost > 0 ? prodCost * multiplier : 0;
-        let autoDecSellUnit = decCost > 0 ? decCost * multiplier : 0;
-        let autoSetupSell = setupCost > 0 ? setupCost * multiplier : 0;
-        let autoShipSell = shipCost > 0 ? shipCost * multiplier : 0;
-
-        // Use custom sell price if edited by user, otherwise auto
-        let actualProdSellUnit = (item.customSellProd !== undefined && item.customSellProd !== '') ? parseFloat(item.customSellProd) : autoProdSellUnit;
-        let actualDecSellUnit = (item.customSellDec !== undefined && item.customSellDec !== '') ? parseFloat(item.customSellDec) : autoDecSellUnit;
-        let actualSetupSell = (item.customSellSetup !== undefined && item.customSellSetup !== '') ? parseFloat(item.customSellSetup) : autoSetupSell;
-        let actualShipSell = (item.customSellShip !== undefined && item.customSellShip !== '') ? parseFloat(item.customSellShip) : autoShipSell;
-
-        let combinedUnitSell = actualProdSellUnit + actualDecSellUnit;
-        let roundedUnitSell = (item.customUnitSell !== undefined && item.customUnitSell !== '') 
-          ? parseFloat(item.customUnitSell) 
-          : applyPriceRounding(combinedUnitSell, roundingRule);
-
-        let itemTotalSell = (roundedUnitSell * itemQty) + actualSetupSell + actualShipSell;
-        if (item.customTotalSell !== undefined && item.customTotalSell !== '') {
-          itemTotalSell = parseFloat(item.customTotalSell);
-        }
+        const autoProdSellUnit = priced.autoProd;
+        const autoDecSellUnit = priced.autoDec;
+        const autoSetupSell = priced.autoSetup;
+        const autoShipSell = priced.autoShip;
+        const actualProdSellUnit = priced.prodSell;
+        const actualDecSellUnit = priced.decSell;
+        const actualSetupSell = priced.setupSell;
+        const actualShipSell = priced.shipSell;
+        const itemTotalSell = priced.total;
         calculatedTotalSell += itemTotalSell;
-
-        const finalUnitSell = itemQty > 0 ? itemTotalSell / itemQty : roundedUnitSell;
+        const finalUnitSell = priced.allInUnit;
 
         // Update DOM inputs without disturbing active focus
         const inProd = document.getElementById(`item_${idx}_sellProductInput`);
@@ -2999,11 +3058,12 @@
       let finalTotalSell = calculatedTotalSell;
 
       // Overall Order Metrics
-      const grossProfit = Math.max(0, finalTotalSell - finalTotalCost);
+      const grossProfit = finalTotalSell - finalTotalCost;
       const actualMarginPct = finalTotalSell > 0 ? (grossProfit / finalTotalSell) * 100 : 0;
       const actualMarkupPct = finalTotalCost > 0 ? (grossProfit / finalTotalCost) * 100 : 0;
-      const repCommission = grossProfit * commissionPct;
-      const netProfit = Math.max(0, grossProfit - repCommission);
+      const repCommission = Math.max(0, grossProfit) * commissionPct;
+      const netProfit = grossProfit - repCommission;
+      lastCalcTotals = { totalCost: finalTotalCost, totalSell: finalTotalSell };
 
       const avgSellUnit = totalOrderQty > 0 ? finalTotalSell / totalOrderQty : 0;
       const avgCostUnit = totalOrderQty > 0 ? finalTotalCost / totalOrderQty : 0;
@@ -3022,6 +3082,13 @@
       const cleanRepDisplayName = repName.replace(/\s*\(.*?\)/, '').trim();
       const elBadgeRep = document.getElementById('badgeRep');
       if (elBadgeRep) elBadgeRep.innerText = `${cleanRepDisplayName} (${(commissionPct * 100).toFixed(0)}%)`;
+
+      const elTopComm = document.getElementById('displayCommissionTop');
+      if (elTopComm) elTopComm.innerText = formatCurrency(repCommission);
+      const elTopRep = document.getElementById('displayRepName');
+      if (elTopRep) elTopRep.innerText = cleanRepDisplayName || '—';
+      const elQtyBadge = document.getElementById('totalQtyBadge');
+      if (elQtyBadge) elQtyBadge.innerText = `Total ${totalOrderQty.toLocaleString('en-US')} unit${totalOrderQty === 1 ? '' : 's'}`;
 
       const elMarginText = document.getElementById('marginPercentText');
       if (elMarginText) elMarginText.innerText = `${actualMarginPct.toFixed(1)}%`;
@@ -3067,7 +3134,8 @@
     }
 
     function formatCurrency(val) {
-      return '$' + (Math.abs(val) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const n = Number(val) || 0;
+      return (n < -0.004 ? '-$' : '$') + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
     // CLIENT QUOTE MODAL LOGIC
@@ -3083,32 +3151,15 @@
       const multiplier = getSellMultiplier(targetPct);
 
       let grandTotal = 0;
-      const tbody = document.getElementById('quoteModalTableBody');
+      const tbody = document.getElementById('quoteSheetTableBody');
       if (tbody) {
         tbody.innerHTML = orderItems.map((item, idx) => {
-          const qty = parseFloat(item.quantity) || 0;
-          const prodCost = parseFloat(item.productCostUnit) || 0;
-          const decCost = parseFloat(item.decorationCostUnit) || 0;
-          const setupCost = parseFloat(item.setupCharge) || 0;
-          const shipCost = parseFloat(item.shippingCost) || 0;
-
-          let pSell = (item.customSellProd !== undefined && item.customSellProd !== '') ? parseFloat(item.customSellProd) : (prodCost > 0 ? prodCost * multiplier : 0);
-          let dSell = (item.customSellDec !== undefined && item.customSellDec !== '') ? parseFloat(item.customSellDec) : (decCost > 0 ? decCost * multiplier : 0);
-          let sSell = (item.customSellSetup !== undefined && item.customSellSetup !== '') ? parseFloat(item.customSellSetup) : (setupCost > 0 ? setupCost * multiplier : 0);
-          let shSell = (item.customSellShip !== undefined && item.customSellShip !== '') ? parseFloat(item.customSellShip) : (shipCost > 0 ? shipCost * multiplier : 0);
-
-          let combinedUnitSell = pSell + dSell;
-          let roundedUnitSell = (item.customUnitSell !== undefined && item.customUnitSell !== '') 
-            ? parseFloat(item.customUnitSell) 
-            : applyPriceRounding(combinedUnitSell, roundingRule);
-
-          let itemTotal = (roundedUnitSell * qty) + sSell + shSell;
-          if (item.customTotalSell !== undefined && item.customTotalSell !== '') {
-            itemTotal = parseFloat(item.customTotalSell);
-          }
+          const priced = computeItemSell(item, multiplier, roundingRule);
+          const qty = priced.qty;
+          const itemTotal = priced.total;
           grandTotal += itemTotal;
 
-          const finalUnitSell = qty > 0 ? itemTotal / qty : roundedUnitSell;
+          const finalUnitSell = priced.allInUnit;
 
           return `
             <tr>
@@ -3121,48 +3172,75 @@
         }).join('');
       }
 
-      const qCust = document.getElementById('quoteClientName');
-      if (qCust) qCust.innerText = customer;
-      const qProj = document.getElementById('quoteProjectName');
-      if (qProj) qProj.innerText = job;
-      const qDate = document.getElementById('quoteDate');
-      if (qDate) qDate.innerText = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-      const qDead = document.getElementById('quoteDeliveryDeadline');
-      if (qDead) qDead.innerText = deadline;
-      const qRep = document.getElementById('quoteSalesRep');
-      if (qRep) qRep.innerText = rep.replace(/\s*\(.*?\)/, '').trim();
-      const qNotes = document.getElementById('quoteNotesTerms');
-      if (qNotes) qNotes.innerText = notes;
-      const qTot = document.getElementById('quoteGrandTotal');
-      if (qTot) qTot.innerText = formatCurrency(grandTotal);
+      const setText = (id, text) => { const el = document.getElementById(id); if (el) el.innerText = text; };
+      setText('quoteSheetCustomer', customer);
+      setText('quoteSheetJob', job);
+      setText('quoteSheetDate', new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }));
+      setText('quoteSheetRef', `Quote Ref: ${currentOrderId}`);
+      setText('quoteSheetNotesText', notes);
+      setText('quoteSheetGrandTotal', formatCurrency(grandTotal));
 
-      // Header branding on modal
-      const qLogo = document.getElementById('quoteLogoImg');
-      if (qLogo && brandingSettings.logoDataUrl) {
-        qLogo.src = brandingSettings.logoDataUrl;
-        qLogo.style.display = 'block';
+      const deadlineWrap = document.getElementById('quoteSheetDeadlineWrap');
+      const rawDeadline = document.getElementById('deliveryDeadline').value;
+      if (deadlineWrap) deadlineWrap.style.display = rawDeadline ? 'block' : 'none';
+      setText('quoteSheetDeadline', `In-Hands Date: ${formatDisplayDate(rawDeadline) || deadline}`);
+
+      const company = brandingSettings.companyName || (currentUserSession && currentUserSession.company) || '';
+      const repClean = rep.replace(/\s*\(.*?\)/, '').trim();
+      const details = document.getElementById('quoteCompanyDetails');
+      if (details) {
+        details.innerHTML = [company ? `<strong>${escapeHtml(company)}</strong>` : '', escapeHtml(brandingSettings.companyContact || ''), repClean ? `Sales Rep: ${escapeHtml(repClean)}` : '']
+          .filter(Boolean).join('<br>');
       }
-      const qComp = document.getElementById('quoteCompanyName');
-      if (qComp) qComp.innerText = brandingSettings.companyName || (currentUserSession && currentUserSession.company) || 'Profit Pulse';
-      const qContact = document.getElementById('quoteCompanyContact');
-      if (qContact) qContact.innerText = brandingSettings.companyContact || '';
 
-      const modal = document.getElementById('quotePreviewModal');
+      const logoWrap = document.getElementById('quoteSheetLogoWrap');
+      const logo = document.getElementById('quoteSheetLogo');
+      if (logo && logoWrap) {
+        if (brandingSettings.logoDataUrl) {
+          logo.src = brandingSettings.logoDataUrl;
+          logoWrap.style.display = 'block';
+        } else {
+          logoWrap.style.display = 'none';
+        }
+      }
+
+      const modal = document.getElementById('quoteModal');
       if (modal) modal.classList.add('open');
     }
 
+    function formatDisplayDate(isoDate) {
+      if (!isoDate) return '';
+      const d = new Date(isoDate + 'T00:00:00');
+      return isNaN(d) ? isoDate : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
     function closeQuoteModal() {
-      const modal = document.getElementById('quotePreviewModal');
+      const modal = document.getElementById('quoteModal');
       if (modal) modal.classList.remove('open');
     }
 
+    // Prints either the client-facing quote or the internal cost/profit sheet
+    function printWithCopy(copyType) {
+      document.body.classList.remove('print-customer-copy', 'print-internal-copy');
+      document.body.classList.add(copyType === 'Customer' ? 'print-customer-copy' : 'print-internal-copy');
+      setTimeout(() => window.print(), 150);
+    }
+
+    window.addEventListener('afterprint', () => {
+      document.body.classList.remove('print-customer-copy', 'print-internal-copy');
+    });
+
     function printCustomerQuoteFromModal() {
-      window.print();
+      printWithCopy('Customer');
     }
 
     function printOrder() {
-      openQuoteModal();
-      setTimeout(() => window.print(), 300);
+      if (currentPrintCopy === 'Customer') {
+        openQuoteModal();
+      } else {
+        closeQuoteModal();
+      }
+      printWithCopy(currentPrintCopy);
     }
 
 
@@ -3210,7 +3288,8 @@
         return;
       }
 
-      const totalCost = parseFloat(document.getElementById('totalCost').value) || 0;
+      calculate();
+      const totalCost = lastCalcTotals.totalCost;
       const targetVal = parseFloat(document.getElementById('pricingTargetVal').value) || 0;
       const repName = document.getElementById('salesRep').value || (savedReps[0] || '');
       const commissionPct = parseFloat(document.getElementById('commissionPercent').value) || 0;
@@ -3221,36 +3300,12 @@
       const targetPct = targetVal / 100;
       const multiplier = getSellMultiplier(targetPct);
 
-      let calculatedTotalSell = 0;
-      orderItems.forEach(item => {
-        const qty = parseFloat(item.quantity) || 0;
-        const prodCost = parseFloat(item.productCostUnit) || 0;
-        const decCost = parseFloat(item.decorationCostUnit) || 0;
-        const setupCost = parseFloat(item.setupCharge) || 0;
-        const shipCost = parseFloat(item.shippingCost) || 0;
-
-        let pSell = (item.customSellProd !== undefined && item.customSellProd !== '') ? parseFloat(item.customSellProd) : (prodCost > 0 ? prodCost * multiplier : 0);
-        let dSell = (item.customSellDec !== undefined && item.customSellDec !== '') ? parseFloat(item.customSellDec) : (decCost > 0 ? decCost * multiplier : 0);
-        let sSell = (item.customSellSetup !== undefined && item.customSellSetup !== '') ? parseFloat(item.customSellSetup) : (setupCost > 0 ? setupCost * multiplier : 0);
-        let shSell = (item.customSellShip !== undefined && item.customSellShip !== '') ? parseFloat(item.customSellShip) : (shipCost > 0 ? shipCost * multiplier : 0);
-
-        let combinedUnitSell = pSell + dSell;
-        let roundedUnitSell = (item.customUnitSell !== undefined && item.customUnitSell !== '') 
-          ? parseFloat(item.customUnitSell) 
-          : applyPriceRounding(combinedUnitSell, roundingRule);
-
-        let itemTotalSell = (roundedUnitSell * qty) + sSell + shSell;
-        if (item.customTotalSell !== undefined && item.customTotalSell !== '') {
-          itemTotalSell = parseFloat(item.customTotalSell);
-        }
-        calculatedTotalSell += itemTotalSell;
-      });
-
-      const totalSell = manualCostOverride ? (totalCost * multiplier) : calculatedTotalSell;
-      const grossProfit = Math.max(0, totalSell - totalCost);
+      calculate();
+      const totalSell = lastCalcTotals.totalSell;
+      const grossProfit = totalSell - totalCost;
       const marginPct = totalSell > 0 ? (grossProfit / totalSell) * 100 : 0;
-      const repCommission = grossProfit * (commissionPct / 100);
-      const netProfit = Math.max(0, grossProfit - repCommission);
+      const repCommission = Math.max(0, grossProfit) * (commissionPct / 100);
+      const netProfit = grossProfit - repCommission;
 
       const totalQty = orderItems.reduce((acc, it) => acc + (parseFloat(it.quantity) || 0), 0);
       const orderRef = currentOrderId || 'ORD-' + Math.floor(1000 + Math.random() * 9000);
@@ -3412,24 +3467,24 @@
       let totalGross = 0;
 
       tbody.innerHTML = filtered.map(o => {
-        totalRev += o.totalSell;
-        totalCostSum += o.totalCost;
-        totalGross += o.grossProfit;
+        totalRev += Number(o.totalSell) || 0;
+        totalCostSum += Number(o.totalCost) || 0;
+        totalGross += Number(o.grossProfit) || 0;
 
         const itemCount = o.items ? o.items.length : 1;
         const totalQty = o.totalQuantity !== undefined ? o.totalQuantity : (o.quantity || 0);
 
         return `
           <tr>
-            <td><strong>${o.id}</strong><br><span style="font-size:11px; color:#94a3b8">${o.date}</span></td>
+            <td><strong>${escapeHtml(o.id)}</strong><br><span style="font-size:11px; color:#94a3b8">${escapeHtml(o.date || '')}</span></td>
             <td><strong>${escapeHtml(o.customer)}</strong></td>
-            <td>${o.deliveryDeadline ? `<span class="quote-deadline-tag" style="font-size:11px;">${o.deliveryDeadline}</span>` : '<span style="color:#94a3b8">—</span>'}</td>
+            <td>${o.deliveryDeadline ? `<span class="quote-deadline-tag" style="font-size:11px;">${escapeHtml(formatDisplayDate(o.deliveryDeadline))}</span>` : '<span style="color:#94a3b8">—</span>'}</td>
             <td>${escapeHtml(o.jobDescription)}</td>
             <td>${totalQty} <span style="font-size:11px; color:#64748b;">(${itemCount} item${itemCount > 1 ? 's' : ''})</span></td>
             <td><strong>${formatCurrency(o.totalSell)}</strong></td>
             <td style="color:#64748b">${formatCurrency(o.totalCost)}</td>
             <td style="color:var(--amber-dark); font-weight:700;">${formatCurrency(o.grossProfit)}</td>
-            <td><span class="tag-badge" style="background:#f1f5f9; color:#334155;">${o.marginPct.toFixed(1)}%</span></td>
+            <td><span class="tag-badge" style="background:#f1f5f9; color:#334155;">${(Number(o.marginPct) || 0).toFixed(1)}%</span></td>
             <td><strong>${formatCurrency(o.netProfit)}</strong></td>
             <td>
               <div class="table-actions">
@@ -3461,7 +3516,7 @@
       document.getElementById('jobDescription').value = order.jobDescription;
       document.getElementById('deliveryDeadline').value = order.deliveryDeadline || '';
       document.getElementById('clientNotes').value = order.clientNotes || '';
-      document.getElementById('priceRounding').value = order.priceRounding || 'none';
+      document.getElementById('priceRounding').value = ROUNDING_ALIASES[order.priceRounding] || order.priceRounding || 'none';
 
       if (order.items && Array.isArray(order.items) && order.items.length > 0) {
         orderItems = JSON.parse(JSON.stringify(order.items));
@@ -3533,31 +3588,39 @@
       }
 
       const headers = ['Order Ref', 'Date', 'Customer', 'Delivery Deadline', 'Project Description', 'Total Quantity', 'Total Sell', 'Total Cost', 'Gross Profit', 'Margin %', 'Sales Rep', 'Commission %', 'Net Profit', 'Notes'];
+      // Quote text cells; prefix formula-like text so spreadsheets don't execute it
+      const cell = v => {
+        let t = String(v === undefined || v === null ? '' : v);
+        if (/^[=+\-@]/.test(t)) t = "'" + t;
+        return `"${t.replace(/"/g, '""')}"`;
+      };
+      const num = (v, d) => (Number(v) || 0).toFixed(d);
       const rows = orders.map(o => [
-        `"${o.id}"`,
-        `"${o.date}"`,
-        `"${(o.customer || '').replace(/"/g, '""')}"`,
-        `"${o.deliveryDeadline || ''}"`,
-        `"${(o.jobDescription || '').replace(/"/g, '""')}"`,
-        o.totalQuantity !== undefined ? o.totalQuantity : (o.quantity || 0),
-        o.totalSell.toFixed(2),
-        o.totalCost.toFixed(2),
-        o.grossProfit.toFixed(2),
-        o.marginPct.toFixed(2),
-        `"${(o.salesRep || '').replace(/"/g, '""')}"`,
-        (o.commissionPct || 0).toFixed(1),
-        o.netProfit.toFixed(2),
-        `"${(o.clientNotes || '').replace(/"/g, '""')}"`
+        cell(o.id),
+        cell(o.date),
+        cell(o.customer),
+        cell(o.deliveryDeadline),
+        cell(o.jobDescription),
+        o.totalQuantity !== undefined ? (Number(o.totalQuantity) || 0) : (Number(o.quantity) || 0),
+        num(o.totalSell, 2),
+        num(o.totalCost, 2),
+        num(o.grossProfit, 2),
+        num(o.marginPct, 2),
+        cell(o.salesRep),
+        num(o.commissionPct, 1),
+        num(o.netProfit, 2),
+        cell(o.clientNotes)
       ]);
 
-      const csvContent = 'data:text/csv;charset=utf-8,﻿' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
-      const encodedUri = encodeURI(csvContent);
+      const csvContent = '\ufeff' + [headers.join(','), ...rows.map(e => e.join(','))].join('\r\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
       const link = document.createElement('a');
-      link.setAttribute('href', encodedUri);
-      link.setAttribute('download', getExportFilename('csv'));
+      link.href = URL.createObjectURL(blob);
+      link.download = getExportFilename('csv');
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(link.href), 1000);
     }
 
     function exportOrdersToExcel() {
@@ -3573,25 +3636,25 @@
       let totalNetSum = 0;
 
       const rowsHtml = orders.map(o => {
-        totalSellSum += o.totalSell;
-        totalCostSum += o.totalCost;
-        totalGrossSum += o.grossProfit;
-        totalNetSum += o.netProfit;
+        totalSellSum += Number(o.totalSell) || 0;
+        totalCostSum += Number(o.totalCost) || 0;
+        totalGrossSum += Number(o.grossProfit) || 0;
+        totalNetSum += Number(o.netProfit) || 0;
 
         return `
           <tr>
-            <td>${o.id}</td>
-            <td>${o.date}</td>
+            <td>${escapeHtml(o.id)}</td>
+            <td>${escapeHtml(o.date || '')}</td>
             <td>${escapeHtml(o.customer)}</td>
             <td>${escapeHtml(o.deliveryDeadline || '')}</td>
             <td>${escapeHtml(o.jobDescription)}</td>
             <td>${o.totalQuantity !== undefined ? o.totalQuantity : (o.quantity || 0)}</td>
-            <td style="text-align:right;">$${o.totalSell.toFixed(2)}</td>
-            <td style="text-align:right;">$${o.totalCost.toFixed(2)}</td>
-            <td style="text-align:right; font-weight:bold;">$${o.grossProfit.toFixed(2)}</td>
-            <td style="text-align:right;">${o.marginPct.toFixed(1)}%</td>
+            <td style="text-align:right;">$${(Number(o.totalSell) || 0).toFixed(2)}</td>
+            <td style="text-align:right;">$${(Number(o.totalCost) || 0).toFixed(2)}</td>
+            <td style="text-align:right; font-weight:bold;">$${(Number(o.grossProfit) || 0).toFixed(2)}</td>
+            <td style="text-align:right;">${(Number(o.marginPct) || 0).toFixed(1)}%</td>
             <td>${escapeHtml(o.salesRep || '')}</td>
-            <td style="text-align:right; font-weight:bold;">$${o.netProfit.toFixed(2)}</td>
+            <td style="text-align:right; font-weight:bold;">$${(Number(o.netProfit) || 0).toFixed(2)}</td>
             <td>${escapeHtml(o.clientNotes || '')}</td>
           </tr>
         `;
@@ -3686,10 +3749,26 @@
         emptyText.style.display = 'block';
       }
 
+      document.querySelectorAll('.theme-swatch').forEach(sw => sw.classList.toggle('active', sw.id === 'swatch-' + brandingSettings.themeKey));
+      const picker = document.getElementById('customColorPicker');
+      if (picker && brandingSettings.primaryColor) picker.value = brandingSettings.primaryColor;
+      const logoInput = document.getElementById('companyLogoInput');
+      if (logoInput) logoInput.value = '';
+
+      brandingSnapshot = JSON.parse(JSON.stringify(brandingSettings));
       document.getElementById('brandingModal').classList.add('open');
     }
 
+    let brandingSnapshot = null;
+
+    // Closing without saving undoes any live preview (theme, logo)
     function closeBrandingModal() {
+      if (brandingSnapshot) {
+        brandingSettings = brandingSnapshot;
+        brandingSnapshot = null;
+        applyThemeColors();
+        applyBrandingToUI();
+      }
       document.getElementById('brandingModal').classList.remove('open');
     }
 
@@ -3697,6 +3776,11 @@
       const file = event.target.files ? event.target.files[0] : null;
       if (!file) return;
       const reader = new FileReader();
+      if (file.size > 1.5 * 1024 * 1024) {
+        alert('That logo is larger than 1.5 MB. Please use a smaller image so it can be saved.');
+        event.target.value = '';
+        return;
+      }
       reader.onload = function(e) {
         brandingSettings.logoDataUrl = e.target.result;
         const preview = document.getElementById('brandingLogoPreview');
@@ -3717,7 +3801,7 @@
       if (input) input.value = '';
     }
 
-    function setThemePreset(theme) {
+    function setThemePreset(theme, primary, dark, light) {
       const themes = {
         amber: { primary: '#f59e0b', dark: '#d97706', accent: '#fbbf24' },
         navy: { primary: '#0284c7', dark: '#0369a1', accent: '#38bdf8' },
@@ -3726,7 +3810,7 @@
         rose: { primary: '#f43f5e', dark: '#be123c', accent: '#fb7185' },
         slate: { primary: '#475569', dark: '#1e293b', accent: '#94a3b8' }
       };
-      const t = themes[theme] || themes.amber;
+      const t = primary ? { primary, dark: dark || primary, accent: light || tintColor(primary) } : (themes[theme] || themes.amber);
       brandingSettings.themeKey = theme;
       brandingSettings.primaryColor = t.primary;
       brandingSettings.darkColor = t.dark;
@@ -3734,7 +3818,7 @@
 
       document.querySelectorAll('.theme-swatch').forEach(sw => {
         sw.classList.remove('active');
-        if (sw.getAttribute('data-theme') === theme) sw.classList.add('active');
+        if (sw.id === 'swatch-' + theme) sw.classList.add('active');
       });
 
       applyThemeColors();
@@ -3749,11 +3833,26 @@
       }
     }
 
+    // Mix a hex color toward white (amount 0-1) for light backgrounds
+    function tintColor(hex, amount) {
+      return mixHex(hex, '#ffffff', amount === undefined ? 0.85 : amount);
+    }
+
+    function shadeColor(hex, amount) {
+      return mixHex(hex, '#000000', Math.abs(amount));
+    }
+
+    function mixHex(a, b, t) {
+      const pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16);
+      const ch = sh => Math.round(((pa >> sh) & 255) * (1 - t) + ((pb >> sh) & 255) * t);
+      return '#' + [16, 8, 0].map(sh => ch(sh).toString(16).padStart(2, '0')).join('');
+    }
+
     function onCustomColorChange(color) {
       brandingSettings.themeKey = 'custom';
       brandingSettings.primaryColor = color;
-      brandingSettings.darkColor = color;
-      brandingSettings.accentColor = color;
+      brandingSettings.darkColor = shadeColor(color, -0.15);
+      brandingSettings.accentColor = tintColor(color);
       document.querySelectorAll('.theme-swatch').forEach(sw => sw.classList.remove('active'));
       applyThemeColors();
     }
@@ -3767,6 +3866,7 @@
       brandingSettings.defaultTargetType = document.getElementById('settingDefaultTargetType').value;
 
       storeUserData('branding', brandingSettings);
+      brandingSnapshot = null;
       applyBrandingToUI();
       closeBrandingModal();
       alert('Brand settings saved successfully!');
@@ -3791,9 +3891,9 @@
         if (headerTitle) headerTitle.innerText = 'Profit Pulse';
       }
 
-      if (brandingSettings.companyContact && headerSubtitle) {
-        headerSubtitle.innerText = brandingSettings.companyContact;
-        headerSubtitle.style.display = 'block';
+      if (headerSubtitle) {
+        headerSubtitle.innerText = brandingSettings.companyContact || '';
+        headerSubtitle.style.display = brandingSettings.companyContact ? 'block' : 'none';
       }
 
       if (brandingSettings.logoDataUrl && brandingSettings.logoDisplay !== 'text_only') {
@@ -4107,7 +4207,7 @@
         const byId = new Map(savedOrders.map(o => [o.id, o]));
         let added = 0;
         data.orders.forEach(o => {
-          if (o && o.id && !byId.has(o.id)) { byId.set(o.id, o); added++; }
+          if (o && typeof o.id === 'string' && /^[\w-]{1,40}$/.test(o.id) && !byId.has(o.id)) { byId.set(o.id, o); added++; }
         });
         savedOrders = Array.from(byId.values());
         storeUserData('orders', savedOrders);
