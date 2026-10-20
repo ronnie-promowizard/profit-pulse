@@ -1,0 +1,4158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profit Pulse</title>
+  <style>
+    :root {
+      --bg-color: #f1f4f8;
+      --card-bg: #ffffff;
+      --navy-dark: #0d1b2a;
+      --navy-card: #13253a;
+      --amber-accent: #f59e0b;
+      --amber-light: #fef3c7;
+      --amber-dark: #d97706;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --input-bg: #ffffff;
+      --danger-color: #ef4444;
+      --danger-light: #fee2e2;
+      --success-color: #10b981;
+      --success-light: #d1fae5;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding: 24px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .app-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .accent-bar {
+      width: 5px;
+      height: 32px;
+      background-color: var(--amber-accent);
+      border-radius: 4px;
+    }
+
+    .app-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-header {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: white;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-header:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+
+    .btn-header.primary-action {
+      background: var(--navy-dark);
+      color: #ffffff;
+      border-color: var(--navy-dark);
+    }
+
+    .btn-header.primary-action:hover {
+      background: #1e293b;
+    }
+
+    /* Main 2-column Grid */
+    .calculator-layout {
+      display: grid;
+      grid-template-columns: 1.22fr 0.78fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    @media (max-width: 1020px) {
+      .calculator-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Cards */
+    .panel-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+      margin-bottom: 20px;
+    }
+
+    /* Form Fields */
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .field-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .field-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .field-required {
+      font-size: 12px;
+      color: var(--danger-color);
+      font-weight: 500;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-prefix {
+      position: absolute;
+      left: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 14px;
+      pointer-events: none;
+    }
+
+    .input-suffix {
+      position: absolute;
+      right: 12px;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      pointer-events: none;
+    }
+
+    /* Hide standard number input spinners */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="password"],
+    input[type="date"],
+    textarea,
+    select {
+      width: 100%;
+      height: 42px;
+      padding: 8px 12px;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      color: var(--text-main);
+      background: var(--input-bg);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    textarea {
+      height: auto;
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="password"]:focus,
+    input[type="date"]:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--amber-accent);
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+    }
+
+    input.with-prefix {
+      padding-left: 26px;
+    }
+
+    input.with-suffix {
+      padding-right: 46px;
+    }
+
+    .two-col-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 600px) {
+      .two-col-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* MULTI-PRODUCT ITEM CARDS */
+    .products-section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      margin-top: 10px;
+    }
+
+    .products-heading {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .item-card {
+      background: #f8fafc;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 16px;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+
+    .item-card:hover {
+      border-color: #cbd5e1;
+    }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 12px;
+    }
+
+    .item-name-input {
+      font-size: 14px !important;
+      font-weight: 700 !important;
+      color: #0f172a !important;
+      background: #ffffff !important;
+      border: 1px solid #cbd5e1 !important;
+      height: 36px !important;
+      padding: 6px 10px !important;
+    }
+
+    .btn-remove-item {
+      background: none;
+      border: none;
+      color: var(--danger-color);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .btn-remove-item:hover {
+      background: #fee2e2;
+    }
+
+    .item-qty-row {
+      margin-bottom: 12px;
+    }
+
+    /* Cost Breakdown 4-column row */
+    .cost-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 680px) {
+      .cost-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .cost-col {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cost-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    
+    /* Editable Sell Price Inputs */
+    .sell-chip {
+      background: #fefce8;
+      border: 1px solid #fef08a;
+      border-radius: 6px;
+      padding: 3px 8px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      margin-top: 5px;
+      transition: all 0.2s ease;
+    }
+    .sell-chip:focus-within {
+      border-color: #d97706 !important;
+      background: #fffbeb !important;
+      box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.2);
+    }
+    .sell-chip-tag {
+      font-size: 10px;
+      font-weight: 800;
+      color: #0369a1;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .sell-chip-prefix {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .sell-chip-input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      padding: 0;
+      outline: none;
+    }
+    .sell-chip-input::placeholder {
+      color: #94a3b8;
+      font-weight: 600;
+    }
+    .inline-sell-badge {
+      display: inline-flex;
+      align-items: center;
+      background: #fefce8;
+      border: 1.5px solid #fde047;
+      border-radius: 6px;
+      padding: 1px 6px;
+      margin-left: 4px;
+      color: #92400e;
+      font-weight: 800;
+      font-size: 12px;
+    }
+    .inline-sell-badge:focus-within {
+      border-color: #d97706;
+      background: #fffbeb;
+      box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.2);
+    }
+    .inline-sell-input {
+      width: 76px;
+      border: none;
+      background: transparent;
+      font-size: 13px;
+      font-weight: 800;
+      color: #92400e;
+      padding: 0;
+      outline: none;
+    }
+    .timer-badge {
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .btn-skip-local {
+      margin-left: 8px;
+      padding: 2px 8px;
+      font-size: 11px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      color: #d97706;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-skip-local:hover {
+      background: #fffbeb;
+      border-color: #f59e0b;
+    }
+    
+    .old-sell-chip {
+      margin-top: 6px;
+      background: #fefce8;
+      border: 1px solid #fef08a;
+      border-radius: var(--radius-sm);
+      padding: 5px 8px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sell-chip-tag {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--amber-dark);
+      letter-spacing: 0.05em;
+    }
+
+    .sell-chip-val {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .item-subtotal-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .item-subtotal-bar span strong {
+      color: var(--text-main);
+    }
+
+    .btn-add-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f0fdf4;
+      border: 1.5px dashed #86efac;
+      color: #166534;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px 16px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      width: 100%;
+      justify-content: center;
+      margin-bottom: 20px;
+      transition: all 0.2s;
+    }
+
+    .btn-add-item:hover {
+      background: #dcfce7;
+      border-color: #4ade80;
+    }
+
+    .field-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Pricing Target Card */
+    .target-box {
+      background: #fffbeb;
+      border: 1.5px solid #fde68a;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin: 20px 0;
+    }
+
+    .target-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .target-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #92400e;
+    }
+
+    .toggle-group {
+      display: inline-flex;
+      background: #fef3c7;
+      border-radius: var(--radius-sm);
+      padding: 2px;
+      border: 1px solid #fde68a;
+    }
+
+    .toggle-btn {
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      border: none;
+      background: transparent;
+      color: #92400e;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .toggle-btn.active {
+      background: var(--amber-accent);
+      color: #ffffff;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .target-slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .range-slider {
+      flex: 1;
+      height: 6px;
+      border-radius: 4px;
+      accent-color: var(--amber-accent);
+      cursor: pointer;
+    }
+
+    .target-val-input {
+      width: 100px;
+      position: relative;
+    }
+
+    .target-val-input input {
+      padding-left: 12px !important;
+      padding-right: 32px !important;
+      font-size: 16px !important;
+      font-weight: 700 !important;
+      color: #1e293b !important;
+      text-align: center !important;
+      background: #ffffff !important;
+    }
+
+    .target-val-input .input-suffix {
+      right: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #92400e;
+    }
+
+    /* Price Rounding Sub-Row */
+    .rounding-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px dashed #fde68a;
+      padding-top: 10px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .rounding-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #92400e;
+    }
+
+    .rounding-select {
+      height: 32px !important;
+      padding: 4px 8px !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      border-color: #fde68a !important;
+      background: #ffffff !important;
+      max-width: 220px;
+    }
+
+    /* Sales Rep & Commission */
+    .rep-row {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .btn-text-link {
+      background: none;
+      border: none;
+      color: #0284c7;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .btn-text-link:hover {
+      color: #0369a1;
+    }
+
+    /* Bottom Toolbar */
+    .bottom-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-color);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .print-copy-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .print-copy-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .toggle-pill-group {
+      display: inline-flex;
+      background: #e2e8f0;
+      border-radius: var(--radius-sm);
+      padding: 2px;
+    }
+
+    .pill-btn {
+      border: none;
+      background: transparent;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .pill-btn.active {
+      background: var(--navy-dark);
+      color: #ffffff;
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary {
+      background: white;
+      border: 1.5px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background: #f8fafc;
+    }
+
+    .btn-primary {
+      background: var(--amber-accent);
+      color: #ffffff;
+      box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: var(--amber-dark);
+    }
+
+    /* RIGHT PANE: Order Profitability & Summary */
+    .profit-card {
+      background: var(--navy-card);
+      color: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .profit-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .card-ref-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #94a3b8;
+      text-transform: uppercase;
+    }
+
+    .profit-ref-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .ref-badge {
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+
+    .btn-print-dark {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .btn-print-dark:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .gross-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 16px;
+    }
+
+    .gross-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--amber-accent);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .gross-amount {
+      font-size: 38px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .commission-box {
+      text-align: right;
+    }
+
+    .commission-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--amber-accent);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .commission-amount {
+      font-size: 20px;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+
+    .commission-rep {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    .badge-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .tag-badge {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+
+    .tag-status {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .status-thin {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .status-healthy {
+      background: rgba(16, 185, 129, 0.2);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .status-great {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fde047;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .margin-progress-wrap {
+      margin-top: 10px;
+    }
+
+    .margin-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--amber-accent);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    /* Summary Table Card */
+    .summary-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 20px;
+    }
+
+    .summary-card-title {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #0284c7;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      font-size: 14px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+      padding-top: 14px;
+      margin-top: 4px;
+      border-top: 1.5px solid var(--border-color);
+    }
+
+    .summary-label {
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    .summary-subtext {
+      color: var(--text-muted);
+      font-weight: 400;
+      font-size: 13px;
+    }
+
+    .summary-val {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .val-negative {
+      color: #64748b;
+    }
+
+    .val-gross {
+      color: var(--amber-dark);
+      font-weight: 800;
+    }
+
+    .val-net {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    /* 3 Bottom Metric Cards */
+    .metric-trio {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .metric-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px 10px;
+      text-align: center;
+    }
+
+    .metric-card.highlight {
+      background: #fffbeb;
+      border-color: #fde68a;
+    }
+
+    .metric-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .metric-card.highlight .metric-title {
+      color: #b45309;
+    }
+
+    .metric-value {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .metric-card.highlight .metric-value {
+      color: #b45309;
+    }
+
+    /* INVOICE UPLOAD BOXES */
+    .upload-section {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-top: 24px;
+    }
+
+    .upload-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .upload-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .upload-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 640px) {
+      .upload-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dropzone {
+      border: 2px dashed #cbd5e1;
+      border-radius: var(--radius-md);
+      padding: 22px 14px;
+      text-align: center;
+      background: #f8fafc;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dropzone * {
+      pointer-events: none;
+    }
+
+    .dropzone:hover {
+      border-color: #d97706;
+      background: #fffbeb;
+    }
+
+    .dropzone.dragover {
+      border-color: #d97706 !important;
+      background: #fef3c7 !important;
+      transform: scale(1.02);
+      box-shadow: 0 8px 20px rgba(217, 119, 6, 0.25);
+    }
+    @keyframes fieldPulse {
+      0% { background-color: #fef3c7; }
+      50% { background-color: #fde68a; }
+      100% { background-color: #ffffff; }
+    }
+    .field-extracted {
+      animation: fieldPulse 2s ease-out;
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+    
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--amber-accent);
+      background: #fffbeb;
+    }
+
+    .dropzone-icon {
+      font-size: 26px;
+      margin-bottom: 6px;
+    }
+
+    .dropzone-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 2px;
+    }
+
+    .dropzone-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .file-loaded-status {
+      margin-top: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--success-color);
+      display: none;
+    }
+
+    /* Full-Screen Auth Portal Gate */
+    .auth-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .auth-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      max-width: 460px;
+      width: 100%;
+      padding: 32px 28px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      position: relative;
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .auth-logo {
+      max-height: 52px;
+      max-width: 200px;
+      object-fit: contain;
+      margin-bottom: 12px;
+    }
+
+    .auth-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+
+    .auth-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .auth-tabs {
+      display: flex;
+      background: #f1f5f9;
+      border-radius: var(--radius-sm);
+      padding: 3px;
+      margin-bottom: 20px;
+    }
+
+    .auth-tab-btn {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .auth-tab-btn.active {
+      background: #ffffff;
+      color: var(--text-main);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .auth-input-group {
+      margin-bottom: 14px;
+    }
+
+    .auth-input-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .auth-btn-submit {
+      width: 100%;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      background: var(--amber-accent);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      margin-top: 8px;
+      box-shadow: 0 2px 4px rgba(245, 158, 11, 0.25);
+      transition: all 0.2s;
+    }
+
+    .auth-btn-submit:hover {
+      background: var(--amber-dark);
+    }
+
+    /* Branding & Theme Swatches */
+    .theme-swatch {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2.5px solid #ffffff;
+      box-shadow: 0 0 0 1.5px #cbd5e1;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .theme-swatch:hover, .theme-swatch.active {
+      transform: scale(1.15);
+      box-shadow: 0 0 0 2.5px var(--navy-dark);
+    }
+
+    /* Custom Reports & Filter Bar */
+    .report-filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-end;
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .filter-col {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .filter-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .filter-col input,
+    .filter-col select {
+      height: 36px !important;
+      font-size: 13px !important;
+      padding: 4px 10px !important;
+      background: #ffffff !important;
+    }
+
+    .btn-filter-reset {
+      background: white;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      height: 36px;
+      transition: all 0.2s;
+    }
+
+    .btn-filter-reset:hover {
+      background: #f1f5f9;
+      color: var(--text-main);
+    }
+
+    .filter-indicator-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    /* ORDER HISTORY SECTION */
+    .history-section {
+      margin-top: 30px;
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      padding: 22px;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .history-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .history-stats-bar {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      background: #f8fafc;
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-bottom: 18px;
+      border: 1px solid var(--border-color);
+    }
+
+    @media (max-width: 800px) {
+      .history-stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .h-stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .h-stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .h-stat-val {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-top: 2px;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    table.history-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    table.history-table th {
+      text-align: left;
+      padding: 10px 12px;
+      background: #f8fafc;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    table.history-table td {
+      padding: 12px;
+      border-bottom: 1px solid #f1f5f9;
+      color: var(--text-main);
+    }
+
+    table.history-table tr:hover td {
+      background: #fcfdfe;
+    }
+
+    .table-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-table {
+      border: 1px solid var(--border-color);
+      background: white;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-main);
+    }
+
+    .btn-table:hover {
+      background: #f1f5f9;
+    }
+
+    .btn-table.danger {
+      color: var(--danger-color);
+      border-color: #fecaca;
+    }
+
+    .btn-table.danger:hover {
+      background: #fee2e2;
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(3px);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      max-width: 540px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .modal-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    /* Sales Rep Manager List in Modal */
+    .rep-list {
+      max-height: 200px;
+      overflow-y: auto;
+      margin: 14px 0;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+    }
+
+    .rep-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 14px;
+    }
+
+    .rep-item:last-child {
+      border-bottom: none;
+    }
+
+    .rep-name {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .btn-delete-rep {
+      background: none;
+      border: none;
+      color: var(--danger-color);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .btn-delete-rep:hover {
+      background: #fee2e2;
+    }
+
+    /* CLIENT QUOTATION PRESENTATION SHEET */
+    .quote-preview-modal-box {
+      max-width: 780px !important;
+      padding: 32px !important;
+    }
+
+    .client-quote-sheet {
+      background: #ffffff;
+      padding: 10px 4px;
+    }
+
+    .quote-sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid #0f172a;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+
+    .quote-sheet-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+    }
+
+    .quote-meta-pill {
+      font-size: 13px;
+      color: #475569;
+      margin-top: 4px;
+    }
+
+    .quote-deadline-tag {
+      display: inline-block;
+      margin-top: 6px;
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fca5a5;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .quote-info-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+
+    .quote-info-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .quote-info-val {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    table.quote-items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    table.quote-items-table th {
+      background: #0f172a;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 10px 14px;
+      text-align: left;
+    }
+
+    table.quote-items-table th.num-col {
+      text-align: right;
+    }
+
+    table.quote-items-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 14px;
+      color: #1e293b;
+    }
+
+    table.quote-items-table td.num-col {
+      text-align: right;
+    }
+
+    table.quote-items-table tfoot td {
+      border-bottom: none;
+      padding: 14px;
+    }
+
+    .quote-total-row {
+      border-top: 2px solid #0f172a;
+      background: #fafafa;
+    }
+
+    .quote-grand-total {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .quote-notes-container {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      margin-top: 20px;
+    }
+
+    .quote-notes-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .quote-notes-body {
+      font-size: 13px;
+      color: #334155;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .quote-sign-block {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 36px;
+      padding-top: 14px;
+      border-top: 1px solid #cbd5e1;
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+      }
+
+      .app-header,
+      .upload-section,
+      .history-section,
+      .bottom-bar,
+      .btn-header,
+      .modal-backdrop:not(#quoteModal),
+      .btn-print-dark,
+      .btn-text-link,
+      .btn-add-item,
+      .btn-remove-item,
+      #targetBox {
+        display: none !important;
+      }
+
+      /* In Customer Copy print mode: only print the client quotation */
+      body.print-customer-copy .calculator-layout {
+        display: none !important;
+      }
+
+      body.print-customer-copy #quoteModal {
+        display: block !important;
+        position: static !important;
+        background: none !important;
+        padding: 0 !important;
+      }
+
+      body.print-customer-copy .quote-preview-modal-box {
+        max-width: 100% !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+      }
+
+      body.print-customer-copy .modal-actions-bar {
+        display: none !important;
+      }
+
+      /* Internal Copy mode: print regular calculator with internal breakdown */
+      body.print-internal-copy .calculator-layout {
+        display: block !important;
+      }
+
+      body.print-internal-copy::before {
+        content: "INTERNAL PROFIT & COST BREAKDOWN";
+        display: block;
+        font-size: 22px;
+        font-weight: 800;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #000;
+        padding-bottom: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- AUTHENTICATION & LEAD CAPTURE PORTAL -->
+  <div class="auth-overlay" id="authPortal" style="display:none;">
+    <div class="auth-card" style="position:relative;">
+            <div class="auth-header">
+        <div id="authLogoWrap" style="display:none;">
+          <img id="authCompanyLogo" src="" alt="Company Logo" class="auth-logo" />
+        </div>
+        <h2 class="auth-title" id="authPortalTitle">Welcome to Profit Pulse</h2>
+        <p class="auth-subtitle" id="authPortalSubtitle">Sign in or create your account. Your orders, reps and branding are private to your account and stay on this device.</p>
+      </div>
+
+      <!-- Sign In vs Sign Up Tabs -->
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab-btn active" id="tabBtnSignIn" onclick="switchAuthTab('signin')">Sign In</button>
+        <button type="button" class="auth-tab-btn" id="tabBtnSignUp" onclick="switchAuthTab('signup')">Create Account</button>
+      </div>
+
+      <!-- 1. SIGN IN FORM -->
+      <form id="signInForm" onsubmit="handleUserSignIn(event)">
+        <div class="auth-input-group">
+          <label class="auth-input-label" for="loginEmail">Email Address</label>
+          <input type="text" id="loginEmail" required placeholder="you@company.com" />
+        </div>
+        <div class="auth-input-group">
+          <label class="auth-input-label" for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" required placeholder="Enter your password..." />
+        </div>
+        <div style="display:flex; justify-content:flex-end; margin-top:-6px; margin-bottom:12px;">
+          <a href="javascript:void(0)" onclick="handleForgotPassword()" style="font-size:12px; color:#0284c7; text-decoration:none; font-weight:600;">Forgot Password?</a>
+        </div>
+        <button type="submit" class="auth-btn-submit">Sign In to Dashboard</button>
+        <div style="text-align:center; margin-top:14px; font-size:13px; color:var(--text-muted);">
+          Don't have an account? <a href="javascript:void(0)" onclick="switchAuthTab('signup')" style="color:#0284c7; font-weight:700;">Create one here</a>
+        </div>
+      </form>
+
+      <!-- 2. CREATE ACCOUNT FORM (Captures Name, Company, Email, Phone, Password) -->
+      <form id="signUpForm" style="display:none;" onsubmit="handleUserSignUp(event)">
+        <div class="auth-input-group">
+          <label class="auth-input-label" for="regFullName">Full Name *</label>
+          <input type="text" id="regFullName" required placeholder="Jane Doe" />
+        </div>
+        <div class="auth-input-group">
+          <label class="auth-input-label" for="regCompanyName">Company / Organization *</label>
+          <input type="text" id="regCompanyName" required placeholder="Acme Promotions Ltd." />
+        </div>
+        <div class="auth-input-group">
+          <label class="auth-input-label" for="regEmail">Work Email Address *</label>
+          <input type="text" id="regEmail" required placeholder="jane@acme.com" />
+        </div>
+        <div class="auth-input-group">
+          <label class="auth-input-label" for="regPhone">Phone Number (optional)</label>
+          <input type="text" id="regPhone" placeholder="+1 (555) 000-0000" />
+        </div>
+        <div class="auth-input-group">
+          <label class="auth-input-label" for="regPassword">Create Password *</label>
+          <input type="password" id="regPassword" required minlength="4" placeholder="Create a secure password..." />
+        </div>
+        <button type="submit" class="auth-btn-submit">Register & Access Calculator</button>
+        <div style="text-align:center; margin-top:14px; font-size:13px; color:var(--text-muted);">
+          Already have an account? <a href="javascript:void(0)" onclick="switchAuthTab('signin')" style="color:#0284c7; font-weight:700;">Sign in here</a>
+        </div>
+      </form>
+      <div style="text-align:center; margin-top:16px; padding-top:14px; border-top:1px solid #f1f5f9;">
+        <a href="javascript:void(0)" onclick="continueAsGuest()" style="font-size:13px; color:#64748b; font-weight:700; text-decoration:underline;">Or try it as a Guest (nothing is kept after you log out) &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="app-title-wrap" style="display:flex; align-items:center; gap:12px;">
+        <div id="companyLogoWrap" style="display:none; align-items:center;">
+          <img id="headerCompanyLogo" src="" alt="Company Logo" style="height:52px; max-width:220px; object-fit:contain;" />
+        </div>
+        <div class="accent-bar" id="headerAccentBar"></div>
+        <div id="headerTitleContainer">
+          <h1 class="app-title" id="appHeaderTitle">Profit Pulse</h1>
+          <div id="headerSubtitle" style="font-size:12px; color:var(--text-muted); font-weight:600; display:none;"></div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-header" onclick="openBrandingModal()">
+          🎨 Brand & Settings
+        </button>
+        <button class="btn-header primary-action" onclick="openQuoteModal()">
+          👁️ Preview Client Quote
+        </button>
+        <button class="btn-header" onclick="openManageRepsModal()">
+          👤 Sales Reps
+        </button>
+        <button class="btn-header" onclick="exportOrdersToCsv()">
+          📥 Export CSV
+        </button>
+        <!-- Logged In User Pill -->
+        <div id="loggedInUserBadge" style="display:flex; align-items:center; gap:8px; background:#f1f5f9; padding:4px 10px; border-radius:var(--radius-sm); border:1px solid #cbd5e1;">
+          <span style="font-size:12px; font-weight:700; color:var(--text-main);" id="headerUserGreeting">Guest</span>
+          <button type="button" class="btn-text-link" style="color:var(--danger-color); font-size:11px;" onclick="logoutUser()">Log Out</button>
+          <button type="button" class="btn-text-link" style="color:#94a3b8; font-size:11px;" onclick="deleteMyAccount()" title="Delete your account and all of its data from this device">Delete Account</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Grid -->
+    <main class="calculator-layout">
+      <!-- Left Column: Inputs & Cost Controls -->
+      <section class="panel-card">
+        <!-- Customer & Delivery Deadline Row -->
+        <div class="two-col-row">
+          <div class="form-group" style="margin-bottom:0;">
+            <div class="field-header">
+              <label class="field-label" for="customer">Customer</label>
+              <span class="field-required">required</span>
+            </div>
+            <input type="text" id="customer" placeholder="Company / Contact Name" oninput="calculate()" />
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <div class="field-header">
+              <label class="field-label" for="deliveryDeadline">Delivery Deadline / In-Hands</label>
+            </div>
+            <input type="date" id="deliveryDeadline" onchange="calculate()" />
+          </div>
+        </div>
+
+        <!-- Job Description -->
+        <div class="form-group">
+          <div class="field-header">
+            <label class="field-label" for="jobDescription">Job description / Order Name</label>
+            <span class="field-required">required</span>
+          </div>
+          <input type="text" id="jobDescription" placeholder="e.g. 250 branded tumblers & 100 polos" oninput="calculate()" />
+        </div>
+
+        <!-- MULTI-PRODUCT LINE ITEMS SECTION -->
+        <div class="products-section-title">
+          <span class="products-heading">Products & Items</span>
+          <span class="field-hint" id="totalQtyBadge">Total: 0 units</span>
+        </div>
+
+        <!-- Dynamic Container for Items -->
+        <div id="itemsContainer">
+          <!-- Item cards rendered dynamically by JS -->
+        </div>
+
+        <!-- Add Item Button -->
+        <button type="button" class="btn-add-item" onclick="addNewProductItem()">
+          + Add Another Product
+        </button>
+
+        <!-- Total Order Cost -->
+        <div class="form-group" id="totalCostGroup">
+          <div class="field-header">
+            <label class="field-label" for="totalCost">Total cost (All Products)</label>
+          </div>
+          <div class="input-wrapper">
+            <span class="input-prefix">$</span>
+            <input type="number" id="totalCost" class="with-prefix" step="0.01" value="0.00" oninput="onManualTotalCostChanged()" />
+          </div>
+          <p class="field-hint">Calculated automatically from all products above (or enter a manual total override)</p>
+        </div>
+
+        <!-- Pricing Target Box (Margin / Markup + Price Rounding) -->
+        <div class="target-box" id="targetBox">
+          <div class="target-header">
+            <span class="target-title">Pricing target</span>
+            <div class="toggle-group">
+              <button type="button" class="toggle-btn active" id="btnTargetMargin" onclick="setPricingTargetType('margin')">Margin</button>
+              <button type="button" class="toggle-btn" id="btnTargetMarkup" onclick="setPricingTargetType('markup')">Markup</button>
+            </div>
+          </div>
+
+          <div class="target-slider-row">
+            <input type="range" id="pricingTargetSlider" class="range-slider" min="0" max="90" value="40" oninput="syncPricingTarget(this.value)" />
+            <div class="input-wrapper target-val-input">
+              <input type="number" id="pricingTargetVal" value="40" min="0" max="99" oninput="syncPricingTarget(this.value)" />
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+
+          <!-- Price Rounding Selector -->
+          <div class="rounding-row">
+            <span class="rounding-label">🏷️ Price Rounding (Client Sell Unit):</span>
+            <select id="priceRounding" class="rounding-select" onchange="calculate()">
+              <option value="none">Exact (No Rounding)</option>
+              <option value="round_05">Round up to .x5 or .x0 (Nearest /bin/sh.05)</option>
+              <option value="round_50">Round up to $.50 (e.g. .50)</option>
+              <option value="round_100">Round up to .00 (e.g. .00)</option>
+              <option value="round_95">Round up to $.95 (e.g. .95)</option>
+              <option value="round_99">Round up to $.99 (e.g. .99)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Sales Rep & Commission -->
+        <div class="rep-row">
+          <div class="form-group" style="margin-bottom:0;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <label class="field-label" for="salesRep" style="margin-bottom:0;">Sales rep</label>
+              <button type="button" class="btn-text-link" onclick="openManageRepsModal()">+ Manage Reps</button>
+            </div>
+            <select id="salesRep" onchange="onSalesRepChanged()">
+              <!-- Populated dynamically from saved sales reps -->
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="field-label" for="commissionPercent">Commission</label>
+            <div class="input-wrapper">
+              <input type="number" id="commissionPercent" class="with-suffix" value="0" min="0" max="100" oninput="calculate()" />
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Client Notes & Terms -->
+        <div class="form-group">
+          <div class="field-header">
+            <label class="field-label" for="clientNotes">Quote Notes & Payment Terms</label>
+            <button type="button" class="btn-text-link" onclick="insertDefaultTerms()">+ Insert Standard Terms</button>
+          </div>
+          <textarea id="clientNotes" rows="3" placeholder="e.g. Quote valid for 14 days. Production begins upon digital proof approval. 50% deposit required." oninput="calculate()"></textarea>
+        </div>
+
+        <!-- Bottom Controls -->
+        <div class="bottom-bar">
+          <div class="print-copy-toggle">
+            <span class="print-copy-label">Print copy:</span>
+            <div class="toggle-pill-group">
+              <button type="button" class="pill-btn" id="pillCustomer" onclick="setPrintCopy('Customer')">Customer</button>
+              <button type="button" class="pill-btn active" id="pillInternal" onclick="setPrintCopy('Internal')">Internal</button>
+            </div>
+          </div>
+
+          <div class="action-btns">
+            <button type="button" class="btn btn-secondary" onclick="newOrder()">
+              📄 New
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="openQuoteModal()">
+              👁️ Quote View
+            </button>
+            <button type="button" class="btn btn-primary" onclick="saveOrder()">
+              💾 Save Order
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Profitability, Summary & Metrics -->
+      <section>
+        <!-- Dark Profitability Card -->
+        <div class="profit-card">
+          <div class="profit-card-header">
+            <span class="card-ref-title">Order Profitability</span>
+            <div class="profit-ref-wrap">
+              <span class="ref-badge" id="orderRefDisplay">Ref: Not saved yet</span>
+              <button class="btn-print-dark" onclick="printOrder()">🖨️ Print</button>
+            </div>
+          </div>
+
+          <div class="gross-section">
+            <div>
+              <div class="gross-label">Gross Profit · This Order</div>
+              <div class="gross-amount" id="displayGrossProfitTop">$0.00</div>
+            </div>
+            <div class="commission-box">
+              <div class="commission-label">Commission</div>
+              <div class="commission-amount" id="displayCommissionTop">$0.00</div>
+              <div class="commission-rep" id="displayRepName">—</div>
+            </div>
+          </div>
+
+          <div class="badge-bar">
+            <span class="tag-badge" id="badgeMargin">0.0% margin</span>
+            <span class="tag-badge" id="badgeMarkup">0.0% markup</span>
+            <span class="tag-badge" id="badgeRep">—</span>
+            
+          </div>
+
+          <div class="margin-progress-wrap">
+            <div class="margin-label-row">
+              <span>MARGIN</span>
+              <span id="marginPercentText">0.0%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="marginProgressBar"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Summary Card -->
+        <div class="summary-card">
+          <div class="summary-card-title">Order Summary</div>
+
+          <div class="summary-row">
+            <div>
+              <div class="summary-label">Total Sell <span class="summary-subtext">· customer pays</span></div>
+            </div>
+            <div class="summary-val" id="summaryTotalSell">$0.00</div>
+          </div>
+
+          <div class="summary-row" id="totalCostRow">
+            <div>
+              <div class="summary-label">Total cost</div>
+            </div>
+            <div class="summary-val val-negative" id="summaryTotalCost">-$0.00</div>
+          </div>
+
+          <div class="summary-row" id="grossProfitRow">
+            <div>
+              <div class="summary-label" style="font-weight:700;">Gross profit</div>
+            </div>
+            <div class="summary-val val-gross" id="summaryGrossProfit">$0.00</div>
+          </div>
+
+          <div class="summary-row" id="repCommissionRow">
+            <div>
+              <div class="summary-label">Rep commission <span class="summary-subtext" id="summaryRepPct">· 0%</span></div>
+            </div>
+            <div class="summary-val val-negative" id="summaryCommission">-$0.00</div>
+          </div>
+
+          <div class="summary-row" id="netProfitRow">
+            <div>
+              <div class="summary-label" style="font-weight:800; font-size:15px;">Net profit</div>
+            </div>
+            <div class="summary-val val-net" id="summaryNetProfit">$0.00</div>
+          </div>
+        </div>
+
+        <!-- Trio Metrics (Blended averages) -->
+        <div class="metric-trio">
+          <div class="metric-card">
+            <div class="metric-title">AVG SELL / UNIT</div>
+            <div class="metric-value" id="metricSellUnit">—</div>
+          </div>
+
+          <div class="metric-card" id="costUnitCard">
+            <div class="metric-title">AVG COST / UNIT</div>
+            <div class="metric-value" id="metricCostUnit">—</div>
+          </div>
+
+          <div class="metric-card highlight" id="profitUnitCard">
+            <div class="metric-title">AVG PROFIT / UNIT</div>
+            <div class="metric-value" id="metricProfitUnit">—</div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Saved Orders History Table -->
+    <section class="history-section">
+      <div class="history-header">
+        <div>
+          <h3 class="history-title">📊 Saved Orders & Custom Reports</h3>
+          <span style="font-size:12px; color:var(--text-muted);">Filter by rolling periods, specific project, customer, or sales rep</span>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn-header" onclick="exportMyDataBackup()" title="Download a backup of your orders, reps and branding">💾 Backup My Data</button>
+          <button class="btn-header" onclick="triggerRestoreBackup()" title="Restore orders from a Profit Pulse backup file">📂 Restore Backup</button>
+          <input type="file" id="restoreBackupInput" accept=".json,application/json" style="display:none;" onchange="restoreMyDataBackup(event)" />
+          <button class="btn-header" onclick="exportOrdersToCsv()">📥 Export CSV</button>
+          <button class="btn-header" onclick="exportOrdersToExcel()">📊 Export Excel (.xls)</button>
+          <button class="btn-header" onclick="clearAllOrders()" style="color:var(--danger-color);">Clear All</button>
+        </div>
+      </div>
+
+      <!-- Filter Controls Bar -->
+      <div class="report-filter-bar">
+        <div class="filter-col" style="max-width:180px;">
+          <label class="filter-label">Time Period (Rolling)</label>
+          <select id="filterPeriod" onchange="onFilterPeriodChange()">
+            <option value="all">All Time</option>
+            <option value="7d">Last 7 Days (Rolling)</option>
+            <option value="15d">Last 15 Days (Rolling)</option>
+            <option value="30d">Last 30 Days (Rolling)</option>
+            <option value="custom">Custom Date Range</option>
+          </select>
+        </div>
+
+        <div class="filter-col" id="customDateRangeWrap" style="display:none; max-width:240px;">
+          <label class="filter-label">From / To Date</label>
+          <div style="display:flex; gap:6px;">
+            <input type="date" id="filterStartDate" onchange="renderHistoryTable()" />
+            <input type="date" id="filterEndDate" onchange="renderHistoryTable()" />
+          </div>
+        </div>
+
+        <div class="filter-col">
+          <label class="filter-label">Search Project / Job</label>
+          <input type="text" id="filterProject" placeholder="Search job description..." oninput="renderHistoryTable()" />
+        </div>
+
+        <div class="filter-col">
+          <label class="filter-label">Customer</label>
+          <input type="text" id="filterCustomer" placeholder="Filter by customer name..." oninput="renderHistoryTable()" />
+        </div>
+
+        <div class="filter-col" style="max-width:180px;">
+          <label class="filter-label">Sales Rep</label>
+          <select id="filterSalesRep" onchange="renderHistoryTable()">
+            <option value="all">All Sales Reps</option>
+          </select>
+        </div>
+
+        <div>
+          <button type="button" class="btn-filter-reset" onclick="resetFilters()">Reset Filters</button>
+        </div>
+      </div>
+
+      <!-- Filter status indicator -->
+      <div class="filter-indicator-bar">
+        <span id="filterResultsCount">Showing all orders</span>
+      </div>
+
+      <!-- Cumulative Statistics Bar -->
+      <div class="history-stats-bar">
+        <div class="h-stat">
+          <span class="h-stat-label">Orders Count</span>
+          <span class="h-stat-val" id="statOrderCount">0</span>
+        </div>
+        <div class="h-stat">
+          <span class="h-stat-label">Total Revenue</span>
+          <span class="h-stat-val" id="statTotalRevenue">/bin/sh.00</span>
+        </div>
+        <div class="h-stat">
+          <span class="h-stat-label">Total Cost</span>
+          <span class="h-stat-val" id="statTotalCost">/bin/sh.00</span>
+        </div>
+        <div class="h-stat">
+          <span class="h-stat-label">Gross Profit</span>
+          <span class="h-stat-val" style="color:var(--amber-dark)" id="statGrossProfit">/bin/sh.00</span>
+        </div>
+        <div class="h-stat">
+          <span class="h-stat-label">Avg Margin %</span>
+          <span class="h-stat-val" id="statAvgMargin">0.0%</span>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-responsive">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Ref / Date</th>
+              <th>Customer</th>
+              <th>Deadline</th>
+              <th>Job Description</th>
+              <th>Items & Qty</th>
+              <th>Total Sell</th>
+              <th>Total Cost</th>
+              <th>Gross Profit</th>
+              <th>Margin</th>
+              <th>Net Profit</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody">
+            <tr>
+              <td colspan="11" style="text-align:center; color:#94a3b8; padding:24px;">No saved orders yet. Click "Save Order" above to log an order.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- CLIENT QUOTATION MODAL / PRINT SHEET -->
+  <div class="modal-backdrop" id="quoteModal">
+    <div class="modal-box quote-preview-modal-box">
+      <div class="client-quote-sheet" id="quoteSheetContent">
+        <!-- Quote Header -->
+        <div class="quote-sheet-header">
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div id="quoteSheetLogoWrap" style="display:none;">
+              <img id="quoteSheetLogo" src="" alt="Company Logo" style="max-height:55px; max-width:180px; object-fit:contain;" />
+            </div>
+            <div>
+              <h2 class="quote-sheet-title" id="quoteSheetTitleText">PRICE QUOTATION</h2>
+              <div id="quoteCompanyDetails" style="font-size:13px; color:#64748b; margin-top:2px;"></div>
+              <div class="quote-meta-pill" id="quoteSheetRef">Quote Ref: Not saved yet</div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div class="quote-meta-pill">Date: <strong id="quoteSheetDate"></strong></div>
+            <div id="quoteSheetDeadlineWrap" style="display:none;">
+              <span class="quote-deadline-tag" id="quoteSheetDeadline">Delivery Deadline: </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bill To & Order Description -->
+        <div class="quote-info-grid">
+          <div>
+            <div class="quote-info-label">Prepared For Client</div>
+            <div class="quote-info-val" id="quoteSheetCustomer">—</div>
+          </div>
+          <div>
+            <div class="quote-info-label">Project / Description</div>
+            <div class="quote-info-val" id="quoteSheetJob">—</div>
+          </div>
+        </div>
+
+        <!-- Products Table (Customer Facing - No Cost or Margins Shown) -->
+        <table class="quote-items-table">
+          <thead>
+            <tr>
+              <th>Item & Description</th>
+              <th class="num-col">Qty</th>
+              <th class="num-col">Unit Price</th>
+              <th class="num-col">Total</th>
+            </tr>
+          </thead>
+          <tbody id="quoteSheetTableBody">
+            <!-- Populated via JS -->
+          </tbody>
+          <tfoot>
+            <tr class="quote-total-row">
+              <td colspan="3" style="text-align:right; font-weight:700; font-size:15px; color:#0f172a;">
+                Total Order Amount:
+              </td>
+              <td class="num-col quote-grand-total" id="quoteSheetGrandTotal">$0.00</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <!-- Notes & Terms -->
+        <div class="quote-notes-container" id="quoteSheetNotesWrap">
+          <div class="quote-notes-title">Quotation Terms & Conditions</div>
+          <div class="quote-notes-body" id="quoteSheetNotesText">No terms specified.</div>
+        </div>
+
+        <!-- Sign-Off Block -->
+        <div class="quote-sign-block">
+          <div>Client Authorized Signature: ___________________________________</div>
+          <div>Date: ____________________</div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="modal-actions-bar" style="display:flex; justify-content:flex-end; gap:10px; margin-top:24px; padding-top:16px; border-top:1px solid #e2e8f0;">
+        <button class="btn btn-secondary" onclick="closeQuoteModal()">Close</button>
+        <button class="btn btn-primary" onclick="printCustomerQuoteFromModal()">🖨️ Print / Save PDF Quote</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MANAGE SALES REPS MODAL -->
+  <div class="modal-backdrop" id="repsModal">
+    <div class="modal-box">
+      <h3 class="modal-title">👥 Manage Sales Reps</h3>
+      <p class="modal-text">
+        Add custom sales reps to save them for all your future orders. Your list is stored locally in your browser.
+      </p>
+
+      <div style="display:flex; gap:10px; margin-bottom:16px;">
+        <input type="text" id="newRepNameInput" placeholder="Enter Sales Rep name..." onkeydown="if(event.key==='Enter') addCustomRep()" />
+        <button class="btn btn-primary" style="white-space:nowrap;" onclick="addCustomRep()">+ Add Rep</button>
+      </div>
+
+      <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px;">Saved Reps</div>
+      <div class="rep-list" id="repListContainer">
+        <!-- populated dynamically -->
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; margin-top:18px;">
+        <button class="btn btn-secondary" onclick="closeManageRepsModal()">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BRANDING & SETTINGS MODAL -->
+  <div class="modal-backdrop" id="brandingModal">
+    <div class="modal-box" style="max-width:580px;">
+      <h3 class="modal-title">🎨 Company Branding & App Settings</h3>
+      <p class="modal-text">
+        Personalize Profit Pulse with your company name, logo, custom color theme, and default standard margins.
+      </p>
+
+      <!-- 1. Company Name & Contact -->
+      <div class="two-col-row" style="margin-bottom:12px;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="field-label" for="settingCompanyName">Company / Business Name</label>
+          <input type="text" id="settingCompanyName" placeholder="e.g. Acme Promotions" />
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="field-label" for="settingCompanyContact">Contact Info (Phone / Email / Web)</label>
+          <input type="text" id="settingCompanyContact" placeholder="e.g. info@evs.com | (555) 123-4567" />
+        </div>
+      </div>
+
+      <!-- 2. Company Logo Upload & Header Sizing -->
+      <div class="form-group">
+        <label class="field-label">Company Logo</label>
+        <div style="display:flex; align-items:center; gap:16px; margin-top:6px; background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:var(--radius-sm); padding:14px; flex-wrap:wrap;">
+          <div id="logoPreviewContainer" style="width:130px; height:60px; background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; display:flex; align-items:center; justify-content:center; overflow:hidden; padding:4px;">
+            <span style="font-size:11px; color:#94a3b8;" id="logoEmptyText">No Logo</span>
+            <img id="brandingLogoPreview" src="" alt="Preview" style="display:none; max-width:100%; max-height:100%; object-fit:contain;" />
+          </div>
+          <div style="flex:1; min-width:200px;">
+            <input type="file" id="companyLogoInput" accept="image/png,image/jpeg,image/svg+xml,image/webp" style="display:none;" onchange="handleLogoUpload(event)" />
+            <div style="display:flex; gap:8px; align-items:center;">
+              <button type="button" class="btn btn-secondary" style="padding:6px 14px; font-size:12px;" onclick="document.getElementById('companyLogoInput').click()">Upload Logo</button>
+              <button type="button" class="btn-text-link" style="color:var(--danger-color);" id="btnRemoveLogo" onclick="removeLogo()">Remove</button>
+            </div>
+            <p class="field-hint" style="margin-top:4px;">PNG, JPG, or SVG. Displayed in the app header and on client quotes.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logo Display Options -->
+      <div class="two-col-row" style="margin-bottom:14px;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="field-label" for="settingLogoDisplay">Header Display Mode</label>
+          <select id="settingLogoDisplay">
+            <option value="both">Show Logo & Company Name</option>
+            <option value="logo_only">Show Logo Only (Cleanest if logo includes your name)</option>
+            <option value="text_only">Show Text Only</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="field-label" for="settingLogoSize">Logo Size in Header</label>
+          <select id="settingLogoSize">
+            <option value="48">Medium (48px height)</option>
+            <option value="60">Large (60px height - Recommended)</option>
+            <option value="72">Extra Large (72px height)</option>
+            <option value="38">Compact (38px height)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 3. Standard Default Margins -->
+      <div class="two-col-row" style="margin-bottom:12px;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="field-label" for="settingDefaultMargin">Standard Target Margin</label>
+          <div class="input-wrapper">
+            <input type="number" id="settingDefaultMargin" class="with-suffix" value="40" min="1" max="95" />
+            <span class="input-suffix">%</span>
+          </div>
+          <p class="field-hint">Initial margin set for all new orders.</p>
+        </div>
+
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="field-label" for="settingDefaultTargetType">Default Target Mode</label>
+          <select id="settingDefaultTargetType">
+            <option value="margin">Margin % (Profit / Revenue)</option>
+            <option value="markup">Markup % (Profit / Cost)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 4. Color Theme Presets -->
+      <div class="form-group">
+        <label class="field-label">Color Theme</label>
+        <div class="theme-swatch-row" style="display:flex; gap:10px; margin-top:8px; align-items:center; flex-wrap:wrap;">
+          <div class="theme-swatch" id="swatch-amber" style="background:#f59e0b;" onclick="setThemePreset('amber', '#f59e0b', '#d97706', '#fef3c7')" title="Amber Gold (Default)"></div>
+          <div class="theme-swatch" id="swatch-ocean" style="background:#0284c7;" onclick="setThemePreset('ocean', '#0284c7', '#0369a1', '#e0f2fe')" title="Ocean Blue"></div>
+          <div class="theme-swatch" id="swatch-emerald" style="background:#10b981;" onclick="setThemePreset('emerald', '#10b981', '#059669', '#d1fae5')" title="Emerald Green"></div>
+          <div class="theme-swatch" id="swatch-indigo" style="background:#6366f1;" onclick="setThemePreset('indigo', '#6366f1', '#4f46e5', '#e0e7ff')" title="Royal Indigo"></div>
+          <div class="theme-swatch" id="swatch-crimson" style="background:#e11d48;" onclick="setThemePreset('crimson', '#e11d48', '#be123c', '#ffe4e6')" title="Crimson Rose"></div>
+          <div class="theme-swatch" id="swatch-slate" style="background:#0f172a;" onclick="setThemePreset('slate', '#334155', '#1e293b', '#f1f5f9')" title="Slate Charcoal"></div>
+          <div style="display:flex; align-items:center; gap:6px; margin-left:6px;">
+            <input type="color" id="customColorPicker" value="#f59e0b" style="width:32px; height:32px; padding:0; border:none; cursor:pointer; border-radius:6px;" onchange="onCustomColorChange(this.value)" />
+            <span style="font-size:12px; color:var(--text-muted);">Custom</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px; padding-top:16px; border-top:1px solid #e2e8f0;">
+        <button type="button" class="btn btn-secondary" onclick="closeBrandingModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="saveBrandingSettings()">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <script>
+    // Global Application State
+    let currentPricingType = 'margin'; // 'margin' or 'markup'
+    let currentPrintCopy = 'Internal'; // 'Customer' or 'Internal'
+    let currentOrderId = 'ORD-2026-1048';
+    let manualCostOverride = false;
+        let orderItems = [
+      {
+        id: 1,
+        name: 'Item 1',
+        quantity: 0,
+        productCostUnit: 0.00,
+        decorationCostUnit: 0.00,
+        setupCharge: 0.00,
+        shippingCost: 0.00
+      }
+    ];
+    // ---- Private per-account storage ----
+    // Every account's data lives under its own key: pp_v1::<accountId>::<name>.
+    // Nothing is shared between accounts and nothing is sent to any server.
+    const PP_ACCOUNTS_KEY = 'pp_v1_accounts';
+    const PP_SESSION_KEY = 'pp_v1_session';
+    const PP_GUEST_FLAG = 'pp_v1_guest_active';
+    const DEFAULT_REPS = ["House Account"];
+    let savedReps = DEFAULT_REPS.slice();
+    let savedOrders = [];
+    let registeredUsers = (function () {
+      try { return JSON.parse(localStorage.getItem(PP_ACCOUNTS_KEY) || '[]') || []; } catch (e) { return []; }
+    })();
+    let currentUserSession = null;
+    const DEFAULT_BRANDING = {
+      companyName: '',
+      companyContact: '',
+      logoDataUrl: '',
+      logoDisplay: 'both',
+      logoSize: '60',
+      defaultMargin: 40,
+      defaultTargetType: 'margin',
+      themeKey: 'amber',
+      primaryColor: '#f59e0b',
+      darkColor: '#d97706',
+      accentColor: '#fbbf24'
+    };
+    let brandingSettings = Object.assign({}, DEFAULT_BRANDING);
+
+    function userStorageKey(name) {
+      return 'pp_v1::' + (currentUserSession ? currentUserSession.id : 'none') + '::' + name;
+    }
+
+    function storeUserData(name, value) {
+      if (!currentUserSession) return;
+      try {
+        localStorage.setItem(userStorageKey(name), JSON.stringify(value));
+      } catch (e) {
+        alert('Could not save: browser storage is full. Try removing your logo or exporting a backup and clearing old orders.');
+      }
+    }
+
+    function readUserData(name, fallback) {
+      if (!currentUserSession) return fallback;
+      try {
+        const raw = localStorage.getItem(userStorageKey(name));
+        return raw === null ? fallback : JSON.parse(raw);
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    function wipeUserData(accountId) {
+      const prefix = 'pp_v1::' + accountId + '::';
+      const doomed = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.indexOf(prefix) === 0) doomed.push(k);
+      }
+      doomed.forEach(k => localStorage.removeItem(k));
+    }
+
+    // Loads the signed-in account's private workspace into memory and refreshes the UI
+    function loadUserWorkspace() {
+      if (!currentUserSession) return;
+      const orders = readUserData('orders', []);
+      savedOrders = Array.isArray(orders) ? orders : [];
+
+      const reps = readUserData('reps', null);
+      savedReps = (Array.isArray(reps) && reps.length) ? reps : [`${currentUserSession.name} (you)`].concat(DEFAULT_REPS);
+
+      brandingSettings = Object.assign({}, DEFAULT_BRANDING, { companyName: currentUserSession.company || '' }, readUserData('branding', {}) || {});
+      applyThemeColors();
+      applyBrandingToUI();
+
+      const marginVal = document.getElementById('pricingTargetVal');
+      const marginSlider = document.getElementById('pricingTargetSlider');
+      if (marginVal) marginVal.value = brandingSettings.defaultMargin;
+      if (marginSlider) marginSlider.value = brandingSettings.defaultMargin;
+      setPricingTargetType(brandingSettings.defaultTargetType || 'margin');
+
+      const repSelect = document.getElementById('salesRep');
+      if (repSelect) repSelect.value = '';
+      renderSalesRepDropdown(savedReps[0]);
+      renderSalesRepFilterDropdown();
+      newOrder();
+      renderHistoryTable();
+    }
+
+// ==========================================
+    // CORE PRICING & LINE ITEM ENGINE
+    // ==========================================
+
+    function renderItems() {
+      const container = document.getElementById('itemsContainer');
+      if (!container) return;
+
+      container.innerHTML = orderItems.map((item, index) => {
+        return `
+          <div class="item-card" data-index="${index}">
+            <div class="item-header">
+              <input type="text" class="item-name-input" value="${escapeHtml(item.name)}" 
+                placeholder="Product description (e.g. 250 branded tumblers)" 
+                oninput="updateItemField(${index}, 'name', this.value)" />
+              ${orderItems.length > 1 ? `
+                <button type="button" class="btn-remove-item" onclick="removeProductItem(${index})">
+                  ✕ Remove
+                </button>
+              ` : ''}
+            </div>
+
+            <!-- Quantity -->
+            <div class="item-qty-row">
+              <div class="field-header">
+                <label class="field-label" style="font-size:12px;">Quantity</label>
+              </div>
+              <div class="input-wrapper">
+                <input type="number" class="with-suffix" value="${item.quantity}" min="0" 
+                  oninput="updateItemField(${index}, 'quantity', parseFloat(this.value) || 0)" />
+                <span class="input-suffix">units</span>
+              </div>
+            </div>
+
+            <!-- 4-Column Cost Breakdown with Directly Editable Sell Prices -->
+            <div class="cost-grid">
+              <div class="cost-col">
+                <span class="cost-title">Product cost / unit</span>
+                <div class="input-wrapper">
+                  <span class="input-prefix">$</span>
+                  <input type="number" class="with-prefix" step="0.001" value="${item.productCostUnit}" 
+                    oninput="updateItemField(${index}, 'productCostUnit', parseFloat(this.value) || 0)" />
+                </div>
+                <div class="sell-chip" title="Directly edit product sell price">
+                  <span class="sell-chip-tag">SELL</span>
+                  <span class="sell-chip-prefix">$</span>
+                  <input type="number" step="0.01" class="sell-chip-input" id="item_${index}_sellProductInput"
+                    value="${item.customSellProd !== undefined ? item.customSellProd : ''}"
+                    placeholder="0.00"
+                    oninput="onCustomSellChanged(${index}, 'customSellProd', this.value)" />
+                </div>
+              </div>
+
+              <div class="cost-col">
+                <span class="cost-title">Decoration / unit</span>
+                <div class="input-wrapper">
+                  <span class="input-prefix">$</span>
+                  <input type="number" class="with-prefix" step="0.01" value="${item.decorationCostUnit}" 
+                    oninput="updateItemField(${index}, 'decorationCostUnit', parseFloat(this.value) || 0)" />
+                </div>
+                <div class="sell-chip" title="Directly edit decoration sell price">
+                  <span class="sell-chip-tag">SELL</span>
+                  <span class="sell-chip-prefix">$</span>
+                  <input type="number" step="0.01" class="sell-chip-input" id="item_${index}_sellDecorationInput"
+                    value="${item.customSellDec !== undefined ? item.customSellDec : ''}"
+                    placeholder="0.00"
+                    oninput="onCustomSellChanged(${index}, 'customSellDec', this.value)" />
+                </div>
+              </div>
+
+              <div class="cost-col">
+                <span class="cost-title">Setup charge</span>
+                <div class="input-wrapper">
+                  <span class="input-prefix">$</span>
+                  <input type="number" class="with-prefix" step="0.01" value="${item.setupCharge}" 
+                    oninput="updateItemField(${index}, 'setupCharge', parseFloat(this.value) || 0)" />
+                </div>
+                <div class="sell-chip" title="Directly edit setup sell charge">
+                  <span class="sell-chip-tag">SELL</span>
+                  <span class="sell-chip-prefix">$</span>
+                  <input type="number" step="0.01" class="sell-chip-input" id="item_${index}_sellSetupInput"
+                    value="${item.customSellSetup !== undefined ? item.customSellSetup : ''}"
+                    placeholder="0.00"
+                    oninput="onCustomSellChanged(${index}, 'customSellSetup', this.value)" />
+                </div>
+              </div>
+
+              <div class="cost-col">
+                <span class="cost-title">Shipping</span>
+                <div class="input-wrapper">
+                  <span class="input-prefix">$</span>
+                  <input type="number" class="with-prefix" step="0.01" value="${item.shippingCost}" 
+                    oninput="updateItemField(${index}, 'shippingCost', parseFloat(this.value) || 0)" />
+                </div>
+                <div class="sell-chip" title="Directly edit shipping sell charge">
+                  <span class="sell-chip-tag">SELL</span>
+                  <span class="sell-chip-prefix">$</span>
+                  <input type="number" step="0.01" class="sell-chip-input" id="item_${index}_sellShippingInput"
+                    value="${item.customSellShip !== undefined ? item.customSellShip : ''}"
+                    placeholder="0.00"
+                    oninput="onCustomSellChanged(${index}, 'customSellShip', this.value)" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Item Subtotal Line with Editable Unit Sell & Customer Sell Total -->
+            <div class="item-subtotal-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <span>Cost: <strong id="item_${index}_totalCost">$0.00</strong></span>
+              <span>Customer Sell Total: 
+                <span class="inline-sell-badge">
+                  <span>$</span>
+                  <input type="number" step="0.01" class="inline-sell-input" id="item_${index}_totalSellInput"
+                    value="0.00"
+                    oninput="onItemTotalSellDirect(${index}, this.value)"
+                    title="Directly edit customer total sell price" />
+                </span>
+              </span>
+              <span>Unit Sell: 
+                <span class="inline-sell-badge">
+                  <span>$</span>
+                  <input type="number" step="0.01" class="inline-sell-input" id="item_${index}_sellPerUnitInput"
+                    value="0.00"
+                    oninput="onItemUnitSellDirect(${index}, this.value)"
+                    title="Directly edit unit sell price" />
+                </span>
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function onCustomSellChanged(index, field, value) {
+      if (value !== '' && !isNaN(parseFloat(value))) {
+        orderItems[index][field] = parseFloat(value);
+      } else {
+        delete orderItems[index][field];
+      }
+      delete orderItems[index].customUnitSell;
+      delete orderItems[index].customTotalSell;
+      syncMarginFromCustomSell();
+      calculate();
+    }
+
+    function onItemUnitSellDirect(index, value) {
+      const val = parseFloat(value);
+      if (!isNaN(val) && val >= 0) {
+        orderItems[index].customUnitSell = val;
+        delete orderItems[index].customSellProd;
+        delete orderItems[index].customSellDec;
+        delete orderItems[index].customTotalSell;
+      } else {
+        delete orderItems[index].customUnitSell;
+      }
+      syncMarginFromCustomSell();
+      calculate();
+    }
+
+    function onItemTotalSellDirect(index, value) {
+      const val = parseFloat(value);
+      if (!isNaN(val) && val >= 0) {
+        orderItems[index].customTotalSell = val;
+        const qty = parseFloat(orderItems[index].quantity) || 0;
+        if (qty > 0) {
+          orderItems[index].customUnitSell = val / qty;
+        }
+      } else {
+        delete orderItems[index].customTotalSell;
+        delete orderItems[index].customUnitSell;
+      }
+      syncMarginFromCustomSell();
+      calculate();
+    }
+
+    function syncMarginFromCustomSell() {
+      let totCost = 0;
+      let totSell = 0;
+      orderItems.forEach(item => {
+        const qty = parseFloat(item.quantity) || 0;
+        const prodCost = parseFloat(item.productCostUnit) || 0;
+        const decCost = parseFloat(item.decorationCostUnit) || 0;
+        const setupCost = parseFloat(item.setupCharge) || 0;
+        const shipCost = parseFloat(item.shippingCost) || 0;
+        totCost += (prodCost + decCost) * qty + setupCost + shipCost;
+
+        let pSell = item.customSellProd !== undefined ? parseFloat(item.customSellProd) : prodCost;
+        let dSell = item.customSellDec !== undefined ? parseFloat(item.customSellDec) : decCost;
+        let sSell = item.customSellSetup !== undefined ? parseFloat(item.customSellSetup) : setupCost;
+        let shSell = item.customSellShip !== undefined ? parseFloat(item.customSellShip) : shipCost;
+        let uSell = item.customUnitSell !== undefined ? parseFloat(item.customUnitSell) : (pSell + dSell);
+        let tSell = item.customTotalSell !== undefined ? parseFloat(item.customTotalSell) : ((uSell * qty) + sSell + shSell);
+        totSell += tSell;
+      });
+
+      if (totSell > totCost && totSell > 0) {
+        const computedMargin = ((totSell - totCost) / totSell) * 100;
+        const targetInput = document.getElementById('pricingTargetVal');
+        const targetSlider = document.getElementById('pricingTargetSlider');
+        const bounded = Math.min(Math.max(Math.round(computedMargin), 0), 95);
+        if (targetInput && document.activeElement !== targetInput) targetInput.value = bounded;
+        if (targetSlider) targetSlider.value = bounded;
+      }
+    }
+
+    function addNewProductItem() {
+      const nextIdx = orderItems.length + 1;
+      orderItems.push({
+        id: Date.now(),
+        name: `Item ${nextIdx}`,
+        quantity: 0,
+        productCostUnit: 0.00,
+        decorationCostUnit: 0.00,
+        setupCharge: 0.00,
+        shippingCost: 0.00
+      });
+      renderItems();
+      calculate();
+    }
+
+    function removeProductItem(index) {
+      if (orderItems.length > 1) {
+        orderItems.splice(index, 1);
+        renderItems();
+        calculate();
+      }
+    }
+
+    function updateItemField(index, field, value) {
+      if (orderItems[index]) {
+        orderItems[index][field] = value;
+        calculate();
+      }
+    }
+
+    function applyPriceRounding(price, rule) {
+      if (!rule || rule === 'none' || price <= 0) return price;
+      if (rule === '5cents') {
+        return Math.ceil(price * 20) / 20;
+      } else if (rule === '50cents') {
+        return Math.ceil(price * 2) / 2;
+      } else if (rule === 'dollar') {
+        return Math.ceil(price);
+      } else if (rule === '95cents') {
+        return Math.floor(price) + 0.95;
+      } else if (rule === '99cents') {
+        return Math.floor(price) + 0.99;
+      }
+      return price;
+    }
+
+    function insertDefaultTerms() {
+      const defaultTerms = "Standard 50% deposit required upon proof approval. Final balance due Net 15 days upon delivery. Production lead time: 10-12 business days.";
+      const notesEl = document.getElementById('clientNotes');
+      if (notesEl) {
+        notesEl.value = defaultTerms;
+        notesEl.classList.add('field-extracted');
+      }
+    }
+
+    function renderSalesRepDropdown(selectedVal) {
+      const select = document.getElementById('salesRep');
+      if (!select) return;
+      const currentVal = selectedVal || select.value || savedReps[0] || '';
+      select.innerHTML = savedReps.map(r => `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`).join('');
+      if (select.querySelector(`option[value="${currentVal}"]`)) {
+        select.value = currentVal;
+      }
+      onSalesRepChanged();
+    }
+
+    function onSalesRepChanged() {
+      const select = document.getElementById('salesRep');
+      if (!select) return;
+      const val = select.value;
+      const commInput = document.getElementById('commissionPercent');
+      if (!commInput) return;
+
+      if (val.includes('(you)')) {
+        commInput.value = '10';
+      } else if (val.includes('House')) {
+        commInput.value = '0';
+      } else {
+        commInput.value = '10';
+      }
+      calculate();
+    }
+
+    function openManageRepsModal() {
+      renderRepList();
+      const modal = document.getElementById('manageRepsModal');
+      if (modal) modal.classList.add('open');
+    }
+
+    function closeManageRepsModal() {
+      const modal = document.getElementById('manageRepsModal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function renderRepList() {
+      const list = document.getElementById('repList');
+      if (!list) return;
+      list.innerHTML = savedReps.map((r, i) => `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:8px; border-bottom:1px solid #f1f5f9;">
+          <span>${escapeHtml(r)}</span>
+          ${savedReps.length > 1 ? `<button type="button" class="btn btn-secondary btn-sm" onclick="deleteRep(${i})" style="color:#ef4444;">✕</button>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function addCustomRep() {
+      const input = document.getElementById('newRepName');
+      if (!input) return;
+      const name = input.value.trim();
+      if (!name) return;
+      if (!savedReps.includes(name)) {
+        savedReps.push(name);
+        storeUserData('reps', savedReps);
+        renderRepList();
+        renderSalesRepDropdown(name);
+        renderSalesRepFilterDropdown();
+        input.value = '';
+      }
+    }
+
+    function deleteRep(index) {
+      if (savedReps.length > 1) {
+        savedReps.splice(index, 1);
+        storeUserData('reps', savedReps);
+        renderRepList();
+        renderSalesRepDropdown();
+        renderSalesRepFilterDropdown();
+      }
+    }
+
+    function setPricingTargetType(type) {
+      currentPricingType = type;
+      const btnMargin = document.getElementById('tabMargin');
+      const btnMarkup = document.getElementById('tabMarkup');
+      const label = document.getElementById('targetPercentLabel');
+
+      if (type === 'margin') {
+        if (btnMargin) btnMargin.classList.add('active');
+        if (btnMarkup) btnMarkup.classList.remove('active');
+        if (label) label.innerText = 'Target margin %';
+      } else {
+        if (btnMarkup) btnMarkup.classList.add('active');
+        if (btnMargin) btnMargin.classList.remove('active');
+        if (label) label.innerText = 'Target markup %';
+      }
+      calculate();
+    }
+
+    function syncPricingTarget(val) {
+      const v = Math.min(Math.max(parseFloat(val) || 0, 0), 95);
+      const input = document.getElementById('pricingTargetVal');
+      const slider = document.getElementById('pricingTargetSlider');
+      if (input && document.activeElement !== input) input.value = v;
+      if (slider) slider.value = v;
+      calculate();
+    }
+
+    function setPrintCopy(type) {
+      currentPrintCopy = type;
+      const btnCust = document.getElementById('copyCustomer');
+      const btnInt = document.getElementById('copyInternal');
+      if (type === 'Customer') {
+        if (btnCust) btnCust.classList.add('active');
+        if (btnInt) btnInt.classList.remove('active');
+      } else {
+        if (btnInt) btnInt.classList.add('active');
+        if (btnCust) btnCust.classList.remove('active');
+      }
+    }
+
+    function onManualTotalCostChanged() {
+      manualCostOverride = true;
+      calculate();
+    }
+
+    function getSellMultiplier(targetPct) {
+      if (currentPricingType === 'margin') {
+        return targetPct >= 1 ? 20 : 1 / (1 - targetPct);
+      } else {
+        return 1 + targetPct;
+      }
+    }
+
+    function calculate() {
+      const targetPct = (parseFloat(document.getElementById('pricingTargetVal').value) || 0) / 100;
+      const commissionPct = (parseFloat(document.getElementById('commissionPercent').value) || 0) / 100;
+      const repName = document.getElementById('salesRep').value || (savedReps[0] || '');
+      const roundingRule = document.getElementById('priceRounding').value || 'none';
+      const multiplier = getSellMultiplier(targetPct);
+
+      let totalOrderQty = 0;
+      let calculatedTotalCost = 0;
+      let calculatedTotalSell = 0;
+
+      // Calculate each product item
+      orderItems.forEach((item, idx) => {
+        const itemQty = parseFloat(item.quantity) || 0;
+        totalOrderQty += itemQty;
+
+        const prodCost = parseFloat(item.productCostUnit) || 0;
+        const decCost = parseFloat(item.decorationCostUnit) || 0;
+        const setupCost = parseFloat(item.setupCharge) || 0;
+        const shipCost = parseFloat(item.shippingCost) || 0;
+
+        const itemTotalCost = (prodCost + decCost) * itemQty + setupCost + shipCost;
+        calculatedTotalCost += itemTotalCost;
+
+        // Auto sell calculations based on multiplier
+        let autoProdSellUnit = prodCost > 0 ? prodCost * multiplier : 0;
+        let autoDecSellUnit = decCost > 0 ? decCost * multiplier : 0;
+        let autoSetupSell = setupCost > 0 ? setupCost * multiplier : 0;
+        let autoShipSell = shipCost > 0 ? shipCost * multiplier : 0;
+
+        // Use custom sell price if edited by user, otherwise auto
+        let actualProdSellUnit = (item.customSellProd !== undefined && item.customSellProd !== '') ? parseFloat(item.customSellProd) : autoProdSellUnit;
+        let actualDecSellUnit = (item.customSellDec !== undefined && item.customSellDec !== '') ? parseFloat(item.customSellDec) : autoDecSellUnit;
+        let actualSetupSell = (item.customSellSetup !== undefined && item.customSellSetup !== '') ? parseFloat(item.customSellSetup) : autoSetupSell;
+        let actualShipSell = (item.customSellShip !== undefined && item.customSellShip !== '') ? parseFloat(item.customSellShip) : autoShipSell;
+
+        let combinedUnitSell = actualProdSellUnit + actualDecSellUnit;
+        let roundedUnitSell = (item.customUnitSell !== undefined && item.customUnitSell !== '') 
+          ? parseFloat(item.customUnitSell) 
+          : applyPriceRounding(combinedUnitSell, roundingRule);
+
+        let itemTotalSell = (roundedUnitSell * itemQty) + actualSetupSell + actualShipSell;
+        if (item.customTotalSell !== undefined && item.customTotalSell !== '') {
+          itemTotalSell = parseFloat(item.customTotalSell);
+        }
+        calculatedTotalSell += itemTotalSell;
+
+        const finalUnitSell = itemQty > 0 ? itemTotalSell / itemQty : roundedUnitSell;
+
+        // Update DOM inputs without disturbing active focus
+        const inProd = document.getElementById(`item_${idx}_sellProductInput`);
+        const inDec = document.getElementById(`item_${idx}_sellDecorationInput`);
+        const inSetup = document.getElementById(`item_${idx}_sellSetupInput`);
+        const inShip = document.getElementById(`item_${idx}_sellShippingInput`);
+        const inTotalSell = document.getElementById(`item_${idx}_totalSellInput`);
+        const inUnitSell = document.getElementById(`item_${idx}_sellPerUnitInput`);
+        const elCost = document.getElementById(`item_${idx}_totalCost`);
+
+        if (inProd && document.activeElement !== inProd) {
+          if (item.customSellProd !== undefined && item.customSellProd !== '') inProd.value = actualProdSellUnit.toFixed(2);
+          else { inProd.value = ''; inProd.placeholder = autoProdSellUnit.toFixed(2); }
+        }
+        if (inDec && document.activeElement !== inDec) {
+          if (item.customSellDec !== undefined && item.customSellDec !== '') inDec.value = actualDecSellUnit.toFixed(2);
+          else { inDec.value = ''; inDec.placeholder = autoDecSellUnit.toFixed(2); }
+        }
+        if (inSetup && document.activeElement !== inSetup) {
+          if (item.customSellSetup !== undefined && item.customSellSetup !== '') inSetup.value = actualSetupSell.toFixed(2);
+          else { inSetup.value = ''; inSetup.placeholder = autoSetupSell.toFixed(2); }
+        }
+        if (inShip && document.activeElement !== inShip) {
+          if (item.customSellShip !== undefined && item.customSellShip !== '') inShip.value = actualShipSell.toFixed(2);
+          else { inShip.value = ''; inShip.placeholder = autoShipSell.toFixed(2); }
+        }
+        if (inTotalSell && document.activeElement !== inTotalSell) {
+          inTotalSell.value = itemTotalSell.toFixed(2);
+        }
+        if (inUnitSell && document.activeElement !== inUnitSell) {
+          inUnitSell.value = finalUnitSell.toFixed(2);
+        }
+        if (elCost) elCost.innerText = formatCurrency(itemTotalCost);
+      });
+
+      // Total Cost handling (Manual override support)
+      let finalTotalCost = calculatedTotalCost;
+      const totalCostInput = document.getElementById('totalCost');
+      if (manualCostOverride) {
+        finalTotalCost = parseFloat(totalCostInput.value) || 0;
+      } else if (totalCostInput) {
+        totalCostInput.value = finalTotalCost.toFixed(2);
+      }
+
+      // Total Sell
+      let finalTotalSell = calculatedTotalSell;
+
+      // Overall Order Metrics
+      const grossProfit = Math.max(0, finalTotalSell - finalTotalCost);
+      const actualMarginPct = finalTotalSell > 0 ? (grossProfit / finalTotalSell) * 100 : 0;
+      const actualMarkupPct = finalTotalCost > 0 ? (grossProfit / finalTotalCost) * 100 : 0;
+      const repCommission = grossProfit * commissionPct;
+      const netProfit = Math.max(0, grossProfit - repCommission);
+
+      const avgSellUnit = totalOrderQty > 0 ? finalTotalSell / totalOrderQty : 0;
+      const avgCostUnit = totalOrderQty > 0 ? finalTotalCost / totalOrderQty : 0;
+      const avgProfitUnit = totalOrderQty > 0 ? grossProfit / totalOrderQty : 0;
+
+      // Update Header & Main Order Dashboard Display (Safely guarded against null)
+      const elTopGross = document.getElementById('displayGrossProfitTop') || document.getElementById('grossProfitVal');
+      if (elTopGross) elTopGross.innerText = formatCurrency(grossProfit);
+
+      const elBadgeMargin = document.getElementById('badgeMargin');
+      if (elBadgeMargin) elBadgeMargin.innerText = `${actualMarginPct.toFixed(1)}% margin`;
+
+      const elBadgeMarkup = document.getElementById('badgeMarkup');
+      if (elBadgeMarkup) elBadgeMarkup.innerText = `${actualMarkupPct.toFixed(1)}% markup`;
+
+      const cleanRepDisplayName = repName.replace(/\s*\(.*?\)/, '').trim();
+      const elBadgeRep = document.getElementById('badgeRep');
+      if (elBadgeRep) elBadgeRep.innerText = `${cleanRepDisplayName} (${(commissionPct * 100).toFixed(0)}%)`;
+
+      const elMarginText = document.getElementById('marginPercentText');
+      if (elMarginText) elMarginText.innerText = `${actualMarginPct.toFixed(1)}%`;
+
+      const elMarginBar = document.getElementById('marginProgressBar');
+      if (elMarginBar) elMarginBar.style.width = `${Math.min(actualMarginPct, 100)}%`;
+
+      const elSumSell = document.getElementById('summaryTotalSell');
+      if (elSumSell) elSumSell.innerText = formatCurrency(finalTotalSell);
+
+      const elSumCost = document.getElementById('summaryTotalCost');
+      if (elSumCost) elSumCost.innerText = formatCurrency(finalTotalCost);
+
+      const elSumGross = document.getElementById('summaryGrossProfit');
+      if (elSumGross) elSumGross.innerText = formatCurrency(grossProfit);
+
+      const elRepRow = document.getElementById('repCommissionRow');
+      if (elRepRow) {
+        if (commissionPct > 0) {
+          elRepRow.style.display = 'flex';
+          const elRepName = document.getElementById('summaryRepName');
+          if (elRepName) elRepName.innerText = cleanRepDisplayName;
+          const elRepPct = document.getElementById('summaryRepPct');
+          if (elRepPct) elRepPct.innerText = `· ${(commissionPct * 100).toFixed(0)}%`;
+          const elComm = document.getElementById('summaryCommission') || document.getElementById('summaryRepCommission');
+          if (elComm) elComm.innerText = `-${formatCurrency(repCommission)}`;
+        } else {
+          elRepRow.style.display = 'none';
+        }
+      }
+
+      const elNet = document.getElementById('summaryNetProfit');
+      if (elNet) elNet.innerText = formatCurrency(netProfit);
+
+      const elSellUnit = document.getElementById('metricSellUnit');
+      if (elSellUnit) elSellUnit.innerText = totalOrderQty > 0 ? formatCurrency(avgSellUnit) : '—';
+
+      const elCostUnit = document.getElementById('metricCostUnit');
+      if (elCostUnit) elCostUnit.innerText = totalOrderQty > 0 ? formatCurrency(avgCostUnit) : '—';
+
+      const elProfitUnit = document.getElementById('metricProfitUnit');
+      if (elProfitUnit) elProfitUnit.innerText = totalOrderQty > 0 ? formatCurrency(avgProfitUnit) : '—';
+    }
+
+    function formatCurrency(val) {
+      return '$' + (Math.abs(val) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    // CLIENT QUOTE MODAL LOGIC
+    function openQuoteModal() {
+      const customer = document.getElementById('customer').value || 'Valued Client';
+      const job = document.getElementById('jobDescription').value || 'Custom Promotional Merchandise';
+      const deadline = document.getElementById('deliveryDeadline').value || 'Standard Turnaround';
+      const notes = document.getElementById('clientNotes').value || 'Standard Terms & Conditions Apply';
+      const roundingRule = document.getElementById('priceRounding').value || 'none';
+      const rep = document.getElementById('salesRep').value || 'Sales Representative';
+
+      const targetPct = (parseFloat(document.getElementById('pricingTargetVal').value) || 0) / 100;
+      const multiplier = getSellMultiplier(targetPct);
+
+      let grandTotal = 0;
+      const tbody = document.getElementById('quoteModalTableBody');
+      if (tbody) {
+        tbody.innerHTML = orderItems.map((item, idx) => {
+          const qty = parseFloat(item.quantity) || 0;
+          const prodCost = parseFloat(item.productCostUnit) || 0;
+          const decCost = parseFloat(item.decorationCostUnit) || 0;
+          const setupCost = parseFloat(item.setupCharge) || 0;
+          const shipCost = parseFloat(item.shippingCost) || 0;
+
+          let pSell = (item.customSellProd !== undefined && item.customSellProd !== '') ? parseFloat(item.customSellProd) : (prodCost > 0 ? prodCost * multiplier : 0);
+          let dSell = (item.customSellDec !== undefined && item.customSellDec !== '') ? parseFloat(item.customSellDec) : (decCost > 0 ? decCost * multiplier : 0);
+          let sSell = (item.customSellSetup !== undefined && item.customSellSetup !== '') ? parseFloat(item.customSellSetup) : (setupCost > 0 ? setupCost * multiplier : 0);
+          let shSell = (item.customSellShip !== undefined && item.customSellShip !== '') ? parseFloat(item.customSellShip) : (shipCost > 0 ? shipCost * multiplier : 0);
+
+          let combinedUnitSell = pSell + dSell;
+          let roundedUnitSell = (item.customUnitSell !== undefined && item.customUnitSell !== '') 
+            ? parseFloat(item.customUnitSell) 
+            : applyPriceRounding(combinedUnitSell, roundingRule);
+
+          let itemTotal = (roundedUnitSell * qty) + sSell + shSell;
+          if (item.customTotalSell !== undefined && item.customTotalSell !== '') {
+            itemTotal = parseFloat(item.customTotalSell);
+          }
+          grandTotal += itemTotal;
+
+          const finalUnitSell = qty > 0 ? itemTotal / qty : roundedUnitSell;
+
+          return `
+            <tr>
+              <td><strong>${escapeHtml(item.name || `Item ${idx + 1}`)}</strong></td>
+              <td style="text-align:center;">${qty}</td>
+              <td style="text-align:right;">${formatCurrency(finalUnitSell)}</td>
+              <td style="text-align:right;"><strong>${formatCurrency(itemTotal)}</strong></td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      const qCust = document.getElementById('quoteClientName');
+      if (qCust) qCust.innerText = customer;
+      const qProj = document.getElementById('quoteProjectName');
+      if (qProj) qProj.innerText = job;
+      const qDate = document.getElementById('quoteDate');
+      if (qDate) qDate.innerText = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      const qDead = document.getElementById('quoteDeliveryDeadline');
+      if (qDead) qDead.innerText = deadline;
+      const qRep = document.getElementById('quoteSalesRep');
+      if (qRep) qRep.innerText = rep.replace(/\s*\(.*?\)/, '').trim();
+      const qNotes = document.getElementById('quoteNotesTerms');
+      if (qNotes) qNotes.innerText = notes;
+      const qTot = document.getElementById('quoteGrandTotal');
+      if (qTot) qTot.innerText = formatCurrency(grandTotal);
+
+      // Header branding on modal
+      const qLogo = document.getElementById('quoteLogoImg');
+      if (qLogo && brandingSettings.logoDataUrl) {
+        qLogo.src = brandingSettings.logoDataUrl;
+        qLogo.style.display = 'block';
+      }
+      const qComp = document.getElementById('quoteCompanyName');
+      if (qComp) qComp.innerText = brandingSettings.companyName || (currentUserSession && currentUserSession.company) || 'Profit Pulse';
+      const qContact = document.getElementById('quoteCompanyContact');
+      if (qContact) qContact.innerText = brandingSettings.companyContact || '';
+
+      const modal = document.getElementById('quotePreviewModal');
+      if (modal) modal.classList.add('open');
+    }
+
+    function closeQuoteModal() {
+      const modal = document.getElementById('quotePreviewModal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function printCustomerQuoteFromModal() {
+      window.print();
+    }
+
+    function printOrder() {
+      openQuoteModal();
+      setTimeout(() => window.print(), 300);
+    }
+
+
+    // ORDER WORKSPACE MANAGEMENT & PERSISTENCE
+    function newOrder() {
+      currentOrderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+      const refEl = document.getElementById('orderRefDisplay');
+      if (refEl) refEl.innerText = `Ref: ${currentOrderId}`;
+
+      // Reset customer, project, in-hands date, notes, total cost to blank
+      const custEl = document.getElementById('customer');
+      if (custEl) custEl.value = '';
+      const jobEl = document.getElementById('jobDescription');
+      if (jobEl) jobEl.value = '';
+      const deadEl = document.getElementById('deliveryDeadline');
+      if (deadEl) deadEl.value = '';
+      const notesEl = document.getElementById('clientNotes');
+      if (notesEl) notesEl.value = '';
+      const costEl = document.getElementById('totalCost');
+      if (costEl) costEl.value = '';
+      manualCostOverride = false;
+
+      // Reset items to single clean blank line item
+      orderItems = [
+        {
+          id: 1,
+          name: 'Item 1',
+          quantity: 0,
+          productCostUnit: 0.00,
+          decorationCostUnit: 0.00,
+          setupCharge: 0.00,
+          shippingCost: 0.00
+        }
+      ];
+
+      renderItems();
+      calculate();
+    }
+
+    function saveOrder() {
+      const customer = (document.getElementById('customer').value || '').trim();
+      const job = (document.getElementById('jobDescription').value || '').trim();
+      if (!customer || !job) {
+        alert('Please enter both Customer and Job description before saving.');
+        return;
+      }
+
+      const totalCost = parseFloat(document.getElementById('totalCost').value) || 0;
+      const targetVal = parseFloat(document.getElementById('pricingTargetVal').value) || 0;
+      const repName = document.getElementById('salesRep').value || (savedReps[0] || '');
+      const commissionPct = parseFloat(document.getElementById('commissionPercent').value) || 0;
+      const deadline = document.getElementById('deliveryDeadline').value;
+      const notes = document.getElementById('clientNotes').value;
+      const roundingRule = document.getElementById('priceRounding').value || 'none';
+
+      const targetPct = targetVal / 100;
+      const multiplier = getSellMultiplier(targetPct);
+
+      let calculatedTotalSell = 0;
+      orderItems.forEach(item => {
+        const qty = parseFloat(item.quantity) || 0;
+        const prodCost = parseFloat(item.productCostUnit) || 0;
+        const decCost = parseFloat(item.decorationCostUnit) || 0;
+        const setupCost = parseFloat(item.setupCharge) || 0;
+        const shipCost = parseFloat(item.shippingCost) || 0;
+
+        let pSell = (item.customSellProd !== undefined && item.customSellProd !== '') ? parseFloat(item.customSellProd) : (prodCost > 0 ? prodCost * multiplier : 0);
+        let dSell = (item.customSellDec !== undefined && item.customSellDec !== '') ? parseFloat(item.customSellDec) : (decCost > 0 ? decCost * multiplier : 0);
+        let sSell = (item.customSellSetup !== undefined && item.customSellSetup !== '') ? parseFloat(item.customSellSetup) : (setupCost > 0 ? setupCost * multiplier : 0);
+        let shSell = (item.customSellShip !== undefined && item.customSellShip !== '') ? parseFloat(item.customSellShip) : (shipCost > 0 ? shipCost * multiplier : 0);
+
+        let combinedUnitSell = pSell + dSell;
+        let roundedUnitSell = (item.customUnitSell !== undefined && item.customUnitSell !== '') 
+          ? parseFloat(item.customUnitSell) 
+          : applyPriceRounding(combinedUnitSell, roundingRule);
+
+        let itemTotalSell = (roundedUnitSell * qty) + sSell + shSell;
+        if (item.customTotalSell !== undefined && item.customTotalSell !== '') {
+          itemTotalSell = parseFloat(item.customTotalSell);
+        }
+        calculatedTotalSell += itemTotalSell;
+      });
+
+      const totalSell = manualCostOverride ? (totalCost * multiplier) : calculatedTotalSell;
+      const grossProfit = Math.max(0, totalSell - totalCost);
+      const marginPct = totalSell > 0 ? (grossProfit / totalSell) * 100 : 0;
+      const repCommission = grossProfit * (commissionPct / 100);
+      const netProfit = Math.max(0, grossProfit - repCommission);
+
+      const totalQty = orderItems.reduce((acc, it) => acc + (parseFloat(it.quantity) || 0), 0);
+      const orderRef = currentOrderId || 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+
+      const orderData = {
+        id: orderRef,
+        date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+        timestamp: Date.now(),
+        createdAt: new Date().toISOString(),
+        customer,
+        jobDescription: job,
+        deliveryDeadline: deadline,
+        clientNotes: notes,
+        priceRounding: roundingRule,
+        items: JSON.parse(JSON.stringify(orderItems)),
+        totalQuantity: totalQty,
+        totalCost,
+        targetType: currentPricingType,
+        targetVal,
+        salesRep: repName,
+        commissionPct,
+        totalSell,
+        grossProfit,
+        marginPct,
+        netProfit,
+        createdByUser: currentUserSession ? currentUserSession.email : ''
+      };
+
+      const existingIndex = savedOrders.findIndex(o => o.id === orderRef);
+      if (existingIndex >= 0) {
+        savedOrders[existingIndex] = orderData;
+      } else {
+        savedOrders.unshift(orderData);
+      }
+
+      storeUserData('orders', savedOrders);
+      renderHistoryTable();
+
+      // RESET WORKSPACE TO CLEAN BLANK STATE FOR NEXT CALCULATION AS REQUESTED
+      newOrder();
+
+      alert(`✓ Quote ${orderRef} saved to your private reports! Workspace has been cleared to start a new calculation.`);
+    }
+
+    // Function aliases for backward compatibility
+    const addProductItem = addNewProductItem;
+    const saveCurrentOrder = saveOrder;
+
+    function renderSalesRepFilterDropdown() {
+      const select = document.getElementById('filterSalesRep');
+      if (!select) return;
+      const currentVal = select.value || 'all';
+      select.innerHTML = '<option value="all">All Sales Reps</option>';
+      savedReps.forEach(rep => {
+        const opt = document.createElement('option');
+        opt.value = rep;
+        opt.textContent = rep;
+        select.appendChild(opt);
+      });
+      if (select.querySelector(`option[value="${currentVal}"]`)) {
+        select.value = currentVal;
+      }
+    }
+
+    function onFilterPeriodChange() {
+      const period = document.getElementById('filterPeriod').value;
+      const customWrap = document.getElementById('customDateRangeWrap');
+      if (period === 'custom') {
+        customWrap.style.display = 'block';
+      } else {
+        customWrap.style.display = 'none';
+      }
+      renderHistoryTable();
+    }
+
+    function resetFilters() {
+      document.getElementById('filterPeriod').value = 'all';
+      document.getElementById('customDateRangeWrap').style.display = 'none';
+      document.getElementById('filterStartDate').value = '';
+      document.getElementById('filterEndDate').value = '';
+      document.getElementById('filterProject').value = '';
+      document.getElementById('filterCustomer').value = '';
+      document.getElementById('filterSalesRep').value = 'all';
+      renderHistoryTable();
+    }
+
+    function getFilteredOrders() {
+      const period = document.getElementById('filterPeriod') ? document.getElementById('filterPeriod').value : 'all';
+      const projectQuery = document.getElementById('filterProject') ? document.getElementById('filterProject').value.trim().toLowerCase() : '';
+      const customerQuery = document.getElementById('filterCustomer') ? document.getElementById('filterCustomer').value.trim().toLowerCase() : '';
+      const repFilter = document.getElementById('filterSalesRep') ? document.getElementById('filterSalesRep').value : 'all';
+
+      const now = Date.now();
+      let startTime = 0;
+      let endTime = Infinity;
+
+      if (period === '7d') {
+        startTime = now - (7 * 24 * 60 * 60 * 1000);
+      } else if (period === '15d') {
+        startTime = now - (15 * 24 * 60 * 60 * 1000);
+      } else if (period === '30d') {
+        startTime = now - (30 * 24 * 60 * 60 * 1000);
+      } else if (period === 'custom') {
+        const startVal = document.getElementById('filterStartDate').value;
+        const endVal = document.getElementById('filterEndDate').value;
+        if (startVal) startTime = new Date(startVal + 'T00:00:00').getTime();
+        if (endVal) endTime = new Date(endVal + 'T23:59:59').getTime();
+      }
+
+      return savedOrders.filter(order => {
+        // Date match
+        const orderTime = order.timestamp || (order.date ? new Date(order.date).getTime() : 0);
+        if (orderTime < startTime || orderTime > endTime) {
+          return false;
+        }
+
+        // Project / Job match
+        if (projectQuery) {
+          const matchJob = (order.jobDescription || '').toLowerCase().includes(projectQuery);
+          const matchItems = (order.items || []).some(item => (item.name || '').toLowerCase().includes(projectQuery));
+          const matchRef = (order.id || '').toLowerCase().includes(projectQuery);
+          if (!matchJob && !matchItems && !matchRef) return false;
+        }
+
+        // Customer match
+        if (customerQuery) {
+          if (!(order.customer || '').toLowerCase().includes(customerQuery)) return false;
+        }
+
+        // Sales Rep match
+        if (repFilter !== 'all') {
+          if ((order.salesRep || '') !== repFilter) return false;
+        }
+
+        return true;
+      });
+    }
+
+    function renderHistoryTable() {
+      const tbody = document.getElementById('historyTableBody');
+      const filtered = getFilteredOrders();
+
+      // Update indicator text
+      const periodEl = document.getElementById('filterPeriod');
+      const periodLabel = (periodEl && periodEl.options && periodEl.selectedIndex >= 0 && periodEl.options[periodEl.selectedIndex]) ? periodEl.options[periodEl.selectedIndex].text : 'All Time';
+      const countEl = document.getElementById('filterResultsCount');
+      if (countEl) {
+        countEl.innerText = `Showing ${filtered.length} of ${savedOrders.length} order(s) · Filter: ${periodLabel}`;
+      }
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="11" style="text-align:center; color:#94a3b8; padding:24px;">No orders matching the current filter. Try resetting filters or logging a new order.</td></tr>`;
+        updateStatsBar(0, 0, 0, 0, 0);
+        return;
+      }
+
+      let totalRev = 0;
+      let totalCostSum = 0;
+      let totalGross = 0;
+
+      tbody.innerHTML = filtered.map(o => {
+        totalRev += o.totalSell;
+        totalCostSum += o.totalCost;
+        totalGross += o.grossProfit;
+
+        const itemCount = o.items ? o.items.length : 1;
+        const totalQty = o.totalQuantity !== undefined ? o.totalQuantity : (o.quantity || 0);
+
+        return `
+          <tr>
+            <td><strong>${o.id}</strong><br><span style="font-size:11px; color:#94a3b8">${o.date}</span></td>
+            <td><strong>${escapeHtml(o.customer)}</strong></td>
+            <td>${o.deliveryDeadline ? `<span class="quote-deadline-tag" style="font-size:11px;">${o.deliveryDeadline}</span>` : '<span style="color:#94a3b8">—</span>'}</td>
+            <td>${escapeHtml(o.jobDescription)}</td>
+            <td>${totalQty} <span style="font-size:11px; color:#64748b;">(${itemCount} item${itemCount > 1 ? 's' : ''})</span></td>
+            <td><strong>${formatCurrency(o.totalSell)}</strong></td>
+            <td style="color:#64748b">${formatCurrency(o.totalCost)}</td>
+            <td style="color:var(--amber-dark); font-weight:700;">${formatCurrency(o.grossProfit)}</td>
+            <td><span class="tag-badge" style="background:#f1f5f9; color:#334155;">${o.marginPct.toFixed(1)}%</span></td>
+            <td><strong>${formatCurrency(o.netProfit)}</strong></td>
+            <td>
+              <div class="table-actions">
+                <button class="btn-table" onclick="loadOrder('${o.id}')">Load</button>
+                <button class="btn-table danger" onclick="deleteOrder('${o.id}')">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      const avgMargin = totalRev > 0 ? (totalGross / totalRev) * 100 : 0;
+      updateStatsBar(filtered.length, totalRev, totalCostSum, totalGross, avgMargin);
+    }
+
+    function updateStatsBar(count, rev, cost, gross, avgMargin) {
+      document.getElementById('statOrderCount').innerText = count;
+      document.getElementById('statTotalRevenue').innerText = formatCurrency(rev);
+      document.getElementById('statTotalCost').innerText = formatCurrency(cost);
+      document.getElementById('statGrossProfit').innerText = formatCurrency(gross);
+      document.getElementById('statAvgMargin').innerText = `${avgMargin.toFixed(1)}%`;
+    }
+
+    function loadOrder(id) {
+      const order = savedOrders.find(o => o.id === id);
+      if (!order) return;
+      currentOrderId = order.id;
+      document.getElementById('customer').value = order.customer;
+      document.getElementById('jobDescription').value = order.jobDescription;
+      document.getElementById('deliveryDeadline').value = order.deliveryDeadline || '';
+      document.getElementById('clientNotes').value = order.clientNotes || '';
+      document.getElementById('priceRounding').value = order.priceRounding || 'none';
+
+      if (order.items && Array.isArray(order.items) && order.items.length > 0) {
+        orderItems = JSON.parse(JSON.stringify(order.items));
+      } else {
+        orderItems = [{
+          id: Date.now(),
+          name: order.jobDescription || 'Item 1',
+          quantity: order.quantity || 0,
+          productCostUnit: order.productCostUnit || 0,
+          decorationCostUnit: order.decorationCostUnit || 0,
+          setupCharge: order.setupCharge || 0,
+          shippingCost: order.shippingCost || 0
+        }];
+      }
+
+      document.getElementById('totalCost').value = (order.totalCost || 0).toFixed(2);
+      document.getElementById('pricingTargetSlider').value = order.targetVal;
+      document.getElementById('pricingTargetVal').value = order.targetVal;
+      
+      const rep = order.salesRep || savedReps[0] || '';
+      if (!savedReps.includes(rep)) {
+        savedReps.push(rep);
+        storeUserData('reps', savedReps);
+        renderSalesRepDropdown(rep);
+      } else {
+        document.getElementById('salesRep').value = rep;
+      }
+
+      document.getElementById('commissionPercent').value = order.commissionPct || 0;
+      document.getElementById('orderRefDisplay').innerText = `Ref: ${order.id}`;
+      setPricingTargetType(order.targetType || 'margin');
+
+      renderItems();
+      calculate();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function deleteOrder(id) {
+      if (!confirm(`Are you sure you want to delete order ${id}?`)) return;
+      savedOrders = savedOrders.filter(o => o.id !== id);
+      storeUserData('orders', savedOrders);
+      if (currentOrderId === id) {
+        newOrder();
+      }
+      renderHistoryTable();
+    }
+
+    function clearAllOrders() {
+      if (!confirm('Are you sure you want to clear all order history?')) return;
+      savedOrders = [];
+      storeUserData('orders', savedOrders);
+      renderHistoryTable();
+    }
+
+    function getExportFilename(extension) {
+      const period = document.getElementById('filterPeriod') ? document.getElementById('filterPeriod').value : 'all';
+      const project = document.getElementById('filterProject') ? document.getElementById('filterProject').value.trim() : '';
+      const dateStr = new Date().toISOString().slice(0, 10);
+      let tag = period;
+      if (project) tag += '_' + project.replace(/[^a-zA-Z0-9]/g, '_').slice(0, 15);
+      return `profit_pulse_report_${tag}_${dateStr}.${extension}`;
+    }
+
+    function exportOrdersToCsv() {
+      const orders = getFilteredOrders();
+      if (orders.length === 0) {
+        alert('No orders to export for the current filter.');
+        return;
+      }
+
+      const headers = ['Order Ref', 'Date', 'Customer', 'Delivery Deadline', 'Project Description', 'Total Quantity', 'Total Sell', 'Total Cost', 'Gross Profit', 'Margin %', 'Sales Rep', 'Commission %', 'Net Profit', 'Notes'];
+      const rows = orders.map(o => [
+        `"${o.id}"`,
+        `"${o.date}"`,
+        `"${(o.customer || '').replace(/"/g, '""')}"`,
+        `"${o.deliveryDeadline || ''}"`,
+        `"${(o.jobDescription || '').replace(/"/g, '""')}"`,
+        o.totalQuantity !== undefined ? o.totalQuantity : (o.quantity || 0),
+        o.totalSell.toFixed(2),
+        o.totalCost.toFixed(2),
+        o.grossProfit.toFixed(2),
+        o.marginPct.toFixed(2),
+        `"${(o.salesRep || '').replace(/"/g, '""')}"`,
+        (o.commissionPct || 0).toFixed(1),
+        o.netProfit.toFixed(2),
+        `"${(o.clientNotes || '').replace(/"/g, '""')}"`
+      ]);
+
+      const csvContent = 'data:text/csv;charset=utf-8,﻿' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', getExportFilename('csv'));
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function exportOrdersToExcel() {
+      const orders = getFilteredOrders();
+      if (orders.length === 0) {
+        alert('No orders to export for the current filter.');
+        return;
+      }
+
+      let totalSellSum = 0;
+      let totalCostSum = 0;
+      let totalGrossSum = 0;
+      let totalNetSum = 0;
+
+      const rowsHtml = orders.map(o => {
+        totalSellSum += o.totalSell;
+        totalCostSum += o.totalCost;
+        totalGrossSum += o.grossProfit;
+        totalNetSum += o.netProfit;
+
+        return `
+          <tr>
+            <td>${o.id}</td>
+            <td>${o.date}</td>
+            <td>${escapeHtml(o.customer)}</td>
+            <td>${escapeHtml(o.deliveryDeadline || '')}</td>
+            <td>${escapeHtml(o.jobDescription)}</td>
+            <td>${o.totalQuantity !== undefined ? o.totalQuantity : (o.quantity || 0)}</td>
+            <td style="text-align:right;">$${o.totalSell.toFixed(2)}</td>
+            <td style="text-align:right;">$${o.totalCost.toFixed(2)}</td>
+            <td style="text-align:right; font-weight:bold;">$${o.grossProfit.toFixed(2)}</td>
+            <td style="text-align:right;">${o.marginPct.toFixed(1)}%</td>
+            <td>${escapeHtml(o.salesRep || '')}</td>
+            <td style="text-align:right; font-weight:bold;">$${o.netProfit.toFixed(2)}</td>
+            <td>${escapeHtml(o.clientNotes || '')}</td>
+          </tr>
+        `;
+      }).join('');
+
+      const avgMargin = totalSellSum > 0 ? (totalGrossSum / totalSellSum) * 100 : 0;
+
+      const excelTemplate = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+        <head>
+          <meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8">
+          <style>
+            th { background-color: #0f172a; color: #ffffff; font-weight: bold; border: 1px solid #cbd5e1; padding: 6px; }
+            td { border: 1px solid #cbd5e1; padding: 5px; }
+            .total-row td { background-color: #f1f5f9; font-weight: bold; border-top: 2px solid #0f172a; }
+          </style>
+        </head>
+        <body>
+          <h2>Profit Pulse — Orders & Profit Report</h2>
+          <p>Export Date: ${new Date().toLocaleDateString()} | Active Orders: ${orders.length}</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Order Ref</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Deadline</th>
+                <th>Project Description</th>
+                <th>Qty</th>
+                <th>Total Sell</th>
+                <th>Total Cost</th>
+                <th>Gross Profit</th>
+                <th>Margin %</th>
+                <th>Sales Rep</th>
+                <th>Net Profit</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+            <tfoot>
+              <tr class="total-row">
+                <td colspan="6" style="text-align:right;">GRAND TOTALS:</td>
+                <td style="text-align:right;">$${totalSellSum.toFixed(2)}</td>
+                <td style="text-align:right;">$${totalCostSum.toFixed(2)}</td>
+                <td style="text-align:right;">$${totalGrossSum.toFixed(2)}</td>
+                <td style="text-align:right;">${avgMargin.toFixed(1)}%</td>
+                <td></td>
+                <td style="text-align:right;">$${totalNetSum.toFixed(2)}</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </body>
+        </html>
+      `;
+
+      const blob = new Blob([excelTemplate], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = getExportFilename('xls');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // USER REGISTRATION, AUTHENTICATION & LEAD CAPTURE
+    // BRANDING & APP SETTINGS
+    function openBrandingModal() {
+      document.getElementById('settingCompanyName').value = brandingSettings.companyName || '';
+      document.getElementById('settingCompanyContact').value = brandingSettings.companyContact || '';
+      document.getElementById('settingLogoDisplay').value = brandingSettings.logoDisplay || 'both';
+      document.getElementById('settingLogoSize').value = brandingSettings.logoSize || '60';
+      document.getElementById('settingDefaultMargin').value = brandingSettings.defaultMargin || 40;
+      document.getElementById('settingDefaultTargetType').value = brandingSettings.defaultTargetType || 'margin';
+
+      const preview = document.getElementById('brandingLogoPreview');
+      const emptyText = document.getElementById('logoEmptyText');
+      if (brandingSettings.logoDataUrl) {
+        preview.src = brandingSettings.logoDataUrl;
+        preview.style.display = 'block';
+        emptyText.style.display = 'none';
+      } else {
+        preview.style.display = 'none';
+        emptyText.style.display = 'block';
+      }
+
+      document.getElementById('brandingModal').classList.add('open');
+    }
+
+    function closeBrandingModal() {
+      document.getElementById('brandingModal').classList.remove('open');
+    }
+
+    function handleLogoUpload(event) {
+      const file = event.target.files ? event.target.files[0] : null;
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        brandingSettings.logoDataUrl = e.target.result;
+        const preview = document.getElementById('brandingLogoPreview');
+        const emptyText = document.getElementById('logoEmptyText');
+        if (preview) { preview.src = e.target.result; preview.style.display = 'block'; }
+        if (emptyText) { emptyText.style.display = 'none'; }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeLogo() {
+      brandingSettings.logoDataUrl = '';
+      const preview = document.getElementById('brandingLogoPreview');
+      const emptyText = document.getElementById('logoEmptyText');
+      if (preview) preview.style.display = 'none';
+      if (emptyText) emptyText.style.display = 'block';
+      const input = document.getElementById('companyLogoInput');
+      if (input) input.value = '';
+    }
+
+    function setThemePreset(theme) {
+      const themes = {
+        amber: { primary: '#f59e0b', dark: '#d97706', accent: '#fbbf24' },
+        navy: { primary: '#0284c7', dark: '#0369a1', accent: '#38bdf8' },
+        emerald: { primary: '#10b981', dark: '#047857', accent: '#34d399' },
+        indigo: { primary: '#6366f1', dark: '#4338ca', accent: '#818cf8' },
+        rose: { primary: '#f43f5e', dark: '#be123c', accent: '#fb7185' },
+        slate: { primary: '#475569', dark: '#1e293b', accent: '#94a3b8' }
+      };
+      const t = themes[theme] || themes.amber;
+      brandingSettings.themeKey = theme;
+      brandingSettings.primaryColor = t.primary;
+      brandingSettings.darkColor = t.dark;
+      brandingSettings.accentColor = t.accent;
+
+      document.querySelectorAll('.theme-swatch').forEach(sw => {
+        sw.classList.remove('active');
+        if (sw.getAttribute('data-theme') === theme) sw.classList.add('active');
+      });
+
+      applyThemeColors();
+    }
+
+    function applyThemeColors() {
+      const root = document.documentElement;
+      if (brandingSettings.primaryColor) {
+        root.style.setProperty('--amber-accent', brandingSettings.primaryColor);
+        root.style.setProperty('--amber-dark', brandingSettings.darkColor);
+        root.style.setProperty('--amber-light', brandingSettings.accentColor);
+      }
+    }
+
+    function onCustomColorChange(color) {
+      brandingSettings.themeKey = 'custom';
+      brandingSettings.primaryColor = color;
+      brandingSettings.darkColor = color;
+      brandingSettings.accentColor = color;
+      document.querySelectorAll('.theme-swatch').forEach(sw => sw.classList.remove('active'));
+      applyThemeColors();
+    }
+
+    function saveBrandingSettings() {
+      brandingSettings.companyName = document.getElementById('settingCompanyName').value.trim();
+      brandingSettings.companyContact = document.getElementById('settingCompanyContact').value.trim();
+      brandingSettings.logoDisplay = document.getElementById('settingLogoDisplay').value;
+      brandingSettings.logoSize = document.getElementById('settingLogoSize').value;
+      brandingSettings.defaultMargin = parseFloat(document.getElementById('settingDefaultMargin').value) || 40;
+      brandingSettings.defaultTargetType = document.getElementById('settingDefaultTargetType').value;
+
+      storeUserData('branding', brandingSettings);
+      applyBrandingToUI();
+      closeBrandingModal();
+      alert('Brand settings saved successfully!');
+    }
+
+    function loadBrandingSettings() {
+      const saved = readUserData('branding', null);
+      if (saved) brandingSettings = Object.assign({}, DEFAULT_BRANDING, saved);
+      applyThemeColors();
+      applyBrandingToUI();
+    }
+
+    function applyBrandingToUI() {
+      const headerTitle = document.getElementById('appHeaderTitle');
+      const headerSubtitle = document.getElementById('headerSubtitle');
+      const logoWrap = document.getElementById('companyLogoWrap');
+      const headerLogo = document.getElementById('headerCompanyLogo');
+
+      if (brandingSettings.companyName) {
+        if (headerTitle) headerTitle.innerText = brandingSettings.companyName;
+      } else {
+        if (headerTitle) headerTitle.innerText = 'Profit Pulse';
+      }
+
+      if (brandingSettings.companyContact && headerSubtitle) {
+        headerSubtitle.innerText = brandingSettings.companyContact;
+        headerSubtitle.style.display = 'block';
+      }
+
+      if (brandingSettings.logoDataUrl && brandingSettings.logoDisplay !== 'text_only') {
+        if (headerLogo) {
+          headerLogo.src = brandingSettings.logoDataUrl;
+          headerLogo.style.height = (brandingSettings.logoSize || '60') + 'px';
+        }
+        if (logoWrap) logoWrap.style.display = 'flex';
+        if (brandingSettings.logoDisplay === 'logo_only' && headerTitle) {
+          headerTitle.style.display = 'none';
+        } else if (headerTitle) {
+          headerTitle.style.display = 'block';
+        }
+      } else {
+        if (logoWrap) logoWrap.style.display = 'none';
+        if (headerTitle) headerTitle.style.display = 'block';
+      }
+    }
+
+    const GUEST_ACCOUNT = { id: 'GUEST', name: 'Guest', company: 'Guest Workspace', email: '', phone: '' };
+
+    function bytesToHex(buf) {
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function makeSalt() {
+      const arr = new Uint8Array(16);
+      if (window.crypto && window.crypto.getRandomValues) {
+        window.crypto.getRandomValues(arr);
+      } else {
+        for (let i = 0; i < arr.length; i++) arr[i] = Math.floor(Math.random() * 256);
+      }
+      return bytesToHex(arr.buffer);
+    }
+
+    // Passwords are never stored; only a salted SHA-256 hash is kept.
+    async function hashPassword(pass, salt) {
+      const text = salt + ':' + pass;
+      if (window.crypto && window.crypto.subtle && window.TextEncoder) {
+        const digest = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+        return 'sha256:' + bytesToHex(digest);
+      }
+      // Fallback for browsers without WebCrypto (e.g. some file:// contexts)
+      let h1 = 0x811c9dc5, h2 = 0x01000193;
+      for (let r = 0; r < 2000; r++) {
+        for (let i = 0; i < text.length; i++) {
+          h1 = Math.imul(h1 ^ text.charCodeAt(i), 16777619) >>> 0;
+          h2 = Math.imul(h2 ^ (h1 >>> 7), 2246822519) >>> 0;
+        }
+      }
+      return 'fnv:' + h1.toString(16) + h2.toString(16);
+    }
+
+    function persistAccounts() {
+      localStorage.setItem(PP_ACCOUNTS_KEY, JSON.stringify(registeredUsers));
+    }
+
+    function startUserSession(account) {
+      currentUserSession = {
+        id: account.id,
+        name: account.name,
+        company: account.company,
+        email: account.email,
+        phone: account.phone || ''
+      };
+      if (account.id === 'GUEST') {
+        sessionStorage.setItem(PP_GUEST_FLAG, '1');
+        localStorage.removeItem(PP_SESSION_KEY);
+      } else {
+        localStorage.setItem(PP_SESSION_KEY, account.id);
+        sessionStorage.removeItem(PP_GUEST_FLAG);
+      }
+      loadUserWorkspace();
+      updateUserHeaderGreeting();
+      hideAuthPortal();
+    }
+
+    function initAuthSession() {
+      const sessionId = localStorage.getItem(PP_SESSION_KEY);
+      const account = sessionId ? registeredUsers.find(u => u.id === sessionId) : null;
+      if (account) {
+        startUserSession(account);
+      } else if (sessionStorage.getItem(PP_GUEST_FLAG)) {
+        startUserSession(GUEST_ACCOUNT);
+      } else {
+        wipeUserData('GUEST'); // leftovers from a guest tab that was closed without logging out
+        showAuthPortal('signin');
+      }
+    }
+
+    function showAuthPortal(tab) {
+      const portal = document.getElementById('authPortal');
+      if (!portal) return;
+      portal.style.display = 'flex';
+      switchAuthTab(tab || 'signin');
+      const logoWrap = document.getElementById('authLogoWrap');
+      if (logoWrap) logoWrap.style.display = 'none';
+      const authTitle = document.getElementById('authPortalTitle');
+      if (authTitle) authTitle.innerText = 'Welcome to Profit Pulse';
+    }
+
+    function hideAuthPortal() {
+      const portal = document.getElementById('authPortal');
+      if (portal) portal.style.display = 'none';
+    }
+
+    function switchAuthTab(tab) {
+      const btnIn = document.getElementById('tabBtnSignIn');
+      const btnUp = document.getElementById('tabBtnSignUp');
+      const formIn = document.getElementById('signInForm');
+      const formUp = document.getElementById('signUpForm');
+      if (!btnIn || !btnUp || !formIn || !formUp) return;
+
+      if (tab === 'signup') {
+        btnIn.classList.remove('active');
+        btnUp.classList.add('active');
+        formIn.style.display = 'none';
+        formUp.style.display = 'block';
+      } else {
+        btnUp.classList.remove('active');
+        btnIn.classList.add('active');
+        formUp.style.display = 'none';
+        formIn.style.display = 'block';
+      }
+    }
+
+    async function handleUserSignUp(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const name = document.getElementById('regFullName').value.trim();
+      const company = document.getElementById('regCompanyName').value.trim();
+      const email = document.getElementById('regEmail').value.trim().toLowerCase();
+      const phone = document.getElementById('regPhone').value.trim();
+      const pass = document.getElementById('regPassword').value;
+
+      if (!name || !company || !email || !pass) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+      if (pass.length < 4) {
+        alert('Password must be at least 4 characters.');
+        return;
+      }
+      if (registeredUsers.some(u => u.email === email)) {
+        alert(`An account for ${email} already exists on this device. Please sign in instead.`);
+        switchAuthTab('signin');
+        const loginEmail = document.getElementById('loginEmail');
+        if (loginEmail) loginEmail.value = email;
+        return;
+      }
+
+      const salt = makeSalt();
+      const account = {
+        id: 'USR-' + Date.now().toString(36) + '-' + salt.slice(0, 8),
+        name,
+        company,
+        email,
+        phone,
+        salt,
+        passwordHash: await hashPassword(pass, salt),
+        joinedDate: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+      };
+      registeredUsers.push(account);
+      persistAccounts();
+
+      ['regFullName', 'regCompanyName', 'regEmail', 'regPhone', 'regPassword'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      startUserSession(account);
+    }
+
+    async function handleUserSignIn(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const email = (document.getElementById('loginEmail').value || '').trim().toLowerCase();
+      const pass = document.getElementById('loginPassword').value || '';
+
+      if (!email || !pass) {
+        alert('Please enter your email and password.');
+        return;
+      }
+
+      const account = registeredUsers.find(u => u.email === email);
+      const hash = account ? await hashPassword(pass, account.salt) : null;
+      if (!account || hash !== account.passwordHash) {
+        alert('Email or password is incorrect.');
+        return;
+      }
+
+      const loginPass = document.getElementById('loginPassword');
+      if (loginPass) loginPass.value = '';
+      startUserSession(account);
+    }
+
+    function removeAccount(accountId) {
+      wipeUserData(accountId);
+      registeredUsers = registeredUsers.filter(u => u.id !== accountId);
+      persistAccounts();
+      if (localStorage.getItem(PP_SESSION_KEY) === accountId) localStorage.removeItem(PP_SESSION_KEY);
+    }
+
+    function handleForgotPassword() {
+      const emailInput = document.getElementById('loginEmail');
+      const typed = emailInput ? emailInput.value.trim().toLowerCase() : '';
+      const target = (prompt('Enter the email of the account you forgot the password for:', typed) || '').trim().toLowerCase();
+      if (!target) return;
+
+      const account = registeredUsers.find(u => u.email === target);
+      if (!account) {
+        alert(`No account for ${target} exists on this device.`);
+        return;
+      }
+      // There is no server, so a password can't be verified another way. To keep each
+      // account private, a reset removes that account's data instead of exposing it.
+      const ok = confirm(
+        'Profit Pulse keeps your data only on this device, so passwords cannot be recovered.\n\n' +
+        `Resetting will permanently delete the account ${target} and all of its saved orders, reps and branding on this device. ` +
+        'If you have a backup file you can restore it after creating the account again.\n\nContinue?'
+      );
+      if (!ok) return;
+      removeAccount(account.id);
+      alert('Account removed. You can now create it again.');
+      switchAuthTab('signup');
+      const regEmail = document.getElementById('regEmail');
+      if (regEmail) regEmail.value = target;
+    }
+
+    function deleteMyAccount() {
+      if (!currentUserSession) return;
+      if (currentUserSession.id === 'GUEST') {
+        logoutUser();
+        return;
+      }
+      const ok = confirm(`Permanently delete the account ${currentUserSession.email} and all of its data on this device? Consider downloading a backup first.`);
+      if (!ok) return;
+      removeAccount(currentUserSession.id);
+      currentUserSession = null;
+      location.reload();
+    }
+
+    function logoutUser() {
+      if (!confirm('Are you sure you want to sign out?')) return;
+      if (currentUserSession && currentUserSession.id === 'GUEST') wipeUserData('GUEST');
+      localStorage.removeItem(PP_SESSION_KEY);
+      sessionStorage.removeItem(PP_GUEST_FLAG);
+      currentUserSession = null;
+      // Reload so no previous account data remains in memory or on screen
+      location.reload();
+    }
+
+    function continueAsGuest() {
+      wipeUserData('GUEST');
+      startUserSession(GUEST_ACCOUNT);
+    }
+
+    function updateUserHeaderGreeting() {
+      const greetingEl = document.getElementById('headerUserGreeting');
+      if (greetingEl && currentUserSession) {
+        greetingEl.innerText = `👤 ${currentUserSession.name} (${currentUserSession.company})`;
+      }
+    }
+
+    // ==========================================
+    // PERSONAL BACKUP / RESTORE (replaces shared Google Sheet sync)
+    // ==========================================
+    function exportMyDataBackup() {
+      if (!currentUserSession) return;
+      const payload = {
+        app: 'ProfitPulse',
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        owner: { name: currentUserSession.name, company: currentUserSession.company, email: currentUserSession.email },
+        orders: savedOrders,
+        reps: savedReps,
+        branding: brandingSettings
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `profit_pulse_backup_${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
+    }
+
+    function triggerRestoreBackup() {
+      const input = document.getElementById('restoreBackupInput');
+      if (input) input.click();
+    }
+
+    function restoreMyDataBackup(event) {
+      const file = event && event.target && event.target.files ? event.target.files[0] : null;
+      if (event && event.target) event.target.value = '';
+      if (!file || !currentUserSession) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        let data;
+        try {
+          data = JSON.parse(reader.result);
+        } catch (e) {
+          alert('That file is not a valid Profit Pulse backup.');
+          return;
+        }
+        if (!data || data.app !== 'ProfitPulse' || !Array.isArray(data.orders)) {
+          alert('That file is not a valid Profit Pulse backup.');
+          return;
+        }
+        const byId = new Map(savedOrders.map(o => [o.id, o]));
+        let added = 0;
+        data.orders.forEach(o => {
+          if (o && o.id && !byId.has(o.id)) { byId.set(o.id, o); added++; }
+        });
+        savedOrders = Array.from(byId.values());
+        storeUserData('orders', savedOrders);
+
+        if (Array.isArray(data.reps)) {
+          data.reps.forEach(r => { if (typeof r === 'string' && !savedReps.includes(r)) savedReps.push(r); });
+          storeUserData('reps', savedReps);
+        }
+        if (data.branding && confirm('Also restore the branding (company name, logo, colors) from this backup?')) {
+          brandingSettings = Object.assign({}, DEFAULT_BRANDING, data.branding);
+          storeUserData('branding', brandingSettings);
+          applyThemeColors();
+          applyBrandingToUI();
+        }
+        renderSalesRepDropdown();
+        renderSalesRepFilterDropdown();
+        renderHistoryTable();
+        alert(`Restore complete: ${added} order(s) added.`);
+      };
+      reader.readAsText(file);
+    }
+
+    // ==========================================
+    // APPLICATION BOOTSTRAP (Final Entry Point)
+    // ==========================================
+    function initApplication() {
+      try {
+        renderSalesRepDropdown();
+        applyThemeColors();
+        applyBrandingToUI();
+        renderSalesRepFilterDropdown();
+        renderItems();
+        calculate();
+        renderHistoryTable();
+        initAuthSession();
+      } catch (err) {
+        console.error("Initialization error:", err);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initApplication);
+    } else {
+      initApplication();
+    }
+  </script>
+</body>
+</html>
