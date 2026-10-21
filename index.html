@@ -198,6 +198,7 @@
     input[type="text"],
     input[type="number"],
     input[type="password"],
+    input[type="email"],
     input[type="date"],
     textarea,
     select {
@@ -222,6 +223,7 @@
     input[type="text"]:focus,
     input[type="number"]:focus,
     input[type="password"]:focus,
+    input[type="email"]:focus,
     input[type="date"]:focus,
     textarea:focus,
     select:focus {
@@ -1672,6 +1674,172 @@
       color: #64748b;
     }
 
+    /* Account messages and email-confirmation banner */
+    .auth-message {
+      display: none;
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .auth-message.info { display: block; background: #e0f2fe; color: #075985; border: 1px solid #bae6fd; }
+    .auth-message.error { display: block; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .auth-btn-submit[disabled] { opacity: 0.6; cursor: wait; }
+    .verify-banner {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 0 0 16px;
+      padding: 10px 14px;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 10px;
+      font-size: 13px;
+      color: #92400e;
+    }
+    .verify-banner button {
+      background: #ffffff;
+      border: 1px solid #f59e0b;
+      color: #92400e;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Teams */
+    .workspace-switcher {
+      height: 28px !important;
+      width: auto !important;
+      max-width: 200px;
+      padding: 2px 8px !important;
+      font-size: 12px !important;
+      font-weight: 700;
+    }
+    .team-section { margin-top: 18px; }
+    .team-section-title {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .team-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 13px;
+    }
+    .team-row-who { min-width: 0; }
+    .team-row-who strong { display: block; }
+    .team-row-who span { color: var(--text-muted); font-size: 12px; word-break: break-all; }
+    .team-row-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .team-row-actions select { height: 30px; width: auto; padding: 2px 6px; font-size: 12px; }
+    .role-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      background: #f1f5f9;
+      color: #334155;
+    }
+    .role-badge.owner { background: #fef3c7; color: #92400e; }
+    .role-badge.admin { background: #e0f2fe; color: #075985; }
+    .team-inline-form { display: flex; gap: 8px; flex-wrap: wrap; }
+    .team-inline-form input { flex: 1 1 200px; }
+    .team-inline-form select { width: auto; }
+    .team-note { font-size: 12px; color: var(--text-muted); line-height: 1.45; margin-top: 6px; }
+    .invites-banner {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      margin: 0 0 16px;
+      padding: 10px 14px;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      border-radius: 10px;
+      font-size: 13px;
+      color: #065f46;
+    }
+    .invites-banner .invite-line { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+    .invites-banner button {
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid #10b981;
+      background: #10b981;
+      color: #ffffff;
+    }
+    .invites-banner button.secondary { background: #ffffff; color: #065f46; }
+
+    /* Team view in reports */
+    .history-table.solo-view .col-created-by { display: none; }
+    .history-table td:first-child strong { white-space: nowrap; }
+    .team-summary {
+      display: none;
+      margin: 0 0 16px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .team-summary-title {
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .team-summary table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .team-summary th, .team-summary td { padding: 8px 14px; text-align: right; border-bottom: 1px solid #f1f5f9; }
+    .team-summary th:first-child, .team-summary td:first-child { text-align: left; }
+    .team-summary th { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+    .team-summary tr.is-filtered td { background: var(--amber-light); }
+    .team-summary .member-link { background: none; border: none; padding: 0; font: inherit; font-weight: 700; color: #0284c7; cursor: pointer; text-align: left; }
+    .share-bar { display: inline-block; height: 6px; border-radius: 3px; background: var(--amber-accent); vertical-align: middle; margin-right: 6px; }
+
+    /* "New version available" banner */
+    .update-banner {
+      display: none;
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+      z-index: 10000;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #0f172a;
+      color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.35);
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .update-banner button {
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-weight: 800;
+      cursor: pointer;
+      background: var(--amber-accent);
+      color: #ffffff;
+    }
+    .update-banner button.secondary { background: transparent; color: #cbd5e1; font-weight: 600; }
+
     /* Print Styles */
     @media print {
       body {
@@ -1680,6 +1848,9 @@
       }
 
       .app-header,
+      .update-banner,
+      .verify-banner,
+      .invites-banner,
       .upload-section,
       .history-section,
       .bottom-bar,
@@ -1738,6 +1909,12 @@
   </style>
 </head>
 <body>
+  <div class="update-banner" id="updateBanner" role="status">
+    <span>✨ A new version of Profit Pulse is available.</span>
+    <button type="button" onclick="reloadForUpdate()">Refresh now</button>
+    <button type="button" class="secondary" onclick="document.getElementById('updateBanner').style.display='none'">Later</button>
+  </div>
+
   <!-- AUTHENTICATION & LEAD CAPTURE PORTAL -->
   <div class="auth-overlay" id="authPortal" style="display:none;">
     <div class="auth-card" style="position:relative;">
@@ -1746,8 +1923,10 @@
           <img id="authCompanyLogo" src="" alt="Company Logo" class="auth-logo" />
         </div>
         <h2 class="auth-title" id="authPortalTitle">Welcome to Profit Pulse</h2>
-        <p class="auth-subtitle" id="authPortalSubtitle">Sign in or create your account. Your orders, reps and branding are private to your account and stay on this device.</p>
+        <p class="auth-subtitle" id="authPortalSubtitle">Sign in or create your account. Your orders, reps and branding are private to you and to the teams you choose to join.</p>
       </div>
+
+      <div class="auth-message" id="authMessage" role="status"></div>
 
       <!-- Sign In vs Sign Up Tabs -->
       <div class="auth-tabs">
@@ -1759,18 +1938,24 @@
       <form id="signInForm" onsubmit="handleUserSignIn(event)">
         <div class="auth-input-group">
           <label class="auth-input-label" for="loginEmail">Email Address</label>
-          <input type="text" id="loginEmail" required placeholder="you@company.com" />
+          <input type="email" id="loginEmail" required autocomplete="email" placeholder="you@company.com" />
         </div>
         <div class="auth-input-group">
           <label class="auth-input-label" for="loginPassword">Password</label>
-          <input type="password" id="loginPassword" required placeholder="Enter your password..." />
+          <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="Enter your password..." />
         </div>
         <div style="display:flex; justify-content:flex-end; margin-top:-6px; margin-bottom:12px;">
           <a href="javascript:void(0)" onclick="handleForgotPassword()" style="font-size:12px; color:#0284c7; text-decoration:none; font-weight:600;">Forgot Password?</a>
         </div>
-        <button type="submit" class="auth-btn-submit">Sign In to Dashboard</button>
+        <button type="submit" class="auth-btn-submit" id="btnSignIn">Sign In to Dashboard</button>
         <div style="text-align:center; margin-top:14px; font-size:13px; color:var(--text-muted);">
           Don't have an account? <a href="javascript:void(0)" onclick="switchAuthTab('signup')" style="color:#0284c7; font-weight:700;">Create one here</a>
+        </div>
+        <div style="text-align:center; margin-top:10px; font-size:12px; color:#94a3b8; line-height:1.4;">
+          Used Profit Pulse before October 2026? Please create your account again with the same email. Orders saved on this computer will be offered for import.
+        </div>
+        <div style="text-align:center; margin-top:8px; font-size:11px; color:#94a3b8; line-height:1.4;">
+          🔒 Signed-in data is stored online with Google Firebase and protected by security rules: only you, and teammates in a team you join, can see it. Guest mode keeps everything on this computer only.
         </div>
       </form>
 
@@ -1786,7 +1971,7 @@
         </div>
         <div class="auth-input-group">
           <label class="auth-input-label" for="regEmail">Work Email Address *</label>
-          <input type="text" id="regEmail" required placeholder="jane@acme.com" />
+          <input type="email" id="regEmail" required autocomplete="email" placeholder="jane@acme.com" />
         </div>
         <div class="auth-input-group">
           <label class="auth-input-label" for="regPhone">Phone Number (optional)</label>
@@ -1794,9 +1979,9 @@
         </div>
         <div class="auth-input-group">
           <label class="auth-input-label" for="regPassword">Create Password *</label>
-          <input type="password" id="regPassword" required minlength="4" placeholder="Create a secure password..." />
+          <input type="password" id="regPassword" required minlength="6" autocomplete="new-password" placeholder="At least 6 characters" />
         </div>
-        <button type="submit" class="auth-btn-submit">Register & Access Calculator</button>
+        <button type="submit" class="auth-btn-submit" id="btnSignUp">Register & Access Calculator</button>
         <div style="text-align:center; margin-top:14px; font-size:13px; color:var(--text-muted);">
           Already have an account? <a href="javascript:void(0)" onclick="switchAuthTab('signin')" style="color:#0284c7; font-weight:700;">Sign in here</a>
         </div>
@@ -1830,17 +2015,31 @@
         <button class="btn-header" onclick="openManageRepsModal()">
           👤 Sales Reps
         </button>
+        <button class="btn-header" id="btnTeam" onclick="openTeamModal()" style="display:none;">
+          👥 Team
+        </button>
         <button class="btn-header" onclick="exportOrdersToCsv()">
           📥 Export CSV
         </button>
         <!-- Logged In User Pill -->
         <div id="loggedInUserBadge" style="display:flex; align-items:center; gap:8px; background:#f1f5f9; padding:4px 10px; border-radius:var(--radius-sm); border:1px solid #cbd5e1;">
           <span style="font-size:12px; font-weight:700; color:var(--text-main);" id="headerUserGreeting">Guest</span>
+          <select id="workspaceSwitcher" class="workspace-switcher" onchange="switchWorkspace(this.value)" title="Switch between your personal workspace and your teams" style="display:none;"></select>
           <button type="button" class="btn-text-link" style="color:var(--danger-color); font-size:11px;" onclick="logoutUser()">Log Out</button>
           <button type="button" class="btn-text-link" style="color:#94a3b8; font-size:11px;" onclick="deleteMyAccount()" title="Delete your account and all of its data from this device">Delete Account</button>
         </div>
       </div>
     </header>
+
+    <div class="verify-banner" id="verifyBanner" role="status">
+      <span id="verifyBannerText">📧 Please confirm your email address. We sent you a link.</span>
+      <span style="display:flex; gap:8px;">
+        <button type="button" onclick="resendVerificationEmail()">Resend email</button>
+        <button type="button" onclick="checkEmailVerified()">I've confirmed it</button>
+      </span>
+    </div>
+
+    <div class="invites-banner" id="invitesBanner" role="status"></div>
 
     <!-- Main Grid -->
     <main class="calculator-layout">
@@ -2094,7 +2293,7 @@
       <div class="history-header">
         <div>
           <h3 class="history-title">📊 Saved Orders & Custom Reports</h3>
-          <span style="font-size:12px; color:var(--text-muted);">Filter by rolling periods, specific project, customer, or sales rep</span>
+          <span style="font-size:12px; color:var(--text-muted);" id="historySubtitle">Filter by rolling periods, specific project, customer, or sales rep</span>
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <button class="btn-header" onclick="exportMyDataBackup()" title="Download a backup of your orders, reps and branding">💾 Backup My Data</button>
@@ -2144,6 +2343,13 @@
           </select>
         </div>
 
+        <div class="filter-col" id="filterCreatedByWrap" style="max-width:200px; display:none;">
+          <label class="filter-label">Team Member</label>
+          <select id="filterCreatedBy" onchange="renderHistoryTable()">
+            <option value="all">Everyone</option>
+          </select>
+        </div>
+
         <div>
           <button type="button" class="btn-filter-reset" onclick="resetFilters()">Reset Filters</button>
         </div>
@@ -2178,12 +2384,16 @@
         </div>
       </div>
 
+      <!-- Team totals by member (team workspaces only) -->
+      <div class="team-summary" id="teamSummary"></div>
+
       <!-- Table -->
       <div class="table-responsive">
-        <table class="history-table">
+        <table class="history-table solo-view" id="historyTable">
           <thead>
             <tr>
               <th>Ref / Date</th>
+              <th class="col-created-by">Created by</th>
               <th>Customer</th>
               <th>Deadline</th>
               <th>Job Description</th>
@@ -2198,7 +2408,7 @@
           </thead>
           <tbody id="historyTableBody">
             <tr>
-              <td colspan="11" style="text-align:center; color:#94a3b8; padding:24px;">No saved orders yet. Click "Save Order" above to log an order.</td>
+              <td colspan="12" style="text-align:center; color:#94a3b8; padding:24px;">No saved orders yet. Click "Save Order" above to log an order.</td>
             </tr>
           </tbody>
         </table>
@@ -2286,15 +2496,45 @@
     </div>
   </div>
 
+  <!-- IMPORT FROM OLD (THIS-DEVICE-ONLY) ACCOUNT -->
+  <div class="modal-backdrop" id="legacyImportModal">
+    <div class="modal-box" style="max-width:460px;">
+      <h3 class="modal-title">📦 Bring over your saved orders?</h3>
+      <p class="modal-text" id="legacyImportText"></p>
+      <form onsubmit="event.preventDefault(); confirmLegacyImport();">
+        <label class="field-label" for="legacyImportTarget">Bring them into</label>
+        <select id="legacyImportTarget" style="margin-bottom:12px;"></select>
+        <label class="field-label" for="legacyImportPassword">Your OLD Profit Pulse password</label>
+        <input type="password" id="legacyImportPassword" autocomplete="off" placeholder="The password you used before" style="width:100%; margin-bottom:8px;" />
+        <div id="legacyImportError" style="color:#b91c1c; font-size:12px; min-height:16px;"></div>
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+          <button type="button" class="btn btn-secondary" onclick="closeLegacyImport()">Not now</button>
+          <button type="submit" class="btn btn-primary">Import my orders</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TEAM MODAL -->
+  <div class="modal-backdrop" id="teamModal">
+    <div class="modal-box" style="max-width:640px;">
+      <h3 class="modal-title">👥 Team</h3>
+      <div id="teamModalBody">Loading…</div>
+      <div style="display:flex; justify-content:flex-end; margin-top:18px;">
+        <button class="btn btn-secondary" onclick="closeTeamModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
   <!-- MANAGE SALES REPS MODAL -->
   <div class="modal-backdrop" id="repsModal">
     <div class="modal-box">
       <h3 class="modal-title">👥 Manage Sales Reps</h3>
       <p class="modal-text">
-        Add custom sales reps to save them for all your future orders. Your list is stored locally in your browser.
+        <span id="repsModalText">Add custom sales reps to save them for all your future orders.</span>
       </p>
 
-      <div style="display:flex; gap:10px; margin-bottom:16px;">
+      <div style="display:flex; gap:10px; margin-bottom:16px;" id="repAddRow">
         <input type="text" id="newRepNameInput" placeholder="Enter Sales Rep name..." onkeydown="if(event.key==='Enter') addCustomRep()" />
         <button class="btn btn-primary" style="white-space:nowrap;" onclick="addCustomRep()">+ Add Rep</button>
       </div>
@@ -2314,6 +2554,7 @@
   <div class="modal-backdrop" id="brandingModal">
     <div class="modal-box" style="max-width:580px;">
       <h3 class="modal-title">🎨 Company Branding & App Settings</h3>
+      <div class="auth-message info" id="brandingReadOnlyNote" style="display:none;">Only the team Owner or an Admin can change the team's branding. You can look, but changes won't be saved.</div>
       <p class="modal-text">
         Personalize Profit Pulse with your company name, logo, custom color theme, and default standard margins.
       </p>
@@ -2341,7 +2582,7 @@
           <div style="flex:1; min-width:200px;">
             <input type="file" id="companyLogoInput" accept="image/png,image/jpeg,image/svg+xml,image/webp" style="display:none;" onchange="handleLogoUpload(event)" />
             <div style="display:flex; gap:8px; align-items:center;">
-              <button type="button" class="btn btn-secondary" style="padding:6px 14px; font-size:12px;" onclick="document.getElementById('companyLogoInput').click()">Upload Logo</button>
+              <button type="button" class="btn btn-secondary logo-upload-btn" style="padding:6px 14px; font-size:12px;" onclick="document.getElementById('companyLogoInput').click()">Upload Logo</button>
               <button type="button" class="btn-text-link" style="color:var(--danger-color);" id="btnRemoveLogo" onclick="removeLogo()">Remove</button>
             </div>
             <p class="field-hint" style="margin-top:4px;">PNG, JPG, or SVG. Displayed in the app header and on client quotes.</p>
@@ -2409,7 +2650,7 @@
 
       <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px; padding-top:16px; border-top:1px solid #e2e8f0;">
         <button type="button" class="btn btn-secondary" onclick="closeBrandingModal()">Cancel</button>
-        <button type="button" class="btn btn-primary" onclick="saveBrandingSettings()">Save Settings</button>
+        <button type="button" class="btn btn-primary" id="btnSaveBranding" onclick="saveBrandingSettings()">Save Settings</button>
       </div>
     </div>
   </div>
@@ -2437,7 +2678,7 @@
     // Every account's data lives under its own key: pp_v1::<accountId>::<name>.
     // Nothing is shared between accounts and nothing is sent to any server.
     const PP_ACCOUNTS_KEY = 'pp_v1_accounts';
-    const PP_SESSION_KEY = 'pp_v1_session';
+    const PP_SESSION_KEY = 'pp_v1_session'; // old local sign-in, no longer used
     const PP_GUEST_FLAG = 'pp_v1_guest_active';
     const DEFAULT_REPS = ["House Account"];
     let savedReps = DEFAULT_REPS.slice();
@@ -2446,6 +2687,15 @@
       try { return JSON.parse(localStorage.getItem(PP_ACCOUNTS_KEY) || '[]') || []; } catch (e) { return []; }
     })();
     let currentUserSession = null;
+    let myTeams = [];           // teams I belong to: [{ id, name, isPersonal, ownerUid, role }]
+    let currentTeam = null;     // the workspace in use (one of myTeams)
+    let myPendingInvites = [];  // invites sent to my confirmed email
+    let workspaceUnsubs = [];   // live Firestore listeners for the open workspace
+    let cloudOrderCache = new Map(); // order id -> content of the version last seen from the server
+    let cloudSettingsSeen = { reps: false, branding: false };
+    let workspaceReady = Promise.resolve();
+    let teamMemberNames = [];
+    let teamMembers = [];       // [{ uid, name, email, role }] of the open team
     const DEFAULT_BRANDING = {
       companyName: '',
       companyContact: '',
@@ -2461,12 +2711,14 @@
     };
     let brandingSettings = Object.assign({}, DEFAULT_BRANDING);
 
+    // Local data is kept per workspace: your personal one (your user id) or a team ('team_<id>')
     function userStorageKey(name) {
-      return 'pp_v1::' + (currentUserSession ? currentUserSession.id : 'none') + '::' + name;
+      return 'pp_v1::' + workspaceStorageId() + '::' + name;
     }
 
     function storeUserData(name, value) {
       if (!currentUserSession) return;
+      if (isCloudWorkspace()) return storeWorkspaceDataInCloud(name, value);
       try {
         localStorage.setItem(userStorageKey(name), JSON.stringify(value));
       } catch (e) {
@@ -2476,6 +2728,12 @@
 
     function readUserData(name, fallback) {
       if (!currentUserSession) return fallback;
+      if (isCloudWorkspace()) {
+        if (name === 'orders') return savedOrders;
+        if (name === 'reps') return cloudSettingsSeen.reps ? savedReps : fallback;
+        if (name === 'branding') return cloudSettingsSeen.branding ? brandingSettings : fallback;
+        return fallback;
+      }
       try {
         const raw = localStorage.getItem(userStorageKey(name));
         return raw === null ? fallback : JSON.parse(raw);
@@ -2497,13 +2755,20 @@
     // Loads the signed-in account's private workspace into memory and refreshes the UI
     function loadUserWorkspace() {
       if (!currentUserSession) return;
+      stopWorkspaceSync();
+      if (isCloudWorkspace()) {
+        savedOrders = [];
+        cloudOrderCache = new Map();
+        cloudSettingsSeen = { reps: false, branding: false };
+      }
       const orders = readUserData('orders', []);
       savedOrders = Array.isArray(orders) ? orders : [];
 
       const reps = readUserData('reps', null);
       savedReps = (Array.isArray(reps) && reps.length) ? reps : [`${currentUserSession.name} (you)`].concat(DEFAULT_REPS);
 
-      brandingSettings = Object.assign({}, DEFAULT_BRANDING, { companyName: currentUserSession.company || '' }, readUserData('branding', {}) || {});
+      const defaultCompany = (currentTeam && !currentTeam.isPersonal) ? currentTeam.name : (currentUserSession.company || '');
+      brandingSettings = Object.assign({}, DEFAULT_BRANDING, { companyName: defaultCompany }, readUserData('branding', {}) || {});
       applyThemeColors();
       applyBrandingToUI();
 
@@ -2519,6 +2784,8 @@
       renderSalesRepFilterDropdown();
       newOrder();
       renderHistoryTable();
+      updateWorkspacePermissionsUI();
+      if (isCloudWorkspace()) startWorkspaceSync();
     }
 
 // ==========================================
@@ -2881,10 +3148,11 @@
     function renderRepList() {
       const list = document.getElementById('repListContainer');
       if (!list) return;
+      const editable = canEditWorkspaceSettings();
       list.innerHTML = savedReps.map((r, i) => `
         <div style="display:flex; justify-content:space-between; align-items:center; padding:8px; border-bottom:1px solid #f1f5f9;">
           <span>${escapeHtml(r)}</span>
-          ${savedReps.length > 1 ? `<button type="button" class="btn btn-secondary btn-sm" onclick="deleteRep(${i})" style="color:#ef4444;" title="Remove rep">✕</button>` : ''}
+          ${editable && savedReps.length > 1 ? `<button type="button" class="btn btn-secondary btn-sm" onclick="deleteRep(${i})" style="color:#ef4444;" title="Remove rep">✕</button>` : ''}
         </div>
       `).join('');
     }
@@ -2892,6 +3160,7 @@
     function addCustomRep() {
       const input = document.getElementById('newRepNameInput');
       if (!input) return;
+      if (!canEditWorkspaceSettings()) { alert('Only the team Owner or an Admin can change the sales rep list.'); return; }
       const name = input.value.trim();
       if (!name) return;
       if (savedReps.includes(name)) {
@@ -2909,6 +3178,7 @@
     }
 
     function deleteRep(index) {
+      if (!canEditWorkspaceSettings()) { alert('Only the team Owner or an Admin can change the sales rep list.'); return; }
       if (savedReps.length > 1) {
         savedReps.splice(index, 1);
         storeUserData('reps', savedReps);
@@ -3246,7 +3516,7 @@
 
     // ORDER WORKSPACE MANAGEMENT & PERSISTENCE
     function newOrder() {
-      currentOrderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+      currentOrderId = newOrderId();
       const refEl = document.getElementById('orderRefDisplay');
       if (refEl) refEl.innerText = `Ref: ${currentOrderId}`;
 
@@ -3308,7 +3578,11 @@
       const netProfit = grossProfit - repCommission;
 
       const totalQty = orderItems.reduce((acc, it) => acc + (parseFloat(it.quantity) || 0), 0);
-      const orderRef = currentOrderId || 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+      let orderRef = currentOrderId || newOrderId();
+      // In a team, members can only change orders they created: save someone else's as a new copy
+      const existingOrder = savedOrders.find(o => o.id === orderRef);
+      const savedAsCopy = !!(existingOrder && !canChangeOrder(existingOrder));
+      if (savedAsCopy) orderRef = newOrderId();
 
       const orderData = {
         id: orderRef,
@@ -3347,7 +3621,10 @@
       // RESET WORKSPACE TO CLEAN BLANK STATE FOR NEXT CALCULATION AS REQUESTED
       newOrder();
 
-      alert(`✓ Quote ${orderRef} saved to your private reports! Workspace has been cleared to start a new calculation.`);
+      const where = isCloudWorkspace() && currentTeam && !currentTeam.isPersonal ? `the ${currentTeam.name} team's reports` : 'your reports';
+      alert(savedAsCopy
+        ? `That order belongs to a teammate, so your changes were saved as a new quote ${orderRef} in ${where}. Workspace has been cleared.`
+        : `✓ Quote ${orderRef} saved to ${where}! Workspace has been cleared to start a new calculation.`);
     }
 
     // Function aliases for backward compatibility
@@ -3389,6 +3666,8 @@
       document.getElementById('filterProject').value = '';
       document.getElementById('filterCustomer').value = '';
       document.getElementById('filterSalesRep').value = 'all';
+      const creatorSel = document.getElementById('filterCreatedBy');
+      if (creatorSel) creatorSel.value = 'all';
       renderHistoryTable();
     }
 
@@ -3397,6 +3676,7 @@
       const projectQuery = document.getElementById('filterProject') ? document.getElementById('filterProject').value.trim().toLowerCase() : '';
       const customerQuery = document.getElementById('filterCustomer') ? document.getElementById('filterCustomer').value.trim().toLowerCase() : '';
       const repFilter = document.getElementById('filterSalesRep') ? document.getElementById('filterSalesRep').value : 'all';
+      const creatorFilter = isTeamView() && document.getElementById('filterCreatedBy') ? document.getElementById('filterCreatedBy').value : 'all';
 
       const now = Date.now();
       let startTime = 0;
@@ -3440,12 +3720,18 @@
           if ((order.salesRep || '') !== repFilter) return false;
         }
 
+        // Team member (who created it)
+        if (creatorFilter !== 'all') {
+          if ((order.createdBy || '') !== creatorFilter) return false;
+        }
+
         return true;
       });
     }
 
     function renderHistoryTable() {
       const tbody = document.getElementById('historyTableBody');
+      updateTeamViewControls();
       const filtered = getFilteredOrders();
 
       // Update indicator text
@@ -3457,8 +3743,9 @@
       }
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="11" style="text-align:center; color:#94a3b8; padding:24px;">No orders matching the current filter. Try resetting filters or logging a new order.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="12" style="text-align:center; color:#94a3b8; padding:24px;">No orders matching the current filter. Try resetting filters or logging a new order.</td></tr>`;
         updateStatsBar(0, 0, 0, 0, 0);
+        renderTeamSummary(filtered);
         return;
       }
 
@@ -3477,6 +3764,7 @@
         return `
           <tr>
             <td><strong>${escapeHtml(o.id)}</strong><br><span style="font-size:11px; color:#94a3b8">${escapeHtml(o.date || '')}</span></td>
+            <td class="col-created-by">${escapeHtml(creatorName(o))}</td>
             <td><strong>${escapeHtml(o.customer)}</strong></td>
             <td>${o.deliveryDeadline ? `<span class="quote-deadline-tag" style="font-size:11px;">${escapeHtml(formatDisplayDate(o.deliveryDeadline))}</span>` : '<span style="color:#94a3b8">—</span>'}</td>
             <td>${escapeHtml(o.jobDescription)}</td>
@@ -3488,8 +3776,8 @@
             <td><strong>${formatCurrency(o.netProfit)}</strong></td>
             <td>
               <div class="table-actions">
-                <button class="btn-table" onclick="loadOrder('${o.id}')">Load</button>
-                <button class="btn-table danger" onclick="deleteOrder('${o.id}')">Delete</button>
+                <button class="btn-table" onclick="loadOrder('${escapeHtml(o.id)}')">Load</button>
+                ${canChangeOrder(o) ? `<button class="btn-table danger" onclick="deleteOrder('${escapeHtml(o.id)}')">Delete</button>` : ''}
               </div>
             </td>
           </tr>
@@ -3498,6 +3786,132 @@
 
       const avgMargin = totalRev > 0 ? (totalGross / totalRev) * 100 : 0;
       updateStatsBar(filtered.length, totalRev, totalCostSum, totalGross, avgMargin);
+      renderTeamSummary(filtered);
+    }
+
+    // ---------- team view helpers ----------
+    function isTeamView() {
+      return isCloudWorkspace() && !!currentTeam && !currentTeam.isPersonal;
+    }
+
+    function creatorName(order) {
+      if (!order) return '';
+      const me = currentUserSession && currentUserSession.id;
+      const member = teamMembers.find(m => m.uid === order.createdBy);
+      const name = (member && member.name) || order.createdByName || (order.createdBy ? 'Former member' : '—');
+      return order.createdBy && order.createdBy === me ? `${name} (you)` : name;
+    }
+
+    // Everyone who is in the team or created an order in it, by user id
+    function knownCreators() {
+      const map = new Map();
+      teamMembers.forEach(m => map.set(m.uid, m.name));
+      savedOrders.forEach(o => { if (o.createdBy && !map.has(o.createdBy)) map.set(o.createdBy, o.createdByName || 'Former member'); });
+      return map;
+    }
+
+    function updateTeamViewControls() {
+      const team = isTeamView();
+      const table = document.getElementById('historyTable');
+      if (table) table.classList.toggle('solo-view', !team);
+      const wrap = document.getElementById('filterCreatedByWrap');
+      if (wrap) wrap.style.display = team ? '' : 'none';
+      const subtitle = document.getElementById('historySubtitle');
+      if (subtitle) {
+        subtitle.innerText = team
+          ? `${currentTeam.name}: everyone's orders. Filter by period, project, customer, sales rep, or team member.`
+          : 'Filter by rolling periods, specific project, customer, or sales rep';
+      }
+      const sel = document.getElementById('filterCreatedBy');
+      if (!sel) return;
+      if (!team) {
+        sel.innerHTML = '<option value="all">Everyone</option>';
+        return;
+      }
+      const current = sel.value || 'all';
+      const me = currentUserSession.id;
+      const others = Array.from(knownCreators().entries())
+        .filter(([uid]) => uid !== me)
+        .sort((a, b) => String(a[1]).localeCompare(String(b[1])));
+      sel.innerHTML = '<option value="all">Everyone</option>'
+        + `<option value="${escapeHtml(me)}">Only mine</option>`
+        + others.map(([uid, name]) => `<option value="${escapeHtml(uid)}">${escapeHtml(name)}</option>`).join('');
+      sel.value = Array.from(sel.options).some(o => o.value === current) ? current : 'all';
+    }
+
+    function filterByCreator(uid) {
+      const sel = document.getElementById('filterCreatedBy');
+      if (!sel) return;
+      sel.value = sel.value === uid ? 'all' : uid;
+      renderHistoryTable();
+    }
+
+    // Per-member totals for the orders currently shown (respects the period/customer/... filters)
+    function renderTeamSummary(filtered) {
+      const box = document.getElementById('teamSummary');
+      if (!box) return;
+      if (!isTeamView()) {
+        box.style.display = 'none';
+        box.innerHTML = '';
+        return;
+      }
+      const sel = document.getElementById('filterCreatedBy');
+      const selected = sel ? sel.value : 'all';
+      // Base the summary on every member's orders, ignoring only the member filter itself
+      let base = filtered;
+      if (selected !== 'all' && sel) {
+        sel.value = 'all';
+        base = getFilteredOrders();
+        sel.value = selected;
+      }
+      const rows = new Map();
+      knownCreators().forEach((name, uid) => rows.set(uid, { uid, name, count: 0, sell: 0, gross: 0, net: 0 }));
+      base.forEach(o => {
+        const key = o.createdBy || 'unknown';
+        if (!rows.has(key)) rows.set(key, { uid: key, name: o.createdByName || 'Unknown', count: 0, sell: 0, gross: 0, net: 0 });
+        const r = rows.get(key);
+        r.count += 1;
+        r.sell += Number(o.totalSell) || 0;
+        r.gross += Number(o.grossProfit) || 0;
+        r.net += Number(o.netProfit) || 0;
+      });
+      const list = Array.from(rows.values()).sort((a, b) => (b.sell - a.sell) || a.name.localeCompare(b.name));
+      const totalSell = list.reduce((sum, r) => sum + r.sell, 0);
+      const totalGross = list.reduce((sum, r) => sum + r.gross, 0);
+      const totalNet = list.reduce((sum, r) => sum + r.net, 0);
+      const totalCount = list.reduce((sum, r) => sum + r.count, 0);
+      const me = currentUserSession.id;
+
+      box.style.display = 'block';
+      box.innerHTML = `
+        <div class="team-summary-title">👥 Team summary by member <span style="text-transform:none; font-weight:600;">· click a name to show only their orders</span></div>
+        <table>
+          <thead><tr><th>Member</th><th>Orders</th><th>Total Sell</th><th>Gross Profit</th><th>Avg Margin</th><th>Net Profit</th><th>Share of Sales</th></tr></thead>
+          <tbody>
+            ${list.map(r => {
+              const share = totalSell > 0 ? (r.sell / totalSell) * 100 : 0;
+              const margin = r.sell > 0 ? (r.gross / r.sell) * 100 : 0;
+              return `<tr class="${selected === r.uid ? 'is-filtered' : ''}">
+                <td><button type="button" class="member-link" onclick="filterByCreator('${escapeHtml(r.uid)}')">${escapeHtml(r.name)}${r.uid === me ? ' (you)' : ''}</button></td>
+                <td>${r.count}</td>
+                <td>${formatCurrency(r.sell)}</td>
+                <td>${formatCurrency(r.gross)}</td>
+                <td>${margin.toFixed(1)}%</td>
+                <td>${formatCurrency(r.net)}</td>
+                <td><span class="share-bar" style="width:${Math.round(share * 0.6)}px;"></span>${share.toFixed(0)}%</td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+          <tfoot><tr>
+            <td><strong>Team total</strong></td>
+            <td><strong>${totalCount}</strong></td>
+            <td><strong>${formatCurrency(totalSell)}</strong></td>
+            <td><strong>${formatCurrency(totalGross)}</strong></td>
+            <td><strong>${(totalSell > 0 ? (totalGross / totalSell) * 100 : 0).toFixed(1)}%</strong></td>
+            <td><strong>${formatCurrency(totalNet)}</strong></td>
+            <td><strong>100%</strong></td>
+          </tr></tfoot>
+        </table>`;
     }
 
     function updateStatsBar(count, rev, cost, gross, avgMargin) {
@@ -3539,7 +3953,7 @@
       const rep = order.salesRep || savedReps[0] || '';
       if (!savedReps.includes(rep)) {
         savedReps.push(rep);
-        storeUserData('reps', savedReps);
+        if (canEditWorkspaceSettings()) storeUserData('reps', savedReps);
         renderSalesRepDropdown(rep);
       } else {
         document.getElementById('salesRep').value = rep;
@@ -3555,6 +3969,11 @@
     }
 
     function deleteOrder(id) {
+      const target = savedOrders.find(o => o.id === id);
+      if (target && !canChangeOrder(target)) {
+        alert('Only the person who created this order, or a team Owner/Admin, can delete it.');
+        return;
+      }
       if (!confirm(`Are you sure you want to delete order ${id}?`)) return;
       savedOrders = savedOrders.filter(o => o.id !== id);
       storeUserData('orders', savedOrders);
@@ -3565,7 +3984,14 @@
     }
 
     function clearAllOrders() {
-      if (!confirm('Are you sure you want to clear all order history?')) return;
+      if (isCloudWorkspace() && !canManageTeam()) {
+        alert('Only a team Owner or Admin can clear all of the team\'s orders.');
+        return;
+      }
+      const teamWide = isCloudWorkspace() && currentTeam && !currentTeam.isPersonal;
+      if (!confirm(teamWide
+        ? `Delete ALL ${savedOrders.length} orders of ${currentTeam.name} for everyone in the team? This cannot be undone.`
+        : 'Are you sure you want to clear all order history?')) return;
       savedOrders = [];
       storeUserData('orders', savedOrders);
       renderHistoryTable();
@@ -3587,7 +4013,7 @@
         return;
       }
 
-      const headers = ['Order Ref', 'Date', 'Customer', 'Delivery Deadline', 'Project Description', 'Total Quantity', 'Total Sell', 'Total Cost', 'Gross Profit', 'Margin %', 'Sales Rep', 'Commission %', 'Net Profit', 'Notes'];
+      const headers = ['Order Ref', 'Date', 'Created By', 'Customer', 'Delivery Deadline', 'Project Description', 'Total Quantity', 'Total Sell', 'Total Cost', 'Gross Profit', 'Margin %', 'Sales Rep', 'Commission %', 'Net Profit', 'Notes'];
       // Quote text cells; prefix formula-like text so spreadsheets don't execute it
       const cell = v => {
         let t = String(v === undefined || v === null ? '' : v);
@@ -3598,6 +4024,7 @@
       const rows = orders.map(o => [
         cell(o.id),
         cell(o.date),
+        cell(isCloudWorkspace() ? creatorName(o).replace(/ \(you\)$/, '') : (currentUserSession ? currentUserSession.name : '')),
         cell(o.customer),
         cell(o.deliveryDeadline),
         cell(o.jobDescription),
@@ -3645,6 +4072,7 @@
           <tr>
             <td>${escapeHtml(o.id)}</td>
             <td>${escapeHtml(o.date || '')}</td>
+            <td>${escapeHtml(isCloudWorkspace() ? creatorName(o).replace(/ \(you\)$/, '') : (currentUserSession ? currentUserSession.name : ''))}</td>
             <td>${escapeHtml(o.customer)}</td>
             <td>${escapeHtml(o.deliveryDeadline || '')}</td>
             <td>${escapeHtml(o.jobDescription)}</td>
@@ -3680,6 +4108,7 @@
               <tr>
                 <th>Order Ref</th>
                 <th>Date</th>
+                <th>Created By</th>
                 <th>Customer</th>
                 <th>Deadline</th>
                 <th>Project Description</th>
@@ -3698,7 +4127,7 @@
             </tbody>
             <tfoot>
               <tr class="total-row">
-                <td colspan="6" style="text-align:right;">GRAND TOTALS:</td>
+                <td colspan="7" style="text-align:right;">GRAND TOTALS:</td>
                 <td style="text-align:right;">$${totalSellSum.toFixed(2)}</td>
                 <td style="text-align:right;">$${totalCostSum.toFixed(2)}</td>
                 <td style="text-align:right;">$${totalGrossSum.toFixed(2)}</td>
@@ -3756,6 +4185,15 @@
       if (logoInput) logoInput.value = '';
 
       brandingSnapshot = JSON.parse(JSON.stringify(brandingSettings));
+      const editable = canEditWorkspaceSettings();
+      document.querySelectorAll('#brandingModal input, #brandingModal select, #brandingModal .theme-swatch, #brandingModal .logo-upload-btn, #btnRemoveLogo').forEach(el => {
+        if ('disabled' in el) el.disabled = !editable;
+        el.style.pointerEvents = editable ? '' : 'none';
+      });
+      const note = document.getElementById('brandingReadOnlyNote');
+      if (note) note.style.display = editable ? 'none' : 'block';
+      const saveBtn = document.getElementById('btnSaveBranding');
+      if (saveBtn) saveBtn.style.display = editable ? '' : 'none';
       document.getElementById('brandingModal').classList.add('open');
     }
 
@@ -3781,14 +4219,42 @@
         event.target.value = '';
         return;
       }
-      reader.onload = function(e) {
-        brandingSettings.logoDataUrl = e.target.result;
+      reader.onload = async function(e) {
+        const small = await shrinkLogo(e.target.result);
+        if (!small) {
+          alert('Sorry, that image could not be used. Please try a PNG or JPG logo.');
+          return;
+        }
+        brandingSettings.logoDataUrl = small;
         const preview = document.getElementById('brandingLogoPreview');
         const emptyText = document.getElementById('logoEmptyText');
-        if (preview) { preview.src = e.target.result; preview.style.display = 'block'; }
+        if (preview) { preview.src = small; preview.style.display = 'block'; }
         if (emptyText) { emptyText.style.display = 'none'; }
       };
       reader.readAsDataURL(file);
+    }
+
+    // Logos are stored with the team's settings (max ~400 KB), so shrink them to fit
+    function shrinkLogo(dataUrl) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => {
+          const maxW = 600, maxH = 240;
+          const scale = Math.min(1, maxW / (img.naturalWidth || maxW), maxH / (img.naturalHeight || maxH));
+          const w = Math.max(1, Math.round((img.naturalWidth || maxW) * scale));
+          const h = Math.max(1, Math.round((img.naturalHeight || maxH) * scale));
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          let out = canvas.toDataURL('image/png');
+          if (out.length > 300000) out = canvas.toDataURL('image/webp', 0.85);
+          if (out.length > 300000) out = canvas.toDataURL('image/jpeg', 0.8);
+          resolve(out.length <= 380000 ? out : null);
+        };
+        img.onerror = () => resolve(null);
+        img.src = dataUrl;
+      });
     }
 
     function removeLogo() {
@@ -3858,6 +4324,7 @@
     }
 
     function saveBrandingSettings() {
+      if (!canEditWorkspaceSettings()) { alert('Only the team Owner or an Admin can change the team branding.'); return; }
       brandingSettings.companyName = document.getElementById('settingCompanyName').value.trim();
       brandingSettings.companyContact = document.getElementById('settingCompanyContact').value.trim();
       brandingSettings.logoDisplay = document.getElementById('settingLogoDisplay').value;
@@ -3913,44 +4380,127 @@
       }
     }
 
+    // ==========================================
+    // NEW-VERSION CHECK
+    // version.json is published next to the app; when its number differs from
+    // APP_VERSION, people who keep the app open get a "Refresh now" banner.
+    // ==========================================
+    const APP_VERSION = '2026.10.21-002339';
+    let updateCheckTimer = null;
+
+    async function checkForAppUpdate() {
+      if (location.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(location.hostname)) return;
+      try {
+        const res = await fetch('version.json?t=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) return;
+        const info = await res.json();
+        if (info && info.version && info.version !== APP_VERSION) {
+          const banner = document.getElementById('updateBanner');
+          if (banner) banner.style.display = 'flex';
+        }
+      } catch (err) {
+        // offline or file missing: try again later
+      }
+    }
+
+    function reloadForUpdate() {
+      const url = new URL(location.href);
+      url.searchParams.set('v', Date.now().toString(36));
+      location.replace(url.toString());
+    }
+
+    function startUpdateChecks() {
+      checkForAppUpdate();
+      if (updateCheckTimer) clearInterval(updateCheckTimer);
+      updateCheckTimer = setInterval(checkForAppUpdate, 10 * 60 * 1000);
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') checkForAppUpdate();
+      });
+    }
+
+    // ==========================================
+    // ACCOUNTS (Firebase Authentication)
+    // ==========================================
     const GUEST_ACCOUNT = { id: 'GUEST', name: 'Guest', company: 'Guest Workspace', email: '', phone: '' };
 
-    function bytesToHex(buf) {
-      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-    }
+    // Public web config for the Profit Pulse Firebase project. It is safe to publish:
+    // Firestore Security Rules decide who can read or write what.
+    const FIREBASE_CONFIG = {
+      "apiKey": "AIzaSyB6E_Gw8ih7hkVAlDqArG5kWPiXuBbA6P0",
+      "authDomain": "profit-pulse-fac6f.firebaseapp.com",
+      "projectId": "profit-pulse-fac6f",
+      "storageBucket": "profit-pulse-fac6f.firebasestorage.app",
+      "messagingSenderId": "967101001132",
+      "appId": "1:967101001132:web:755e6207ca79f4b3f55e09"
+    };
+    const FIREBASE_SDK_URL = 'https://www.gstatic.com/firebasejs/13.0.0/';
 
-    function makeSalt() {
-      const arr = new Uint8Array(16);
-      if (window.crypto && window.crypto.getRandomValues) {
-        window.crypto.getRandomValues(arr);
-      } else {
-        for (let i = 0; i < arr.length; i++) arr[i] = Math.floor(Math.random() * 256);
+    // For local testing only: http://localhost...?emu=1 talks to the Firebase emulators
+    const USE_FIREBASE_EMULATORS = ['localhost', '127.0.0.1'].includes(location.hostname)
+      && new URLSearchParams(location.search).has('emu');
+
+    let fb = null;               // { auth, db, authApi, fsApi } once loaded
+    let signUpInProgress = false;
+
+    async function loadFirebase() {
+      if (fb) return fb;
+      const [appApi, authApi, fsApi] = await Promise.all([
+        import(FIREBASE_SDK_URL + 'firebase-app.js'),
+        import(FIREBASE_SDK_URL + 'firebase-auth.js'),
+        import(FIREBASE_SDK_URL + 'firebase-firestore.js')
+      ]);
+      const config = USE_FIREBASE_EMULATORS
+        ? Object.assign({}, FIREBASE_CONFIG, { apiKey: 'demo-key', projectId: 'demo-profit-pulse', authDomain: 'demo-profit-pulse.firebaseapp.com' })
+        : FIREBASE_CONFIG;
+      const app = appApi.initializeApp(config);
+      const auth = authApi.getAuth(app);
+      const db = fsApi.getFirestore(app);
+      if (USE_FIREBASE_EMULATORS) {
+        authApi.connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+        fsApi.connectFirestoreEmulator(db, '127.0.0.1', 8080);
       }
-      return bytesToHex(arr.buffer);
+      fb = { auth, db, authApi, fsApi };
+      return fb;
     }
 
-    // Passwords are never stored; only a salted SHA-256 hash is kept.
-    async function hashPassword(pass, salt) {
-      const text = salt + ':' + pass;
-      if (window.crypto && window.crypto.subtle && window.TextEncoder) {
-        const digest = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-        return 'sha256:' + bytesToHex(digest);
-      }
-      // Fallback for browsers without WebCrypto (e.g. some file:// contexts)
-      let h1 = 0x811c9dc5, h2 = 0x01000193;
-      for (let r = 0; r < 2000; r++) {
-        for (let i = 0; i < text.length; i++) {
-          h1 = Math.imul(h1 ^ text.charCodeAt(i), 16777619) >>> 0;
-          h2 = Math.imul(h2 ^ (h1 >>> 7), 2246822519) >>> 0;
-        }
-      }
-      return 'fnv:' + h1.toString(16) + h2.toString(16);
+    // Where links in confirmation / reset emails send people back to
+    function emailActionSettings() {
+      return { url: location.origin + location.pathname };
     }
 
-    function persistAccounts() {
-      localStorage.setItem(PP_ACCOUNTS_KEY, JSON.stringify(registeredUsers));
+    function friendlyAuthError(err) {
+      const code = (err && err.code) || '';
+      const map = {
+        'auth/email-already-in-use': 'An account with this email already exists. Please sign in instead, or use "Forgot Password?".',
+        'auth/invalid-email': 'Please enter a valid email address.',
+        'auth/weak-password': 'Please choose a password with at least 6 characters.',
+        'auth/missing-password': 'Please enter your password.',
+        'auth/invalid-credential': 'Email or password is incorrect.',
+        'auth/wrong-password': 'Email or password is incorrect.',
+        'auth/user-not-found': 'Email or password is incorrect.',
+        'auth/user-disabled': 'This account has been disabled.',
+        'auth/too-many-requests': 'Too many attempts. Please wait a few minutes and try again.',
+        'auth/network-request-failed': 'Could not connect. Please check your internet connection and try again.',
+        'auth/requires-recent-login': 'For your security, please enter your password again.'
+      };
+      return map[code] || 'Something went wrong. Please try again.';
     }
 
+    function showAuthMessage(text, kind) {
+      const el = document.getElementById('authMessage');
+      if (!el) return;
+      el.className = 'auth-message' + (text ? ' ' + (kind || 'info') : '');
+      el.innerText = text || '';
+    }
+
+    function setAuthBusy(busy) {
+      ['btnSignIn', 'btnSignUp'].forEach(id => {
+        const b = document.getElementById(id);
+        if (b) b.disabled = !!busy;
+      });
+    }
+
+    // Loads the signed-in account's private workspace and opens the app
     function startUserSession(account) {
       currentUserSession = {
         id: account.id,
@@ -3961,28 +4511,74 @@
       };
       if (account.id === 'GUEST') {
         sessionStorage.setItem(PP_GUEST_FLAG, '1');
-        localStorage.removeItem(PP_SESSION_KEY);
       } else {
-        localStorage.setItem(PP_SESSION_KEY, account.id);
         sessionStorage.removeItem(PP_GUEST_FLAG);
       }
+      localStorage.removeItem(PP_SESSION_KEY);
+      currentTeam = null;
+      myTeams = [];
       loadUserWorkspace();
       updateUserHeaderGreeting();
       hideAuthPortal();
+      refreshVerifyBanner();
     }
 
-    function initAuthSession() {
-      const sessionId = localStorage.getItem(PP_SESSION_KEY);
-      const account = sessionId ? registeredUsers.find(u => u.id === sessionId) : null;
-      if (account) {
-        startUserSession(account);
-      } else if (sessionStorage.getItem(PP_GUEST_FLAG)) {
+    async function initAuthSession() {
+      if (sessionStorage.getItem(PP_GUEST_FLAG)) {
         startUserSession(GUEST_ACCOUNT);
-      } else {
-        wipeUserData('GUEST'); // leftovers from a guest tab that was closed without logging out
-        showAuthPortal('signin');
+        return;
+      }
+      wipeUserData('GUEST'); // leftovers from a guest tab that was closed without logging out
+      showAuthPortal('signin');
+      setAuthBusy(true);
+      try {
+        const { auth, authApi } = await loadFirebase();
+        authApi.onAuthStateChanged(auth, user => { onFirebaseUserChanged(user); });
+      } catch (err) {
+        console.error('Firebase failed to load', err);
+        showAuthMessage('Could not reach the sign-in service. Please check your internet connection and reload the page. You can still try the app as a Guest.', 'error');
+      } finally {
+        setAuthBusy(false);
       }
     }
+
+    async function loadProfile(user) {
+      const cacheKey = 'pp_v1::' + user.uid + '::profile';
+      try {
+        const { db, fsApi } = await loadFirebase();
+        const snap = await fsApi.getDoc(fsApi.doc(db, 'users', user.uid));
+        const data = snap.exists() ? snap.data() : {};
+        localStorage.setItem(cacheKey, JSON.stringify({ name: data.name || '', company: data.company || '', phone: data.phone || '' }));
+        return data;
+      } catch (err) {
+        console.warn('Could not load profile, using saved copy', err);
+        try { return JSON.parse(localStorage.getItem(cacheKey) || '{}'); } catch (e) { return {}; }
+      }
+    }
+
+    async function onFirebaseUserChanged(user) {
+      if (signUpInProgress) return; // the sign-up handler opens the app itself once the profile is saved
+      if (!user) {
+        if (currentUserSession && currentUserSession.id !== 'GUEST') location.reload();
+        return;
+      }
+      if (currentUserSession && currentUserSession.id === user.uid) {
+        refreshVerifyBanner();
+        return;
+      }
+      const profile = await loadProfile(user);
+      startUserSession({
+        id: user.uid,
+        name: profile.name || user.displayName || (user.email || '').split('@')[0],
+        company: profile.company || '',
+        email: user.email || '',
+        phone: profile.phone || ''
+      });
+      await initTeamsForUser();
+      offerLegacyImport();
+    }
+
+    function hideAuthPortalMessages() { showAuthMessage(''); }
 
     function showAuthPortal(tab) {
       const portal = document.getElementById('authPortal');
@@ -3998,6 +4594,7 @@
     function hideAuthPortal() {
       const portal = document.getElementById('authPortal');
       if (portal) portal.style.display = 'none';
+      hideAuthPortalMessages();
     }
 
     function switchAuthTab(tab) {
@@ -4029,122 +4626,174 @@
       const pass = document.getElementById('regPassword').value;
 
       if (!name || !company || !email || !pass) {
-        alert('Please fill in all required fields.');
+        showAuthMessage('Please fill in all required fields.', 'error');
         return;
       }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        alert('Please enter a valid email address.');
-        return;
-      }
-      if (pass.length < 4) {
-        alert('Password must be at least 4 characters.');
-        return;
-      }
-      if (registeredUsers.some(u => u.email === email)) {
-        alert(`An account for ${email} already exists on this device. Please sign in instead.`);
-        switchAuthTab('signin');
-        const loginEmail = document.getElementById('loginEmail');
-        if (loginEmail) loginEmail.value = email;
+      if (pass.length < 6) {
+        showAuthMessage('Please choose a password with at least 6 characters.', 'error');
         return;
       }
 
-      const salt = makeSalt();
-      const account = {
-        id: 'USR-' + Date.now().toString(36) + '-' + salt.slice(0, 8),
-        name,
-        company,
-        email,
-        phone,
-        salt,
-        passwordHash: await hashPassword(pass, salt),
-        joinedDate: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
-      };
-      registeredUsers.push(account);
-      persistAccounts();
-
-      ['regFullName', 'regCompanyName', 'regEmail', 'regPhone', 'regPassword'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = '';
-      });
-      startUserSession(account);
+      setAuthBusy(true);
+      showAuthMessage('Creating your account…', 'info');
+      signUpInProgress = true;
+      try {
+        const { auth, db, authApi, fsApi } = await loadFirebase();
+        const cred = await authApi.createUserWithEmailAndPassword(auth, email, pass);
+        await authApi.updateProfile(cred.user, { displayName: name });
+        await fsApi.setDoc(fsApi.doc(db, 'users', cred.user.uid), {
+          name, company, phone, email, createdAt: fsApi.serverTimestamp()
+        });
+        try {
+          await authApi.sendEmailVerification(cred.user, emailActionSettings());
+        } catch (verr) {
+          console.warn('Could not send confirmation email', verr);
+        }
+        ['regFullName', 'regCompanyName', 'regEmail', 'regPhone', 'regPassword'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.value = '';
+        });
+        signUpInProgress = false;
+        await onFirebaseUserChanged(cred.user);
+      } catch (err) {
+        signUpInProgress = false;
+        showAuthMessage(friendlyAuthError(err), 'error');
+        if (err && err.code === 'auth/email-already-in-use') {
+          switchAuthTab('signin');
+          const loginEmail = document.getElementById('loginEmail');
+          if (loginEmail) loginEmail.value = email;
+        }
+      } finally {
+        setAuthBusy(false);
+      }
     }
 
     async function handleUserSignIn(e) {
       if (e && e.preventDefault) e.preventDefault();
       const email = (document.getElementById('loginEmail').value || '').trim().toLowerCase();
       const pass = document.getElementById('loginPassword').value || '';
-
       if (!email || !pass) {
-        alert('Please enter your email and password.');
+        showAuthMessage('Please enter your email and password.', 'error');
         return;
       }
-
-      const account = registeredUsers.find(u => u.email === email);
-      const hash = account ? await hashPassword(pass, account.salt) : null;
-      if (!account || hash !== account.passwordHash) {
-        alert('Email or password is incorrect.');
-        return;
+      setAuthBusy(true);
+      showAuthMessage('Signing in…', 'info');
+      try {
+        const { auth, authApi } = await loadFirebase();
+        await authApi.signInWithEmailAndPassword(auth, email, pass);
+        const loginPass = document.getElementById('loginPassword');
+        if (loginPass) loginPass.value = '';
+        // onFirebaseUserChanged opens the app
+      } catch (err) {
+        showAuthMessage(friendlyAuthError(err), 'error');
+      } finally {
+        setAuthBusy(false);
       }
-
-      const loginPass = document.getElementById('loginPassword');
-      if (loginPass) loginPass.value = '';
-      startUserSession(account);
     }
 
-    function removeAccount(accountId) {
-      wipeUserData(accountId);
-      registeredUsers = registeredUsers.filter(u => u.id !== accountId);
-      persistAccounts();
-      if (localStorage.getItem(PP_SESSION_KEY) === accountId) localStorage.removeItem(PP_SESSION_KEY);
-    }
-
-    function handleForgotPassword() {
+    async function handleForgotPassword() {
       const emailInput = document.getElementById('loginEmail');
-      const typed = emailInput ? emailInput.value.trim().toLowerCase() : '';
-      const target = (prompt('Enter the email of the account you forgot the password for:', typed) || '').trim().toLowerCase();
-      if (!target) return;
-
-      const account = registeredUsers.find(u => u.email === target);
-      if (!account) {
-        alert(`No account for ${target} exists on this device.`);
-        return;
+      let email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+      if (!email) {
+        email = (prompt('Enter the email address you signed up with:') || '').trim().toLowerCase();
       }
-      // There is no server, so a password can't be verified another way. To keep each
-      // account private, a reset removes that account's data instead of exposing it.
-      const ok = confirm(
-        'Profit Pulse keeps your data only on this device, so passwords cannot be recovered.\n\n' +
-        `Resetting will permanently delete the account ${target} and all of its saved orders, reps and branding on this device. ` +
-        'If you have a backup file you can restore it after creating the account again.\n\nContinue?'
-      );
-      if (!ok) return;
-      removeAccount(account.id);
-      alert('Account removed. You can now create it again.');
-      switchAuthTab('signup');
-      const regEmail = document.getElementById('regEmail');
-      if (regEmail) regEmail.value = target;
+      if (!email) return;
+      try {
+        const { auth, authApi } = await loadFirebase();
+        await authApi.sendPasswordResetEmail(auth, email, emailActionSettings());
+      } catch (err) {
+        if (err && err.code !== 'auth/user-not-found') {
+          showAuthMessage(friendlyAuthError(err), 'error');
+          return;
+        }
+      }
+      // Same message whether or not the account exists, so emails can't be probed
+      showAuthMessage(`If an account exists for ${email}, we've emailed a link to reset the password. Check your inbox (and spam folder).`, 'info');
     }
 
-    function deleteMyAccount() {
+    // ---------- email confirmation ----------
+    function refreshVerifyBanner() {
+      const banner = document.getElementById('verifyBanner');
+      if (!banner) return;
+      const user = fb && fb.auth.currentUser;
+      const needs = !!(user && currentUserSession && currentUserSession.id === user.uid && !user.emailVerified);
+      banner.style.display = needs ? 'flex' : 'none';
+      const text = document.getElementById('verifyBannerText');
+      if (needs && text) {
+        text.innerText = `📧 Please confirm your email address. We sent a link to ${user.email}. You'll need this to join a team.`;
+      }
+    }
+
+    async function resendVerificationEmail() {
+      const user = fb && fb.auth.currentUser;
+      if (!user) return;
+      try {
+        await fb.authApi.sendEmailVerification(user, emailActionSettings());
+        alert(`Sent! Check ${user.email} (and the spam folder).`);
+      } catch (err) {
+        alert(friendlyAuthError(err));
+      }
+    }
+
+    async function checkEmailVerified() {
+      const user = fb && fb.auth.currentUser;
+      if (!user) return;
+      try {
+        await user.reload();
+        if (fb.auth.currentUser.emailVerified) {
+          await fb.auth.currentUser.getIdToken(true); // refresh so the database sees the confirmed email
+          refreshVerifyBanner();
+          await loadMyInvites();
+          alert('Thanks, your email is confirmed.');
+        } else {
+          alert("We haven't seen the confirmation yet. Click the link in the email, then press this button again.");
+        }
+      } catch (err) {
+        alert(friendlyAuthError(err));
+      }
+    }
+
+    // ---------- sign out / delete ----------
+    async function logoutUser() {
+      if (!confirm('Are you sure you want to sign out?')) return;
+      if (currentUserSession && currentUserSession.id === 'GUEST') wipeUserData('GUEST');
+      sessionStorage.removeItem(PP_GUEST_FLAG);
+      stopWorkspaceSync();
+      currentUserSession = null;
+      try {
+        if (fb && fb.auth.currentUser) await fb.authApi.signOut(fb.auth);
+      } catch (err) {
+        console.warn('Sign-out problem', err);
+      }
+      // Reload so no previous account data remains in memory or on screen
+      location.reload();
+    }
+
+    async function deleteMyAccount() {
       if (!currentUserSession) return;
       if (currentUserSession.id === 'GUEST') {
         logoutUser();
         return;
       }
-      const ok = confirm(`Permanently delete the account ${currentUserSession.email} and all of its data on this device? Consider downloading a backup first.`);
+      const ok = confirm(`Permanently delete the account ${currentUserSession.email} and all of its saved data? Consider downloading a backup first.`);
       if (!ok) return;
-      removeAccount(currentUserSession.id);
-      currentUserSession = null;
-      location.reload();
-    }
-
-    function logoutUser() {
-      if (!confirm('Are you sure you want to sign out?')) return;
-      if (currentUserSession && currentUserSession.id === 'GUEST') wipeUserData('GUEST');
-      localStorage.removeItem(PP_SESSION_KEY);
-      sessionStorage.removeItem(PP_GUEST_FLAG);
-      currentUserSession = null;
-      // Reload so no previous account data remains in memory or on screen
-      location.reload();
+      const password = prompt('For your security, please enter your password to confirm:');
+      if (!password) return;
+      try {
+        const { auth, db, authApi, fsApi } = await loadFirebase();
+        const user = auth.currentUser;
+        const credential = authApi.EmailAuthProvider.credential(user.email, password);
+        await authApi.reauthenticateWithCredential(user, credential);
+        await removeMeFromAllTeams();
+        await fsApi.deleteDoc(fsApi.doc(db, 'users', user.uid));
+        wipeUserData(user.uid);
+        await authApi.deleteUser(user);
+        currentUserSession = null;
+        alert('Your account has been deleted.');
+        location.reload();
+      } catch (err) {
+        alert(err && err.teamBlock ? err.message : friendlyAuthError(err));
+      }
     }
 
     function continueAsGuest() {
@@ -4155,7 +4804,911 @@
     function updateUserHeaderGreeting() {
       const greetingEl = document.getElementById('headerUserGreeting');
       if (greetingEl && currentUserSession) {
-        greetingEl.innerText = `👤 ${currentUserSession.name} (${currentUserSession.company})`;
+        greetingEl.innerText = currentUserSession.company
+          ? `👤 ${currentUserSession.name} (${currentUserSession.company})`
+          : `👤 ${currentUserSession.name}`;
+      }
+    }
+
+    // ==========================================
+    // BRIDGE FROM THE OLD THIS-DEVICE-ONLY ACCOUNTS
+    // Before Firebase, accounts lived only in this browser (pp_v1_accounts) with
+    // a salted SHA-256 password hash. Their orders can be brought into the new
+    // account once the person proves they know the old password.
+    // ==========================================
+    let legacyImportCandidate = null;
+
+    function bytesToHex(buf) {
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    async function hashLegacyPassword(pass, salt) {
+      const text = salt + ':' + pass;
+      if (window.crypto && window.crypto.subtle && window.TextEncoder) {
+        const digest = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+        return 'sha256:' + bytesToHex(digest);
+      }
+      let h1 = 0x811c9dc5, h2 = 0x01000193;
+      for (let r = 0; r < 2000; r++) {
+        for (let i = 0; i < text.length; i++) {
+          h1 = Math.imul(h1 ^ text.charCodeAt(i), 16777619) >>> 0;
+          h2 = Math.imul(h2 ^ (h1 >>> 7), 2246822519) >>> 0;
+        }
+      }
+      return 'fnv:' + h1.toString(16) + h2.toString(16);
+    }
+
+    function legacyOrdersFor(accountId) {
+      try {
+        const orders = JSON.parse(localStorage.getItem('pp_v1::' + accountId + '::orders') || '[]');
+        return Array.isArray(orders) ? orders : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function offerLegacyImport(force) {
+      if (!currentUserSession || currentUserSession.id === 'GUEST' || !currentUserSession.email) return;
+      const legacy = registeredUsers.find(u => u.email === currentUserSession.email.toLowerCase() && u.id !== currentUserSession.id);
+      if (!legacy) return;
+      if (!force && sessionStorage.getItem('pp_v1_legacy_skip::' + legacy.id)) return;
+      const count = legacyOrdersFor(legacy.id).length;
+      legacyImportCandidate = legacy;
+      const text = document.getElementById('legacyImportText');
+      if (text) {
+        text.innerText = `This computer has ${count} saved order${count === 1 ? '' : 's'}, plus your sales reps and branding, from your earlier Profit Pulse sign-in (${legacy.email}). Enter the password you used back then to bring them into your new account.`;
+      }
+      const err = document.getElementById('legacyImportError');
+      if (err) err.innerText = '';
+      const target = document.getElementById('legacyImportTarget');
+      if (target) {
+        const choices = myTeams.length ? myTeams : [];
+        target.innerHTML = choices.map(t => `<option value="${escapeHtml(t.id)}">${t.isPersonal ? 'My personal workspace' : 'Team: ' + escapeHtml(t.name)}</option>`).join('');
+        target.parentElement.querySelector('label[for="legacyImportTarget"]').style.display = choices.length > 1 ? '' : 'none';
+        target.style.display = choices.length > 1 ? '' : 'none';
+        const personal = choices.find(t => t.isPersonal);
+        if (personal) target.value = personal.id;
+      }
+      const modal = document.getElementById('legacyImportModal');
+      if (modal) modal.classList.add('open');
+      const input = document.getElementById('legacyImportPassword');
+      if (input) { input.value = ''; setTimeout(() => input.focus(), 50); }
+    }
+
+    function closeLegacyImport() {
+      if (legacyImportCandidate) sessionStorage.setItem('pp_v1_legacy_skip::' + legacyImportCandidate.id, '1');
+      legacyImportCandidate = null;
+      const modal = document.getElementById('legacyImportModal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    async function confirmLegacyImport() {
+      const legacy = legacyImportCandidate;
+      const input = document.getElementById('legacyImportPassword');
+      const errEl = document.getElementById('legacyImportError');
+      if (!legacy || !currentUserSession) return;
+      const hash = await hashLegacyPassword((input && input.value) || '', legacy.salt);
+      if (hash !== legacy.passwordHash) {
+        if (errEl) errEl.innerText = "That password doesn't match your old account.";
+        return;
+      }
+
+      // Switch to the chosen workspace and wait until its online data has loaded
+      const targetSel = document.getElementById('legacyImportTarget');
+      const targetTeam = targetSel && myTeams.find(t => t.id === targetSel.value);
+      if (targetTeam && (!currentTeam || currentTeam.id !== targetTeam.id)) setCurrentTeam(targetTeam);
+      if (errEl) errEl.innerText = 'Importing…';
+      await workspaceReady;
+
+      const oldOrders = legacyOrdersFor(legacy.id);
+      const byId = new Map(savedOrders.map(o => [o.id, o]));
+      let added = 0;
+      oldOrders.forEach(o => { if (o && o.id && !byId.has(o.id)) { byId.set(o.id, o); added++; } });
+      savedOrders = Array.from(byId.values());
+      const problems = await storeUserData('orders', savedOrders);
+      if (problems) {
+        if (errEl) errEl.innerText = 'Some orders could not be saved online. Nothing was removed; please try again.';
+        return;
+      }
+
+      try {
+        const oldReps = JSON.parse(localStorage.getItem('pp_v1::' + legacy.id + '::reps') || 'null');
+        if (Array.isArray(oldReps) && canEditWorkspaceSettings()) {
+          oldReps.forEach(r => { if (typeof r === 'string' && !r.endsWith('(you)') && !savedReps.includes(r)) savedReps.push(r); });
+          storeUserData('reps', savedReps);
+        }
+      } catch (e) {}
+      try {
+        const oldBranding = JSON.parse(localStorage.getItem('pp_v1::' + legacy.id + '::branding') || 'null');
+        if (oldBranding && canEditWorkspaceSettings() && !readUserData('branding', null)) {
+          brandingSettings = Object.assign({}, DEFAULT_BRANDING, oldBranding);
+          storeUserData('branding', brandingSettings);
+          applyThemeColors();
+          applyBrandingToUI();
+        }
+      } catch (e) {}
+
+      // The old account has served its purpose; remove it from this computer
+      wipeUserData(legacy.id);
+      registeredUsers = registeredUsers.filter(u => u.id !== legacy.id);
+      localStorage.setItem(PP_ACCOUNTS_KEY, JSON.stringify(registeredUsers));
+
+      legacyImportCandidate = null;
+      const modal = document.getElementById('legacyImportModal');
+      if (modal) modal.classList.remove('open');
+      renderSalesRepDropdown();
+      renderSalesRepFilterDropdown();
+      renderHistoryTable();
+      alert(`Done! ${added} order${added === 1 ? '' : 's'} brought into your account.`);
+    }
+
+    // ==========================================
+    // ONLINE WORKSPACE DATA
+    // Orders, sales reps and branding of the open workspace (personal or team)
+    // live in Firestore and update live for everyone in it. Guests stay local.
+    // ==========================================
+    function isCloudWorkspace() {
+      return !!(fb && currentTeam && currentUserSession && currentUserSession.id !== 'GUEST');
+    }
+
+    function canEditWorkspaceSettings() {
+      return !isCloudWorkspace() || canManageTeam();
+    }
+
+    function canChangeOrder(order) {
+      if (!isCloudWorkspace() || canManageTeam()) return true;
+      return !order || !order.createdBy || order.createdBy === currentUserSession.id;
+    }
+
+    function newOrderId() {
+      const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let id = '';
+      const bytes = new Uint8Array(6);
+      if (window.crypto && window.crypto.getRandomValues) window.crypto.getRandomValues(bytes);
+      else for (let i = 0; i < bytes.length; i++) bytes[i] = Math.floor(Math.random() * 256);
+      bytes.forEach(b => { id += alphabet[b % alphabet.length]; });
+      return 'ORD-' + id;
+    }
+
+    // JSON with sorted keys, so the same content always produces the same text
+    function stableStringify(value) {
+      if (Array.isArray(value)) return '[' + value.map(stableStringify).join(',') + ']';
+      if (value && typeof value === 'object') {
+        return '{' + Object.keys(value).sort().filter(k => value[k] !== undefined)
+          .map(k => JSON.stringify(k) + ':' + stableStringify(value[k])).join(',') + '}';
+      }
+      return JSON.stringify(value === undefined ? null : value);
+    }
+
+    const ORDER_META_FIELDS = ['createdAtMs', 'updatedAtMs', 'createdBy', 'createdByName', 'orderRef', 'createdAtLocal', 'createdAt', 'updatedAt'];
+
+    function orderContentKey(order) {
+      const copy = JSON.parse(JSON.stringify(order || {}));
+      ORDER_META_FIELDS.forEach(k => { delete copy[k]; });
+      copy.customer = String(order.customer || order.clientName || '');
+      copy.jobDescription = String(order.jobDescription || order.projectName || '');
+      return stableStringify(copy);
+    }
+
+    function fromCloudOrder(snap) {
+      const d = snap.data();
+      const o = Object.assign({}, d);
+      o.id = snap.id;
+      o.createdAtMs = d.createdAt && d.createdAt.toMillis ? d.createdAt.toMillis() : null;
+      o.updatedAtMs = d.updatedAt && d.updatedAt.toMillis ? d.updatedAt.toMillis() : null;
+      delete o.createdAt;
+      delete o.updatedAt;
+      if (!o.timestamp && o.createdAtMs) o.timestamp = o.createdAtMs;
+      return o;
+    }
+
+    function toCloudOrder(order) {
+      const d = JSON.parse(JSON.stringify(order));
+      ORDER_META_FIELDS.forEach(k => { delete d[k]; });
+      delete d.id;
+      if (typeof order.createdAt === 'string') d.createdAtLocal = order.createdAt;
+      d.orderRef = String(order.id).slice(0, 40);
+      d.customer = (String(order.customer || order.clientName || '').slice(0, 300)) || 'Unknown customer';
+      d.jobDescription = (String(order.jobDescription || order.projectName || '').slice(0, 500)) || '—';
+      d.clientNotes = String(order.clientNotes || '').slice(0, 5000);
+      d.items = Array.isArray(order.items) ? order.items.slice(0, 200) : [];
+      d.totalSell = Number(order.totalSell) || 0;
+      d.totalCost = Number(order.totalCost) || 0;
+      return d;
+    }
+
+    function storeWorkspaceDataInCloud(name, value) {
+      if (name === 'orders') return pushOrdersToCloud(Array.isArray(value) ? value : []);
+      if (name === 'reps') return writeWorkspaceSetting('reps', { names: (value || []).filter(r => typeof r === 'string').slice(0, 100) });
+      if (name === 'branding') return writeWorkspaceSetting('branding', JSON.parse(JSON.stringify(value || {})));
+      return Promise.resolve(0);
+    }
+
+    async function writeWorkspaceSetting(docId, data) {
+      if (!canManageTeam()) {
+        alert('Only the team Owner or an Admin can change this.');
+        return 1;
+      }
+      try {
+        await fb.fsApi.setDoc(fb.fsApi.doc(fb.db, 'teams', currentTeam.id, 'settings', docId), data);
+        cloudSettingsSeen[docId] = true;
+        return 0;
+      } catch (err) {
+        alert(teamErrorMessage(err));
+        return 1;
+      }
+    }
+
+    // Sends only what changed compared with the server: new/edited orders and deletions.
+    // Resolves to the number of changes the server refused (0 = all good).
+    async function pushOrdersToCloud(orders) {
+      const { db, fsApi } = fb;
+      const teamId = currentTeam.id;
+      const me = currentUserSession.id;
+      const keep = new Set(orders.map(o => o.id));
+      const jobs = [];
+
+      orders.forEach(o => {
+        if (!o || !o.id) return;
+        const key = orderContentKey(o);
+        if (cloudOrderCache.get(o.id) === key) return;
+        const ref = fsApi.doc(db, 'teams', teamId, 'orders', String(o.id));
+        const data = toCloudOrder(o);
+        const isUpdate = cloudOrderCache.has(o.id);
+        cloudOrderCache.set(o.id, key);
+        jobs.push(isUpdate
+          ? fsApi.updateDoc(ref, Object.assign(data, { updatedAt: fsApi.serverTimestamp() }))
+          : fsApi.setDoc(ref, Object.assign(data, {
+              createdBy: me,
+              createdByName: (currentUserSession.name || '').slice(0, 200),
+              createdAt: fsApi.serverTimestamp(),
+              updatedAt: fsApi.serverTimestamp()
+            })));
+      });
+
+      Array.from(cloudOrderCache.keys()).forEach(id => {
+        if (keep.has(id)) return;
+        cloudOrderCache.delete(id);
+        jobs.push(fsApi.deleteDoc(fsApi.doc(db, 'teams', teamId, 'orders', String(id))));
+      });
+
+      const results = await Promise.allSettled(jobs);
+      const failed = results.filter(r => r.status === 'rejected');
+      if (failed.length) {
+        console.warn('Some changes were refused', failed.map(f => f.reason));
+        alert(`${failed.length} change(s) could not be saved: ${teamErrorMessage(failed[0].reason)} The list has been refreshed from the server.`);
+        stopWorkspaceSync();
+        startWorkspaceSync();
+      }
+      return failed.length;
+    }
+
+    function stopWorkspaceSync() {
+      workspaceUnsubs.forEach(unsub => { try { unsub(); } catch (e) {} });
+      workspaceUnsubs = [];
+    }
+
+    function startWorkspaceSync() {
+      if (!isCloudWorkspace()) return;
+      const { db, fsApi } = fb;
+      const team = currentTeam;
+      const teamId = team.id;
+      teamMembers = [];
+      const loaded = { orders: false, reps: false, branding: false };
+      let resolveReady;
+      workspaceReady = new Promise(res => { resolveReady = res; });
+      const markLoaded = part => {
+        loaded[part] = true;
+        if (loaded.orders && loaded.reps && loaded.branding && resolveReady) { resolveReady(); resolveReady = null; }
+      };
+      const stillOpen = () => currentTeam && currentTeam.id === teamId;
+      const onError = err => handleWorkspaceAccessLost(err, team);
+
+      if (!team.isPersonal) {
+        fsApi.getDocs(fsApi.collection(db, 'teams', teamId, 'members')).then(snap => {
+          if (!stillOpen()) return;
+          teamMembers = snap.docs.map(d => d.data());
+          teamMemberNames = teamMembers.map(m => m.name).filter(Boolean).sort();
+          renderHistoryTable();
+          if (stillOpen() && !cloudSettingsSeen.reps) {
+            savedReps = teamMemberNames.concat(DEFAULT_REPS);
+            renderSalesRepDropdown();
+            renderSalesRepFilterDropdown();
+          }
+        }).catch(() => {});
+      }
+
+      // My own membership: if it disappears I was removed; if my role changes, update what I can do
+      workspaceUnsubs.push(fsApi.onSnapshot(fsApi.doc(db, 'teams', teamId, 'members', currentUserSession.id), snap => {
+        if (!stillOpen()) return;
+        if (!snap.exists()) {
+          handleWorkspaceAccessLost({ code: 'permission-denied' }, team);
+          return;
+        }
+        const role = snap.data().role;
+        if (role && role !== currentTeam.role) {
+          currentTeam.role = role;
+          const listed = myTeams.find(t => t.id === teamId);
+          if (listed) listed.role = role;
+          updateWorkspacePermissionsUI();
+          renderHistoryTable();
+        }
+      }, onError));
+
+      workspaceUnsubs.push(fsApi.onSnapshot(fsApi.collection(db, 'teams', teamId, 'orders'), snap => {
+        if (!stillOpen()) return;
+        savedOrders = snap.docs.map(fromCloudOrder).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        cloudOrderCache = new Map(savedOrders.map(o => [o.id, orderContentKey(o)]));
+        renderHistoryTable();
+        markLoaded('orders');
+      }, onError));
+
+      workspaceUnsubs.push(fsApi.onSnapshot(fsApi.doc(db, 'teams', teamId, 'settings', 'reps'), snap => {
+        if (!stillOpen()) return;
+        const names = snap.exists() ? snap.data().names : null;
+        if (Array.isArray(names) && names.length) {
+          savedReps = names.slice();
+          cloudSettingsSeen.reps = true;
+        } else {
+          cloudSettingsSeen.reps = false;
+          savedReps = team.isPersonal
+            ? [`${currentUserSession.name} (you)`].concat(DEFAULT_REPS)
+            : (teamMemberNames.length ? teamMemberNames.concat(DEFAULT_REPS) : [`${currentUserSession.name}`].concat(DEFAULT_REPS));
+        }
+        const select = document.getElementById('salesRep');
+        renderSalesRepDropdown(select && savedReps.includes(select.value) ? select.value : savedReps[0]);
+        renderSalesRepFilterDropdown();
+        if (document.getElementById('repsModal') && document.getElementById('repsModal').classList.contains('open')) renderRepList();
+        markLoaded('reps');
+      }, onError));
+
+      workspaceUnsubs.push(fsApi.onSnapshot(fsApi.doc(db, 'teams', teamId, 'settings', 'branding'), snap => {
+        if (!stillOpen()) return;
+        const modalOpen = document.getElementById('brandingModal') && document.getElementById('brandingModal').classList.contains('open');
+        const defaultCompany = team.isPersonal ? (currentUserSession.company || '') : team.name;
+        if (snap.exists()) {
+          cloudSettingsSeen.branding = true;
+          if (!modalOpen) brandingSettings = Object.assign({}, DEFAULT_BRANDING, { companyName: defaultCompany }, snap.data());
+        } else {
+          cloudSettingsSeen.branding = false;
+        }
+        if (!modalOpen) {
+          applyThemeColors();
+          applyBrandingToUI();
+        }
+        markLoaded('branding');
+      }, onError));
+    }
+
+    async function handleWorkspaceAccessLost(err, team) {
+      console.warn('Workspace listener stopped', err);
+      if (!err || err.code !== 'permission-denied') return;
+      if (!currentTeam || currentTeam.id !== team.id) return;
+      stopWorkspaceSync();
+      alert(`You no longer have access to ${team.isPersonal ? 'this workspace' : team.name}. Switching to your personal workspace.`);
+      try { await loadMyTeams(); } catch (e) {}
+      setCurrentTeam(myTeams.find(t => t.isPersonal) || null);
+    }
+
+    // Hide controls the current role can't use
+    function updateWorkspacePermissionsUI() {
+      const editable = canEditWorkspaceSettings();
+      const addRow = document.getElementById('repAddRow');
+      if (addRow) addRow.style.display = editable ? 'flex' : 'none';
+      const repsText = document.getElementById('repsModalText');
+      if (repsText) {
+        repsText.innerText = editable
+          ? (isCloudWorkspace() && currentTeam && !currentTeam.isPersonal
+            ? 'Add sales reps for everyone in this team to use on their orders.'
+            : 'Add custom sales reps to save them for all your future orders.')
+          : "This is the team's shared sales rep list. Only the team Owner or an Admin can change it.";
+      }
+      document.querySelectorAll('button[onclick="clearAllOrders()"]').forEach(b => {
+        b.style.display = (isCloudWorkspace() && !canManageTeam()) ? 'none' : '';
+      });
+    }
+
+    // ==========================================
+    // TEAMS (Cloud Firestore)
+    // Layout and permissions: see firebase/firestore.rules
+    // ==========================================
+    function workspaceStorageId() {
+      if (!currentUserSession) return 'none';
+      if (currentTeam && !currentTeam.isPersonal) return 'team_' + currentTeam.id;
+      return currentUserSession.id;
+    }
+
+    function personalTeamId(uid) { return 'personal_' + uid; }
+    function roleLabel(role) { return { owner: 'Owner', admin: 'Admin', member: 'Member' }[role] || role; }
+    function canManageTeam() { return !!currentTeam && ['owner', 'admin'].includes(currentTeam.role); }
+    function isTeamOwner() { return !!currentTeam && currentTeam.role === 'owner'; }
+    function myLowerEmail() { return ((fb && fb.auth.currentUser && fb.auth.currentUser.email) || '').toLowerCase(); }
+
+    function teamErrorMessage(err) {
+      const code = (err && err.code) || '';
+      if (code === 'permission-denied') return "You don't have permission to do that. Your role may have changed; please reopen the Team window.";
+      if (code === 'unavailable') return 'Could not reach the server. Please check your internet connection.';
+      return (err && err.message) || 'Something went wrong. Please try again.';
+    }
+
+    function memberRecord(role) {
+      return {
+        uid: currentUserSession.id,
+        role,
+        name: (currentUserSession.name || 'Member').slice(0, 100),
+        email: myLowerEmail(),
+        joinedAt: fb.fsApi.serverTimestamp()
+      };
+    }
+
+    async function createTeamDocs(teamId, name, isPersonal) {
+      const { db, fsApi } = fb;
+      const uid = currentUserSession.id;
+      const batch = fsApi.writeBatch(db);
+      batch.set(fsApi.doc(db, 'teams', teamId), {
+        name: name.slice(0, 100), isPersonal, ownerUid: uid, createdBy: uid, createdAt: fsApi.serverTimestamp()
+      });
+      batch.set(fsApi.doc(db, 'teams', teamId, 'members', uid), memberRecord('owner'));
+      await batch.commit();
+    }
+
+    async function loadMyTeams() {
+      const { db, fsApi } = fb;
+      const q = fsApi.query(fsApi.collectionGroup(db, 'members'), fsApi.where('uid', '==', currentUserSession.id));
+      const snap = await fsApi.getDocs(q);
+      const teams = [];
+      for (const m of snap.docs) {
+        try {
+          const t = await fsApi.getDoc(m.ref.parent.parent);
+          if (t.exists()) {
+            const d = t.data();
+            teams.push({ id: t.id, name: d.name, isPersonal: !!d.isPersonal, ownerUid: d.ownerUid, role: m.data().role });
+          }
+        } catch (e) {
+          console.warn('Skipping a team that could not be read', e);
+        }
+      }
+      teams.sort((a, b) => (Number(b.isPersonal) - Number(a.isPersonal)) || a.name.localeCompare(b.name));
+      myTeams = teams;
+      return teams;
+    }
+
+    async function initTeamsForUser() {
+      if (!fb || !currentUserSession || currentUserSession.id === 'GUEST') return;
+      try {
+        await loadMyTeams();
+        if (!myTeams.some(t => t.isPersonal)) {
+          await createTeamDocs(personalTeamId(currentUserSession.id), currentUserSession.company || currentUserSession.name || 'My workspace', true);
+          await loadMyTeams();
+        }
+        const last = localStorage.getItem('pp_v1::' + currentUserSession.id + '::lastTeam');
+        const pick = myTeams.find(t => t.id === last) || myTeams.find(t => t.isPersonal) || myTeams[0] || null;
+        setCurrentTeam(pick);
+        await loadMyInvites();
+      } catch (err) {
+        console.warn('Teams are unavailable right now', err);
+      }
+      renderTeamControls();
+    }
+
+    function setCurrentTeam(team) {
+      const changed = (currentTeam && currentTeam.id) !== (team && team.id);
+      currentTeam = team || null;
+      if (currentUserSession && currentTeam) {
+        localStorage.setItem('pp_v1::' + currentUserSession.id + '::lastTeam', currentTeam.id);
+      }
+      if (changed) {
+        const creatorSel = document.getElementById('filterCreatedBy');
+        if (creatorSel) creatorSel.value = 'all';
+        loadUserWorkspace();
+      }
+      renderTeamControls();
+      updateWorkspacePermissionsUI();
+    }
+
+    function switchWorkspace(teamId) {
+      const team = myTeams.find(t => t.id === teamId);
+      if (team) setCurrentTeam(team);
+    }
+
+    function renderTeamControls() {
+      const signedIn = !!(currentUserSession && currentUserSession.id !== 'GUEST' && fb && fb.auth.currentUser);
+      const btn = document.getElementById('btnTeam');
+      if (btn) btn.style.display = signedIn ? '' : 'none';
+      const sel = document.getElementById('workspaceSwitcher');
+      if (sel) {
+        sel.style.display = signedIn && myTeams.length ? '' : 'none';
+        sel.innerHTML = myTeams.map(t =>
+          `<option value="${escapeHtml(t.id)}">${t.isPersonal ? '🔒 Personal' : '👥 ' + escapeHtml(t.name)}</option>`).join('');
+        if (currentTeam) sel.value = currentTeam.id;
+      }
+    }
+
+    // ---------- invites addressed to me ----------
+    async function loadMyInvites() {
+      myPendingInvites = [];
+      const user = fb && fb.auth.currentUser;
+      if (user && user.emailVerified) {
+        try {
+          const { db, fsApi } = fb;
+          const q = fsApi.query(fsApi.collection(db, 'invites'), fsApi.where('email', '==', user.email.toLowerCase()));
+          const snap = await fsApi.getDocs(q);
+          myPendingInvites = snap.docs.map(d => Object.assign({ id: d.id }, d.data()))
+            .filter(inv => !myTeams.some(t => t.id === inv.teamId));
+        } catch (err) {
+          console.warn('Could not load invites', err);
+        }
+      }
+      renderInvitesBanner();
+    }
+
+    function renderInvitesBanner() {
+      const el = document.getElementById('invitesBanner');
+      if (!el) return;
+      if (!myPendingInvites.length) {
+        el.style.display = 'none';
+        el.innerHTML = '';
+        return;
+      }
+      el.style.display = 'flex';
+      el.innerHTML = myPendingInvites.map(inv => `
+        <div class="invite-line">
+          <span>📨 You've been invited to join <strong>${escapeHtml(inv.teamName || 'a team')}</strong> as <strong>${escapeHtml(roleLabel(inv.role))}</strong>.</span>
+          <span style="display:flex; gap:6px;">
+            <button type="button" onclick="acceptInvite('${escapeHtml(inv.id)}')">Join team</button>
+            <button type="button" class="secondary" onclick="declineInvite('${escapeHtml(inv.id)}')">Decline</button>
+          </span>
+        </div>`).join('');
+    }
+
+    async function acceptInvite(inviteId) {
+      const inv = myPendingInvites.find(i => i.id === inviteId);
+      if (!inv) return;
+      try {
+        const { db, fsApi } = fb;
+        await fsApi.setDoc(fsApi.doc(db, 'teams', inv.teamId, 'members', currentUserSession.id), memberRecord(inv.role));
+        try { await fsApi.deleteDoc(fsApi.doc(db, 'invites', inviteId)); } catch (e) {}
+        await loadMyTeams();
+        setCurrentTeam(myTeams.find(t => t.id === inv.teamId) || currentTeam);
+        await loadMyInvites();
+        alert(`Welcome! You've joined ${inv.teamName || 'the team'}.`);
+        offerLegacyImport(true); // old orders on this computer can now go into the team too
+      } catch (err) {
+        alert(teamErrorMessage(err));
+      }
+    }
+
+    async function declineInvite(inviteId) {
+      if (!confirm('Decline this invitation?')) return;
+      try {
+        await fb.fsApi.deleteDoc(fb.fsApi.doc(fb.db, 'invites', inviteId));
+      } catch (err) {
+        alert(teamErrorMessage(err));
+      }
+      await loadMyInvites();
+    }
+
+    // ---------- the Team window ----------
+    async function openTeamModal() {
+      const modal = document.getElementById('teamModal');
+      if (modal) modal.classList.add('open');
+      await renderTeamModal();
+    }
+
+    function closeTeamModal() {
+      const modal = document.getElementById('teamModal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function createTeamFormHtml(title) {
+      return `
+        <div class="team-section">
+          <div class="team-section-title">${title}</div>
+          <form class="team-inline-form" onsubmit="event.preventDefault(); createTeamFromForm();">
+            <input type="text" id="newTeamName" maxlength="100" placeholder="Company / team name, e.g. Alpha Promo" />
+            <button type="submit" class="btn btn-primary">Create team</button>
+          </form>
+          <div class="team-note">You'll be the team's Owner. Then invite your colleagues by email.</div>
+        </div>`;
+    }
+
+    async function renderTeamModal() {
+      const body = document.getElementById('teamModalBody');
+      if (!body) return;
+      if (!fb || !currentTeam) {
+        body.innerHTML = '<p class="modal-text">Teams are not available right now. Please check your internet connection and sign in again.</p>';
+        return;
+      }
+      const { db, fsApi } = fb;
+
+      if (currentTeam.isPersonal) {
+        const others = myTeams.filter(t => !t.isPersonal);
+        body.innerHTML = `
+          <p class="modal-text">You're in your <strong>personal workspace</strong>. Only you can see what's saved here.</p>
+          ${others.length ? `<div class="team-section"><div class="team-section-title">Your teams</div>
+            ${others.map(t => `<div class="team-row"><div class="team-row-who"><strong>${escapeHtml(t.name)}</strong></div>
+              <div class="team-row-actions"><span class="role-badge ${t.role}">${roleLabel(t.role)}</span>
+              <button class="btn btn-secondary btn-sm" onclick="switchWorkspace('${escapeHtml(t.id)}'); renderTeamModal();">Open</button></div></div>`).join('')}
+            </div>` : ''}
+          ${createTeamFormHtml('Create a team')}`;
+        return;
+      }
+
+      body.innerHTML = '<p class="modal-text">Loading team…</p>';
+      let members = [];
+      let invites = [];
+      try {
+        const msnap = await fsApi.getDocs(fsApi.collection(db, 'teams', currentTeam.id, 'members'));
+        members = msnap.docs.map(d => d.data());
+        if (canManageTeam()) {
+          const isnap = await fsApi.getDocs(fsApi.query(fsApi.collection(db, 'invites'), fsApi.where('teamId', '==', currentTeam.id)));
+          invites = isnap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+        }
+      } catch (err) {
+        body.innerHTML = `<p class="modal-text">${escapeHtml(teamErrorMessage(err))}</p>`;
+        return;
+      }
+      const roleOrder = { owner: 0, admin: 1, member: 2 };
+      members.sort((a, b) => (roleOrder[a.role] - roleOrder[b.role]) || String(a.name).localeCompare(String(b.name)));
+      const me = currentUserSession.id;
+
+      const memberRows = members.map(m => {
+        const isMe = m.uid === me;
+        let actions = `<span class="role-badge ${m.role}">${roleLabel(m.role)}</span>`;
+        if (canManageTeam() && !isMe && m.role !== 'owner') {
+          actions = `
+            <select onchange="changeMemberRole('${escapeHtml(m.uid)}', this.value)" title="Change role">
+              <option value="member" ${m.role === 'member' ? 'selected' : ''}>Member</option>
+              <option value="admin" ${m.role === 'admin' ? 'selected' : ''}>Admin</option>
+            </select>
+            <button class="btn btn-secondary btn-sm" style="color:#ef4444;" onclick="removeTeamMember('${escapeHtml(m.uid)}', '${escapeHtml(m.name)}')">Remove</button>`;
+        }
+        if (isTeamOwner() && !isMe) {
+          actions += ` <button class="btn btn-secondary btn-sm" onclick="makeTeamOwner('${escapeHtml(m.uid)}', '${escapeHtml(m.name)}')" title="Hand over ownership">Make owner</button>`;
+        }
+        return `<div class="team-row">
+          <div class="team-row-who"><strong>${escapeHtml(m.name)}${isMe ? ' (you)' : ''}</strong><span>${escapeHtml(m.email)}</span></div>
+          <div class="team-row-actions">${actions}</div></div>`;
+      }).join('');
+
+      const inviteSection = canManageTeam() ? `
+        <div class="team-section">
+          <div class="team-section-title">Invite someone</div>
+          <form class="team-inline-form" onsubmit="event.preventDefault(); inviteToTeam();">
+            <input type="email" id="inviteEmail" placeholder="colleague@company.com" />
+            <select id="inviteRole">
+              <option value="member">Member</option>
+              <option value="admin">Admin</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Invite</button>
+          </form>
+          <div class="team-note">Profit Pulse doesn't email invitations itself. After inviting, use <strong>Copy invite message</strong> and send it to them. They join by signing in with that exact email address (and confirming it).</div>
+          ${invites.length ? `<div style="margin-top:10px;">${invites.map(inv => `
+            <div class="team-row">
+              <div class="team-row-who"><strong>${escapeHtml(inv.email)}</strong><span>Invited as ${roleLabel(inv.role)} · waiting to join</span></div>
+              <div class="team-row-actions">
+                <button class="btn btn-secondary btn-sm" onclick="copyInviteMessage('${escapeHtml(inv.email)}')">Copy invite message</button>
+                <button class="btn btn-secondary btn-sm" style="color:#ef4444;" onclick="cancelInvite('${escapeHtml(inv.id)}')">Cancel</button>
+              </div></div>`).join('')}</div>` : ''}
+        </div>` : '';
+
+      const renameSection = canManageTeam() ? `
+        <div class="team-section">
+          <div class="team-section-title">Team name</div>
+          <form class="team-inline-form" onsubmit="event.preventDefault(); renameTeam();">
+            <input type="text" id="renameTeamInput" maxlength="100" value="${escapeHtml(currentTeam.name)}" />
+            <button type="submit" class="btn btn-secondary">Rename</button>
+          </form>
+        </div>` : '';
+
+      const dangerSection = `
+        <div class="team-section" style="display:flex; gap:8px; flex-wrap:wrap;">
+          ${isTeamOwner()
+            ? `<button class="btn btn-secondary" style="color:#ef4444;" onclick="deleteCurrentTeam()">Delete team</button>
+               <span class="team-note" style="margin:0; align-self:center;">To leave instead, first make someone else the owner.</span>`
+            : `<button class="btn btn-secondary" style="color:#ef4444;" onclick="leaveCurrentTeam()">Leave team</button>`}
+        </div>`;
+
+      body.innerHTML = `
+        <p class="modal-text">Everyone in <strong>${escapeHtml(currentTeam.name)}</strong> can see all of the team's orders. You are <span class="role-badge ${currentTeam.role}">${roleLabel(currentTeam.role)}</span></p>
+        <div class="team-section">
+          <div class="team-section-title">Members (${members.length})</div>
+          ${memberRows}
+        </div>
+        ${inviteSection}
+        ${renameSection}
+        ${createTeamFormHtml('Create another team')}
+        ${dangerSection}`;
+    }
+
+    async function refreshTeamsAndModal() {
+      await loadMyTeams();
+      const still = currentTeam && myTeams.find(t => t.id === currentTeam.id);
+      setCurrentTeam(still || myTeams.find(t => t.isPersonal) || null);
+      await renderTeamModal();
+    }
+
+    async function createTeamFromForm() {
+      const input = document.getElementById('newTeamName');
+      const name = ((input && input.value) || '').trim();
+      if (!name) { alert('Please enter a team name.'); return; }
+      try {
+        const teamId = fb.fsApi.doc(fb.fsApi.collection(fb.db, 'teams')).id;
+        await createTeamDocs(teamId, name, false);
+        await loadMyTeams();
+        setCurrentTeam(myTeams.find(t => t.id === teamId));
+        await renderTeamModal();
+      } catch (err) {
+        alert(teamErrorMessage(err));
+      }
+    }
+
+    async function inviteToTeam() {
+      const email = ((document.getElementById('inviteEmail') || {}).value || '').trim().toLowerCase();
+      const role = (document.getElementById('inviteRole') || {}).value || 'member';
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { alert('Please enter a valid email address.'); return; }
+      try {
+        const { db, fsApi } = fb;
+        const already = await fsApi.getDocs(fsApi.query(fsApi.collection(db, 'teams', currentTeam.id, 'members'), fsApi.where('email', '==', email)));
+        if (!already.empty) { alert(`${email} is already in this team.`); return; }
+        await fsApi.setDoc(fsApi.doc(db, 'invites', currentTeam.id + '__' + email), {
+          teamId: currentTeam.id,
+          teamName: currentTeam.name.slice(0, 100),
+          email,
+          role,
+          invitedBy: currentUserSession.id,
+          createdAt: fsApi.serverTimestamp()
+        });
+        await renderTeamModal();
+        if (confirm(`${email} is invited. Copy an invite message to send them now?`)) copyInviteMessage(email);
+      } catch (err) {
+        alert(teamErrorMessage(err));
+      }
+    }
+
+    function inviteMessageText(email) {
+      const link = location.origin + location.pathname;
+      return `Hi! I've invited you to our team "${currentTeam.name}" on Profit Pulse.\n\n` +
+        `1. Open ${link}\n` +
+        `2. Create an account (or sign in) using this email address: ${email}\n` +
+        `3. Confirm your email with the link Profit Pulse sends you, then click "I've confirmed it"\n` +
+        `4. Click "Join team" on the green invitation bar.`;
+    }
+
+    async function copyInviteMessage(email) {
+      const text = inviteMessageText(email);
+      try {
+        await navigator.clipboard.writeText(text);
+        alert('Invite message copied. Paste it into an email or chat to send it.');
+      } catch (err) {
+        prompt('Copy this message and send it to them:', text);
+      }
+    }
+
+    async function cancelInvite(inviteId) {
+      if (!confirm('Cancel this invitation?')) return;
+      try {
+        await fb.fsApi.deleteDoc(fb.fsApi.doc(fb.db, 'invites', inviteId));
+        await renderTeamModal();
+      } catch (err) {
+        alert(teamErrorMessage(err));
+      }
+    }
+
+    async function changeMemberRole(uid, role) {
+      try {
+        await fb.fsApi.updateDoc(fb.fsApi.doc(fb.db, 'teams', currentTeam.id, 'members', uid), { role });
+      } catch (err) {
+        alert(teamErrorMessage(err));
+      }
+      await renderTeamModal();
+    }
+
+    async function removeTeamMember(uid, name) {
+      if (!confirm(`Remove ${name} from ${currentTeam.name}? Their orders stay with the team.`)) return;
+      try {
+        await fb.fsApi.deleteDoc(fb.fsApi.doc(fb.db, 'teams', currentTeam.id, 'members', uid));
+      } catch (err) {
+        alert(teamErrorMessage(err));
+      }
+      await renderTeamModal();
+    }
+
+    async function makeTeamOwner(uid, name) {
+      if (!confirm(`Make ${name} the owner of ${currentTeam.name}? You will become an Admin.`)) return;
+      try {
+        const { db, fsApi } = fb;
+        const batch = fsApi.writeBatch(db);
+        batch.update(fsApi.doc(db, 'teams', currentTeam.id), { ownerUid: uid });
+        batch.update(fsApi.doc(db, 'teams', currentTeam.id, 'members', uid), { role: 'owner' });
+        batch.update(fsApi.doc(db, 'teams', currentTeam.id, 'members', currentUserSession.id), { role: 'admin' });
+        await batch.commit();
+      } catch (err) {
+        alert(teamErrorMessage(err));
+      }
+      await refreshTeamsAndModal();
+    }
+
+    async function renameTeam() {
+      const name = ((document.getElementById('renameTeamInput') || {}).value || '').trim();
+      if (!name) { alert('Please enter a team name.'); return; }
+      try {
+        await fb.fsApi.updateDoc(fb.fsApi.doc(fb.db, 'teams', currentTeam.id), { name: name.slice(0, 100) });
+      } catch (err) {
+        alert(teamErrorMessage(err));
+      }
+      await refreshTeamsAndModal();
+    }
+
+    async function leaveCurrentTeam() {
+      if (!confirm(`Leave ${currentTeam.name}? You'll lose access to its orders right away.`)) return;
+      const teamId = currentTeam.id;
+      try {
+        await fb.fsApi.deleteDoc(fb.fsApi.doc(fb.db, 'teams', teamId, 'members', currentUserSession.id));
+        wipeUserData('team_' + teamId);
+      } catch (err) {
+        alert(teamErrorMessage(err));
+      }
+      await refreshTeamsAndModal();
+    }
+
+    // Deletes a whole team the signed-in owner owns: orders, settings, invites, members, then the team
+    async function deleteTeamCompletely(teamId) {
+      const { db, fsApi } = fb;
+      const refs = [];
+      for (const sub of ['orders', 'settings']) {
+        const snap = await fsApi.getDocs(fsApi.collection(db, 'teams', teamId, sub));
+        snap.docs.forEach(d => refs.push(d.ref));
+      }
+      const inv = await fsApi.getDocs(fsApi.query(fsApi.collection(db, 'invites'), fsApi.where('teamId', '==', teamId)));
+      inv.docs.forEach(d => refs.push(d.ref));
+      const mem = await fsApi.getDocs(fsApi.collection(db, 'teams', teamId, 'members'));
+      mem.docs.forEach(d => { if (d.id !== currentUserSession.id) refs.push(d.ref); });
+      for (let i = 0; i < refs.length; i += 400) {
+        const batch = fsApi.writeBatch(db);
+        refs.slice(i, i + 400).forEach(r => batch.delete(r));
+        await batch.commit();
+      }
+      const last = fsApi.writeBatch(db);
+      last.delete(fsApi.doc(db, 'teams', teamId, 'members', currentUserSession.id));
+      last.delete(fsApi.doc(db, 'teams', teamId));
+      await last.commit();
+      wipeUserData('team_' + teamId);
+    }
+
+    async function deleteCurrentTeam() {
+      const typed = prompt(`This permanently deletes "${currentTeam.name}", all of its orders, and everyone's access to it.\n\nType the team name to confirm:`);
+      if (typed === null) return;
+      if (typed.trim() !== currentTeam.name) { alert("The name didn't match, so nothing was deleted."); return; }
+      try {
+        await deleteTeamCompletely(currentTeam.id);
+      } catch (err) {
+        alert(teamErrorMessage(err));
+      }
+      await refreshTeamsAndModal();
+    }
+
+    // Before deleting an account: delete my personal workspace and any team I own alone, leave the rest
+    async function removeMeFromAllTeams() {
+      await loadMyTeams();
+      const { db, fsApi } = fb;
+      for (const t of myTeams) {
+        if (t.role === 'owner' && !t.isPersonal) {
+          const mem = await fsApi.getDocs(fsApi.collection(db, 'teams', t.id, 'members'));
+          if (mem.size > 1) {
+            const e = new Error(`You own the team "${t.name}", which has other members. Make someone else the owner (or delete the team) first, then delete your account.`);
+            e.teamBlock = true;
+            throw e;
+          }
+        }
+      }
+      for (const t of myTeams) {
+        if (t.role === 'owner') {
+          await deleteTeamCompletely(t.id);
+        } else {
+          await fsApi.deleteDoc(fsApi.doc(db, 'teams', t.id, 'members', currentUserSession.id));
+          wipeUserData('team_' + t.id);
+        }
       }
     }
 
@@ -4212,11 +5765,11 @@
         savedOrders = Array.from(byId.values());
         storeUserData('orders', savedOrders);
 
-        if (Array.isArray(data.reps)) {
+        if (Array.isArray(data.reps) && canEditWorkspaceSettings()) {
           data.reps.forEach(r => { if (typeof r === 'string' && !savedReps.includes(r)) savedReps.push(r); });
           storeUserData('reps', savedReps);
         }
-        if (data.branding && confirm('Also restore the branding (company name, logo, colors) from this backup?')) {
+        if (data.branding && canEditWorkspaceSettings() && confirm('Also restore the branding (company name, logo, colors) from this backup?')) {
           brandingSettings = Object.assign({}, DEFAULT_BRANDING, data.branding);
           storeUserData('branding', brandingSettings);
           applyThemeColors();
@@ -4243,6 +5796,7 @@
         calculate();
         renderHistoryTable();
         initAuthSession();
+        startUpdateChecks();
       } catch (err) {
         console.error("Initialization error:", err);
       }
